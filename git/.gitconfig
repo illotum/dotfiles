@@ -1,0 +1,12 @@
+[user]
+	name = alex
+	email = alex.valiushko@cybera.ca
+[credential]
+	helper = osxkeychain
+[push]
+	default = upstream
+[color]
+	ui = true
+[ghq]
+	root = ~/src
+	root = ~/go/src
