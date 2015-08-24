@@ -1,5 +1,13 @@
+set --erase fish_greeting
+
 # Path to your oh-my-fish.
 set fish_path $HOME/.oh-my-fish
+
+# Path to your custom folder (default path is ~/.oh-my-fish/custom)
+set fish_custom $HOME/.config/fish/custom
+
+# Load oh-my-fish configuration.
+source $fish_path/oh-my-fish.fish
 
 # Dev variables
 set -x GOPATH $HOME/go
@@ -19,19 +27,17 @@ set -x EDITOR vim
 # set -x GEM_PATH $GEM_HOME $GEM_ROOT
 
 # Theme
-set fish_theme cmorrell.com
+Theme "cmorrell.com"
 set default_user illtm
 
-# All built-in plugins can be found at ~/.oh-my-fish/plugins/
-# Custom plugins may be added to ~/.oh-my-fish/custom/plugins/
-# Enable plugins by adding their name separated by a space to the line below.
-set fish_plugins theme brew osx extract replace tmux balias gi peco
-
-# Path to your custom folder (default path is ~/.oh-my-fish/custom)
-set fish_custom $HOME/.config/fish/custom
-
-# Load oh-my-fish configuration.
-source $fish_path/oh-my-fish.fish
+# Plugins
+Plugin "theme"
+Plugin "brew"
+Plugin "osx"
+Plugin "replace"
+Plugin "tmux"
+Plugin "balias"
+Plugin "gi"
 
 # Aliases
 balias gws "git status --short"
