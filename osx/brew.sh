@@ -92,6 +92,7 @@ brew install git-lfs
 brew install imagemagick --with-webp
 brew install lua
 brew install lynx
+brew install go
 brew install p7zip
 # brew install pigz
 brew install pv
@@ -105,14 +106,16 @@ brew install stow
 brew install tmux
 # brew install zopfli
 
-# Install everyday casks
-# brew tap Caskroom/cask
+# Install everyday apps
 brew install caskroom/cask/brew-cask
 brew cask install seil
 brew cask install calibre
-# brew cask install iterm2
+brew cask install iterm2
 brew cask install flux
-# brew cask install google-chrome
+brew cask install google-chrome
+brew cask install transmission
+brew cask install dropbox
+brew cask install appcleaner
 
 # Remove outdated versions from the cellar.
 brew cleanup

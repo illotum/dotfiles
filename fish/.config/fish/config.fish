@@ -13,7 +13,7 @@ source $fish_path/oh-my-fish.fish
 set -x GOPATH $HOME/go
 set -x ARCHFLAGS '-arch x86_64'
 set -x EDITOR vim
-# set fish_user_paths $GOPATH/bin $HOME/Library/Haskell/bin
+set fish_user_paths $GOPATH/bin
 
 # GPG startup
 # set -x GPG_TTY (tty)
