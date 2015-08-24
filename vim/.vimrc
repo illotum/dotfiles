@@ -58,17 +58,14 @@
     " Haskell
     NeoBundle 'dag/vim2hs'
     NeoBundle 'eagletmt/neco-ghc'
-    NeoBundle 'lambdatoast/elm.vim'
     NeoBundle 'Twinside/vim-hoogle'
     NeoBundle 'eagletmt/ghcmod-vim'
     " Golang
     NeoBundle 'fatih/vim-go'
-    NeoBundle 'peterhoeg/vim-qml'
     " Python
     NeoBundle 'klen/python-mode'
     " Ruby
     NeoBundle 'vim-ruby/vim-ruby'
-    " Clojure
     " DevOps
     NeoBundle 'ekalinin/Dockerfile.vim'
     NeoBundle 'dag/vim-fish'
