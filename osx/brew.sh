@@ -106,13 +106,13 @@ brew install tmux
 # brew install zopfli
 
 # Install everyday casks
-brew tap Caskroom/cask
+# brew tap Caskroom/cask
 brew install caskroom/cask/brew-cask
 brew cask install seil
 brew cask install calibre
-brew cask install iterm2
+# brew cask install iterm2
 brew cask install flux
-brew cask install google-chrome
+# brew cask install google-chrome
 
 # Remove outdated versions from the cellar.
 brew cleanup
