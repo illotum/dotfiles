@@ -102,6 +102,7 @@ brew install ssh-copy-id
 brew install tree
 brew install webkit2png
 brew install stow
+brew install tmux
 # brew install zopfli
 
 # Install everyday casks
