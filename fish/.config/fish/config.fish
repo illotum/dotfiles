@@ -5,18 +5,18 @@ set fish_path $HOME/.oh-my-fish
 set -x GOPATH $HOME/go
 set -x ARCHFLAGS '-arch x86_64'
 set -x EDITOR vim
-set fish_user_paths $GOPATH/bin $HOME/Library/Haskell/bin
+# set fish_user_paths $GOPATH/bin $HOME/Library/Haskell/bin
 
 # GPG startup
-set -x GPG_TTY (tty)
-if not set -q GPG_AGENT_INFO
-    set -gx GPG_AGENT_INFO (gpg-agent --daemon | cut -d';' -f1 | cut -d'=' -f 2)
-end
+# set -x GPG_TTY (tty)
+# if not set -q GPG_AGENT_INFO
+#     set -gx GPG_AGENT_INFO (gpg-agent --daemon | cut -d';' -f1 | cut -d'=' -f 2)
+# end
 
-# set fish_user_paths /opt/chefdk/bin $fish_user_paths
-set -x GEM_ROOT /opt/chefdk/embedded/lib/ruby/2.1.0
-set -x GEM_HOME $HOME/.chefdk/gem/ruby/2.1.0
-set -x GEM_PATH $GEM_HOME $GEM_ROOT
+# # set fish_user_paths /opt/chefdk/bin $fish_user_paths
+# set -x GEM_ROOT /opt/chefdk/embedded/lib/ruby/2.1.0
+# set -x GEM_HOME $HOME/.chefdk/gem/ruby/2.1.0
+# set -x GEM_PATH $GEM_HOME $GEM_ROOT
 
 # Theme
 set fish_theme cmorrell.com
