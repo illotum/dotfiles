@@ -789,6 +789,12 @@ defaults write org.m0k.transmission WarningLegal -bool false
 # defaults write com.twitter.twitter-mac HideInBackground -bool true
 
 ###############################################################################
+# Seil.app                                                               #
+###############################################################################
+/Applications/Seil.app/Contents/Library/bin/seil set keycode_capslock 109
+
+
+###############################################################################
 # Spectacle.app                                                               #
 ###############################################################################
 
