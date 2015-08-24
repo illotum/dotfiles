@@ -103,5 +103,13 @@ brew install tree
 brew install webkit2png
 # brew install zopfli
 
+# Install everyday casks
+brew tap Caskroom/cask
+brew install caskroom/cask/brew-cask
+brew cask install seil
+brew cask install calibre
+brew cask install iterm2
+brew cask install flux
+
 # Remove outdated versions from the cellar.
 brew cleanup
