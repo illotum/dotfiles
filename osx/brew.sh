@@ -116,6 +116,7 @@ brew cask install google-chrome
 brew cask install transmission
 brew cask install dropbox
 brew cask install appcleaner
+brew cask install skype
 
 # Remove outdated versions from the cellar.
 brew cleanup
