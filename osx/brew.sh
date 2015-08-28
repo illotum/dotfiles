@@ -104,6 +104,7 @@ brew install tree
 brew install webkit2png
 brew install stow
 brew install tmux
+brew install openconnect
 # brew install zopfli
 
 # Install everyday apps
@@ -117,6 +118,11 @@ brew cask install transmission
 brew cask install dropbox
 brew cask install appcleaner
 brew cask install skype
+brew cask install java
+brew cask install appcleaner
+brew cask install vagrant
+brew cask install slack
+brew cask install audioscrobbler
 
 # Remove outdated versions from the cellar.
 brew cleanup
