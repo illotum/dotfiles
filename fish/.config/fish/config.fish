@@ -10,9 +10,9 @@ set fish_custom $HOME/.config/fish/custom
 source $fish_path/oh-my-fish.fish
 
 # Dev variables
-set -x GOPATH $HOME/go
-set -x ARCHFLAGS '-arch x86_64'
-set -x EDITOR vim
+setenv GOPATH $HOME/go
+setenv ARCHFLAGS '-arch x86_64'
+setenv EDITOR vim
 set fish_user_paths $GOPATH/bin
 
 # GPG startup
