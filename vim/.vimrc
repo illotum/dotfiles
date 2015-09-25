@@ -46,6 +46,7 @@
     NeoBundle 'tpope/vim-surround'
     NeoBundle 'plasticboy/vim-markdown'
     NeoBundle 'majutsushi/tagbar'
+    NeoBundle 'cespare/vim-toml'
     " NeoComplete
     NeoBundle 'Shougo/neocomplcache.vim'
     NeoBundle 'Shougo/neosnippet'
@@ -71,6 +72,8 @@
     NeoBundle 'dag/vim-fish'
     " NetOps
     NeoBundle 'ClockworkNet/vim-junos-syntax'
+    " Rust
+    NeoBundle 'rust-lang/rust.vim'
 
     call neobundle#end()
     filetype plugin indent on
