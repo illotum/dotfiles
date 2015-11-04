@@ -3,6 +3,11 @@ vim/.vim/*
 !vim/.vim/bundle/neobundle.vim
 !vim/.vim/ftplugin
 
+# NVIM
+nvim/.config/nvim/*
+!nvim/.config/nvim/init.vim
+!nvim/.config/nvim/autoload
+
 # Fish
 fish/.config/fish/*
 !fish/.config/fish/config.fish

@@ -1,84 +1,49 @@
 " Modeline and Notes {
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
 " }
-
-" Fish hack {
-    if &shell =~# 'fish$'
-        set shell=sh
-    endif
-" }
-
+"
 " Components {
-    " Init NeoBundle {
-    if has('vim_starting')
-        if &compatible
-            set nocompatible
-        endif
+    call plug#begin('~/.config/nvim/plugged')
 
-        set runtimepath+=~/.vim/bundle/neobundle.vim/
-    endif
+    Plug 'junegunn/seoul256.vim'
+    Plug 'junegunn/vim-easy-align'
+    Plug 'altercation/vim-colors-solarized'
+    Plug 'ap/vim-css-color'
 
-    call neobundle#begin(expand('~/.vim/bundle'))
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-endwise'
+    Plug 'tpope/vim-surround'
 
-    NeoBundleFetch 'Shougo/neobundle.vim'
-    " }
+    Plug 'Lokaltog/vim-easymotion'
+    Plug 'kien/ctrlp.vim'
+    Plug 'benekastah/neomake'
+    Plug 'majutsushi/tagbar'
 
-    " UI
-    NeoBundle 'altercation/vim-colors-solarized'
-    NeoBundle 'bling/vim-airline'
-    NeoBundle 'tpope/vim-repeat'
-    NeoBundle 'kien/ctrlp.vim'
-    NeoBundle 'Lokaltog/vim-easymotion'
-    NeoBundle 'chriskempson/base16-vim'
-    NeoBundle 'Shougo/vimproc.vim', {
-\ 'build' : {
-\     'cygwin' : 'make -f make_cygwin.mak',
-\     'mac' : 'make -f make_mac.mak',
-\     'linux' : 'make',
-\     'unix' : 'gmake',
-\    },
-\ }
-    " General programming
-    NeoBundle 'scrooloose/syntastic'
-    NeoBundle 'tpope/vim-fugitive'
-    NeoBundle 'tpope/vim-commentary'
-    NeoBundle 'tpope/vim-endwise'
-    NeoBundle 'tpope/vim-surround'
-    NeoBundle 'majutsushi/tagbar'
-    NeoBundle 'luochen1990/rainbow'
-    " NeoComplete
-    NeoBundle 'Shougo/neocomplcache.vim'
-    NeoBundle 'Shougo/neosnippet'
-    NeoBundle 'Shougo/neosnippet-snippets'
-    NeoBundle 'honza/vim-snippets'
-    " File types
-    NeoBundle 'plasticboy/vim-markdown'
-    NeoBundle 'cespare/vim-toml'
-    NeoBundle 'ap/vim-css-color'
-    NeoBundle 'dag/vim2hs'
-    NeoBundle 'eagletmt/neco-ghc'
-    NeoBundle 'Twinside/vim-hoogle'
-    NeoBundle 'eagletmt/ghcmod-vim'
-    NeoBundle 'fatih/vim-go'
-    NeoBundle 'klen/python-mode'
-    NeoBundle 'vim-ruby/vim-ruby'
-    NeoBundle 'dag/vim-fish'
-    NeoBundle 'ClockworkNet/vim-junos-syntax'
-    NeoBundle 'elmcast/elm-vim'
+    Plug 'luochen1990/rainbow', { 'for': 'clojure' }
+    Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
+    Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
+    Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
+    Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+    Plug 'dag/vim2hs', { 'for': 'haskell' }
 
-    call neobundle#end()
-    filetype plugin indent on
-    NeoBundleCheck
+    Plug 'fatih/vim-go', { 'for': 'go' }
+    Plug 'klen/python-mode', { 'for': 'python' }
+    Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
+    Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
+    Plug 'cespare/vim-toml', { 'for': 'toml' }
+    Plug 'dag/vim-fish', { 'for': 'fish' }
+
+    Plug 'Shougo/neocomplete.vim'
+
+    call plug#end()
 " }
-
+"
 " General {
-    set nocompatible
-    set encoding=utf-8
     set modeline
     set background=dark         " Assume a dark background
-    filetype plugin indent on   " Automatically detect file types.
-    syntax on                   " Syntax highlighting
     set mouse=a                 " Automatically enable mouse usage
     set mousehide               " Hide the mouse cursor while typing
     scriptencoding utf-8
@@ -97,7 +62,6 @@
     set shortmess+=filmnrxoOtT          " Abbrev. of messages (avoids 'hit enter')
     set viewoptions=folds,options,cursor,unix,slash " Better Unix / Windows compatibility
     set virtualedit=onemore             " Allow for cursor beyond last character
-    set history=1000                    " Store a ton of history (default is 20)
     set spell                           " Spell checking on
     set hidden                          " Allow buffer switching without saving
     set visualbell
@@ -107,7 +71,6 @@
     " set it to the first line when editing a git commit message
     au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
-    " http://vim.wikia.com/wiki/Restore_cursor_to_file_position_in_previous_editing_session
     " Restore cursor to file position in previous editing session
     function! ResCur()
         if line("'\"") <= line("$")
@@ -142,19 +105,12 @@
     highlight clear SignColumn      " SignColumn should match background
     highlight clear LineNr          " Current line number row will have same background color in relative mode
     highlight clear SpecialKey      " Whitespace should match background
-    let g:CSApprox_hook_post = ['hi clear SignColumn']
-    "highlight clear CursorLineNr    " Remove highlight color from current line number
+    highlight clear CursorLineNr    " Remove highlight color from current line number
+    "let g:CSApprox_hook_post = ['hi clear SignColumn']
 
-    if has('cmdline_info')
-        set ruler                   " Show the ruler
-        set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
-        set showcmd                 " Show partial commands in status line and
-                                    " Selected characters/lines in visual mode
-    endif
+    set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
 
     if has('statusline')
-        set laststatus=2
-
         " Broken down into easily includeable segments
         set statusline=%<%f\                     " Filename
         set statusline+=%w%h%m%r                 " Options
@@ -164,21 +120,19 @@
         set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
     endif
 
-    set backspace=indent,eol,start  " Backspace for dummies
     set linespace=0                 " No extra spaces between rows
     set number                      " Line numbers on
     set relativenumber              " Numbers relative to current position
     set showmatch                   " Show matching brackets/parenthesis
-    set incsearch                   " Find as you type search
     set hlsearch                    " Highlight search terms
     set winminheight=0              " Windows can be 0 line high
     set ignorecase                  " Case insensitive search
     set smartcase                   " Case sensitive when uc present
-    set wildmenu                    " Show list instead of just completing
     set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
     set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap too
     set scrolljump=1                " Lines to scroll when cursor leaves screen
     set scrolloff=3                 " Minimum lines to keep above and below cursor
+    set sidescrolloff=5             " Minimum chars to keep left and right of cursor
     set foldenable                  " Auto fold code
     set list
     set listchars=tab:›\ ,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
@@ -187,7 +141,6 @@
 " Formatting {
 
     set nowrap                      " Do not wrap long lines
-    set autoindent                  " Indent at the same level of the previous line
     set tabstop=4                   " An indentation every four columns
     set shiftwidth=0                " Use indents of 'tabstop' spaces
     set expandtab                   " Tabs are spaces, not tabs
@@ -196,11 +149,11 @@
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
-    "set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
+    set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
+
     " Remove trailing whitespaces and ^M chars
     autocmd FileType javascript,python,ruby,clojure,xml,yml,coffee,haskell,go autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     autocmd FileType haskell,ruby,clojure,coffee,javascript setlocal tabstop=2 shiftwidth=2
-    "autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 " }
 
 " Key (re)Mappings {
@@ -340,8 +293,7 @@
 " Plugins {
 
     " Misc {
-        let g:NERDShutUp=1
-        let b:match_ignorecase = 1
+        let b:match_ignorecase = 1 " matchit.vim
     " }
 
     " Easymotion {
@@ -366,54 +318,13 @@
 
     " }
 
-    " AutoCloseTag {
-        " Make it so AutoCloseTag works for xml and xhtml files as well
-        au FileType xhtml,xml ru ftplugin/html/autoclosetag.vim
-        nmap <Leader>ac <Plug>ToggleAutoCloseMappings
-    " }
+    " EasyAlign {
+    " Start interactive EasyAlign in visual mode (e.g. vipga)
+    xmap ga <Plug>(EasyAlign)
 
-    " NerdTree {
-        map <C-e> <plug>NERDTreeTabsToggle<CR>
-        map <leader>e :NERDTreeFind<CR>
-        nmap <leader>nt :NERDTreeFind<CR>
-
-        let NERDTreeShowBookmarks=1
-        let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
-        let NERDTreeChDirMode=0
-        let NERDTreeQuitOnOpen=1
-        let NERDTreeMouseMode=2
-        let NERDTreeShowHidden=1
-        let NERDTreeKeepTreeInNewTab=1
-        let g:nerdtree_tabs_open_on_gui_startup=0
-    " }
-
-    " Tabularize {
-        nmap <Leader>a& :Tabularize /&<CR>
-        vmap <Leader>a& :Tabularize /&<CR>
-        nmap <Leader>a= :Tabularize /=<CR>
-        vmap <Leader>a= :Tabularize /=<CR>
-        nmap <Leader>a: :Tabularize /:<CR>
-        vmap <Leader>a: :Tabularize /:<CR>
-        nmap <Leader>a:: :Tabularize /:\zs<CR>
-        vmap <Leader>a:: :Tabularize /:\zs<CR>
-        nmap <Leader>a, :Tabularize /,<CR>
-        vmap <Leader>a, :Tabularize /,<CR>
-        nmap <Leader>a,, :Tabularize /,\zs<CR>
-        vmap <Leader>a,, :Tabularize /,\zs<CR>
-        nmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-        vmap <Leader>a<Bar> :Tabularize /<Bar><CR>
-    " }
-
-    " Session List {
-        set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
-        nmap <leader>sl :SessionList<CR>
-        nmap <leader>ss :SessionSave<CR>
-        nmap <leader>sc :SessionClose<CR>
-    " }
-
-    " JSON {
-        nmap <leader>jt <Esc>:%!python -m json.tool<CR><Esc>:set filetype=json<CR>
-    " }
+    " Start interactive EasyAlign for a motion/text object (e.g. gaip)
+    nmap ga <Plug>(EasyAlign)
+"}
 
     " PyMode {
         let g:pymode_lint_checker = "pyflakes"
@@ -465,106 +376,8 @@
         nnoremap <silent> <leader>gg :SignifyToggle<CR>
     "}
 
-    " neocomplcache {
-    let g:acp_enableAtStartup = 0
-    let g:neocomplcache_enable_at_startup = 1
-    let g:neocomplcache_enable_camel_case_completion = 1
-    let g:neocomplcache_enable_smart_case = 1
-    let g:neocomplcache_enable_underbar_completion = 1
-    let g:neocomplcache_enable_auto_delimiter = 1
-    let g:neocomplcache_max_list = 15
-    let g:neocomplcache_force_overwrite_completefunc = 1
-
-    " Define dictionary.
-    let g:neocomplcache_dictionary_filetype_lists = {
-                \ 'default' : '',
-                \ 'vimshell' : $HOME.'/.vimshell_hist',
-                \ 'scheme' : $HOME.'/.gosh_completions'
-                \ }
-
-    " Define keyword.
-    if !exists('g:neocomplcache_keyword_patterns')
-        let g:neocomplcache_keyword_patterns = {}
-    endif
-    let g:neocomplcache_keyword_patterns._ = '\h\w*'
-
-    " Plugin key-mappings {
-        " These two lines conflict with the default digraph mapping of <C-K>
-        imap <C-k> <Plug>(neosnippet_expand_or_jump)
-        smap <C-k> <Plug>(neosnippet_expand_or_jump)
-        if exists('g:spf13_noninvasive_completion')
-            inoremap <CR> <CR>
-            " <ESC> takes you out of insert mode
-            inoremap <expr> <Esc>   pumvisible() ? "\<C-y>\<Esc>" : "\<Esc>"
-            " <CR> accepts first, then sends the <CR>
-            inoremap <expr> <CR>    pumvisible() ? "\<C-y>\<CR>" : "\<CR>"
-            " <Down> and <Up> cycle like <Tab> and <S-Tab>
-            inoremap <expr> <Down>  pumvisible() ? "\<C-n>" : "\<Down>"
-            inoremap <expr> <Up>    pumvisible() ? "\<C-p>" : "\<Up>"
-            " Jump up and down the list
-            inoremap <expr> <C-d>   pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<C-d>"
-            inoremap <expr> <C-u>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<C-u>"
-        else
-            imap <silent><expr><C-k> neosnippet#expandable() ?
-                        \ "\<Plug>(neosnippet_expand_or_jump)" : (pumvisible() ?
-                        \ "\<C-e>" : "\<Plug>(neosnippet_expand_or_jump)")
-            smap <TAB> <Right><Plug>(neosnippet_jump_or_expand)
-
-            inoremap <expr><C-g> neocomplcache#undo_completion()
-            inoremap <expr><C-l> neocomplcache#complete_common_string()
-            "inoremap <expr><CR> neocomplcache#complete_common_string()
-
-            function! CleverCr()
-                if pumvisible()
-                    if neosnippet#expandable()
-                        let exp = "\<Plug>(neosnippet_expand)"
-                        return exp . neocomplcache#close_popup()
-                    else
-                        return neocomplcache#close_popup()
-                    endif
-                else
-                    return "\<CR>"
-                endif
-            endfunction
-
-            " <CR> close popup and save indent or expand snippet
-            imap <expr> <CR> CleverCr()
-
-            " <CR>: close popup
-            " <s-CR>: close popup and save indent.
-            inoremap <expr><s-CR> pumvisible() ? neocomplcache#close_popup()"\<CR>" : "\<CR>"
-            "inoremap <expr><CR> pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-
-            " <C-h>, <BS>: close popup and delete backword char.
-            inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-            inoremap <expr><C-y> neocomplcache#close_popup()
-        endif
-        " <TAB>: completion.
-        inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-        inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<TAB>"
-    " }
-
-    " Enable omni completion.
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-    autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-    autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-
-    " Enable heavy omni completion.
-    if !exists('g:neocomplcache_omni_patterns')
-        let g:neocomplcache_omni_patterns = {}
-    endif
-    let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-    let g:neocomplcache_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-    let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-    let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-    let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
-    let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
-
-    " }
+    " neocompete {
+"}
 
     " UndoTree {
         nnoremap <Leader>u :UndotreeToggle<CR>
@@ -572,52 +385,13 @@
         let g:undotree_SetFocusWhenToggle=1
     " }
 
-    " Snippets {
-
-        " Use honza's snippets.
-        let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
-
-        " Enable neosnippet snipmate compatibility mode
-        let g:neosnippet#enable_snipmate_compatibility = 1
-
-        " For snippet_complete marker.
-        if !exists("g:spf13_no_conceal")
-            if has('conceal')
-                set conceallevel=2 concealcursor=i
-            endif
-        endif
-
-        " Enable neosnippets when using go
-        let g:go_snippet_engine = "neosnippet"
-
-        " Disable the neosnippet preview candidate window
-        " When enabled, there can be too much visual noise
-        " especially when splits are used.
-        set completeopt-=preview
-
-    " }
-
-    " vim-airline {
-        " Set configuration options for the statusline plugin vim-airline.
-        " Use the powerline theme and optionally enable powerline symbols.
-        " To use the symbols , , , , , , and .in the statusline
-        " segments add the following to your .vimrc.before.local file:
-        "   let g:airline_powerline_fonts=1
-        " If the previous symbols do not render for you then install a
-        " powerline enabled font.
-
-        " See `:echo g:airline_theme_map` for some more choices
-        " Default in terminal vim is 'dark'
-        let g:airline_theme = 'solarized'
-        let g:airline_powerline_fonts=1
-        let g:airline#extensions#tabline#enabled = 1
-    " }
-
     " Syntastic {
         let g:syntastic_python_pylint_args="--disable=C,R0903,R0904,W0232"
         let g:syntastic_error_symbol = "✗"
         let g:syntastic_warning_symbol = "⚠"
         map <silent> <Leader>e :Errors<CR>
+
+        autocmd! BufWritePost * Neomake
 " }
 
     " GHC-Mod {
@@ -742,5 +516,3 @@
     " }
 
 " }
-
-
