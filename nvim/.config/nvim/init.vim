@@ -1,7 +1,5 @@
-" Modeline and Notes {
 " vim: set sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
-" }
-"
+
 " Components {
     call plug#begin('~/.config/nvim/plugged')
 
@@ -40,7 +38,7 @@
 
     call plug#end()
 " }
-"
+
 " General {
     set modeline
     set background=dark         " Assume a dark background
@@ -83,6 +81,12 @@
         autocmd!
         autocmd BufWinEnter * call ResCur()
     augroup END
+
+    " Adapt to fish
+    if &shell =~# 'fish$'
+        set shell=/bin/bash
+    endif
+
 
     " Setting up the directories {
     if has('persistent_undo')
@@ -128,12 +132,17 @@
     set winminheight=0              " Windows can be 0 line high
     set ignorecase                  " Case insensitive search
     set smartcase                   " Case sensitive when uc present
+    set wildmenu                    " Visual autocomplete for command menu
+    set lazyredraw                  " Redraw only when we need to.
     set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
     set whichwrap=b,s,h,l,<,>,[,]   " Backspace and cursor keys wrap too
     set scrolljump=1                " Lines to scroll when cursor leaves screen
     set scrolloff=3                 " Minimum lines to keep above and below cursor
     set sidescrolloff=5             " Minimum chars to keep left and right of cursor
     set foldenable                  " Auto fold code
+    set foldlevelstart=10           " Open most folds by default
+    set foldnestmax=10              " 10 nested fold max
+    set foldmethod=indent           " Default fold based on indent level
     set list
     set listchars=tab:›\ ,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
 " }
@@ -161,10 +170,14 @@
     let mapleader = ','
     let maplocalleader = '_'
 
+    " Easy command mode
     nmap ; :
 
-    nmap <Space> <PageDown>
-    nmap <Tab> <PageUp>
+    " Easy fold
+    nnoremap <Space> za
+
+    " Easy join
+    nnoremap K i<CR><Esc>
 
     " Easier moving in tabs and windows
     map <C-J> <C-W>j<C-W>_
@@ -175,6 +188,9 @@
     " Wrapped lines goes down/up to next row, rather than next line in file.
     noremap j gj
     noremap k gk
+
+    " highlight last inserted text
+    nnoremap gV `[v`]
 
     " End/Start of line motion keys act relative to row/wrap width in the
     " presence of `:set wrap`, and relative to line for `:set nowrap`.
@@ -337,8 +353,10 @@
 
     " ctrlp {
         let g:ctrlp_working_path_mode = 'ra'
+        let g:ctrlp_match_window = 'bottom,order:ttb'
         nnoremap <silent> <D-t> :CtrlP<CR>
         nnoremap <silent> <D-r> :CtrlPMRU<CR>
+        nnoremap <silent> <c-t> :CtrlPBufTag<CR>
         let g:ctrlp_custom_ignore = {
           \ 'dir':  '\v[\/]\.(git|hg|svn)$',
           \ 'file': '\v\.(exe|so|dll|pyc|o)$',
