@@ -15,26 +15,36 @@
     Plug 'tpope/vim-surround'
 
     Plug 'Lokaltog/vim-easymotion'
-    Plug 'kien/ctrlp.vim'
+    " Plug 'kien/ctrlp.vim'
+    Plug 'junegunn/fzf.vim'
     Plug 'benekastah/neomake'
     Plug 'majutsushi/tagbar'
+    Plug 'Konfekt/FastFold'
+    Plug 'kopischke/vim-stay'
 
     Plug 'luochen1990/rainbow', { 'for': 'clojure' }
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+    Plug 'guns/vim-sexp', { 'for': 'clojure' }
+    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 
     Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
     Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
-    Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+    " Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
     Plug 'dag/vim2hs', { 'for': 'haskell' }
 
     Plug 'fatih/vim-go', { 'for': 'go' }
+    Plug 'zchee/deoplete-go', { 'for': 'go' }
+    " Plug 'racer-rust/vim-racer' { 'for': 'rust'}
     Plug 'klen/python-mode', { 'for': 'python' }
     Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
     Plug 'dag/vim-fish', { 'for': 'fish' }
+    Plug 'Shougo/neco-vim', { 'for': 'vim' }
 
-    Plug 'Shougo/neocomplete.vim'
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'Shougo/neco-syntax'
+    " Plug 'Shougo/neosnippet.vim'
 
     call plug#end()
 " }
@@ -84,7 +94,7 @@
 
     " Adapt to fish
     if &shell =~# 'fish$'
-        set shell=/bin/bash
+        set shell=/bin/sh
     endif
 
 
@@ -394,9 +404,6 @@
         nnoremap <silent> <leader>gg :SignifyToggle<CR>
     "}
 
-    " neocompete {
-"}
-
     " UndoTree {
         nnoremap <Leader>u :UndotreeToggle<CR>
         " If undotree is opened, it is likely one wants to interact with it.
@@ -456,6 +463,29 @@
         \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
         \   'ctermfgs': ['blue', 'yellow', 'cyan', 'magenta'],
         \}
+    " }
+
+    " Deoplete {
+    set completeopt+=noinsert,noselect
+    let g:deoplete#enable_at_startup = 1
+    let g:deoplete#enable_smart_case = 1
+
+    let g:deoplete#sources#go = 'vim-go'
+    " autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+    let g:deoplete#omni_patterns = {}
+    let g:deoplete#omni_patterns.ruby = ['[^. *\t]\.\w*', '\h\w*::']
+    let g:deoplete#sources = {}
+    let g:deoplete#sources._ = ['omni', 'buffer', 'tag']
+
+    " <C-h>, <BS>: close popup and delete backword char.
+    inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
+
+    " <CR>: close popup and save indent.
+    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+    function! s:my_cr_function()
+      return deoplete#mappings#close_popup() . "\<CR>"
+    endfunction
     " }
 
 " }
@@ -534,3 +564,4 @@
     " }
 
 " }
+
