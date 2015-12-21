@@ -86,6 +86,8 @@ brew install homebrew/php/php55 --with-gmp
 # Install other useful binaries.
 brew install ack
 brew install dark-mode
+brew install the_silver_searcher
+brew install fzf
 #brew install exiv2
 brew install git
 brew install git-lfs
