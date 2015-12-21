@@ -16,6 +16,7 @@
 
     Plug 'Lokaltog/vim-easymotion'
     " Plug 'kien/ctrlp.vim'
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'benekastah/neomake'
     Plug 'majutsushi/tagbar'
@@ -361,32 +362,58 @@
         endif
     " }
 
-    " ctrlp {
-        let g:ctrlp_working_path_mode = 'ra'
-        let g:ctrlp_match_window = 'bottom,order:ttb'
-        nnoremap <silent> <D-t> :CtrlP<CR>
-        nnoremap <silent> <D-r> :CtrlPMRU<CR>
-        nnoremap <silent> <c-t> :CtrlPBufTag<CR>
-        let g:ctrlp_custom_ignore = {
-          \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-          \ 'file': '\v\.(exe|so|dll|pyc|o)$',
-          \ }
+    "" ctrlp {
+    "    let g:ctrlp_working_path_mode = 'ra'
+    "    let g:ctrlp_match_window = 'bottom,order:ttb'
+    "    nnoremap <silent> <D-t> :CtrlP<CR>
+    "    nnoremap <silent> <D-r> :CtrlPMRU<CR>
+    "    nnoremap <silent> <c-t> :CtrlPBufTag<CR>
+    "    let g:ctrlp_custom_ignore = {
+    "      \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+    "      \ 'file': '\v\.(exe|so|dll|pyc|o)$',
+    "      \ }
 
-        if executable('ag')
-            let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
-        elseif executable('ack')
-            let s:ctrlp_fallback = 'ack %s --nocolor -f'
-        else
-            let s:ctrlp_fallback = 'find %s -type f'
-        endif
+    "    if executable('ag')
+    "        let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
+    "    elseif executable('ack')
+    "        let s:ctrlp_fallback = 'ack %s --nocolor -f'
+    "    else
+    "        let s:ctrlp_fallback = 'find %s -type f'
+    "    endif
 
-        let g:ctrlp_user_command = {
-            \ 'types': {
-                \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-                \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-            \ },
-            \ 'fallback': s:ctrlp_fallback
-        \ }
+    "    let g:ctrlp_user_command = {
+    "        \ 'types': {
+    "            \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
+    "            \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+    "        \ },
+    "        \ 'fallback': s:ctrlp_fallback
+    "    \ }
+    ""}
+
+    " fzf {
+    " This is the default extra key bindings
+    let g:fzf_action = {
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-x': 'split',
+      \ 'ctrl-v': 'vsplit' }
+
+    " Default fzf layout
+    " - down / up / left / right
+    " - window (nvim only)
+    let g:fzf_layout = { 'down': '~40%' }
+
+    " Advanced customization using autoload functions
+    autocmd VimEnter * command! Colors
+      \ call fzf#vim#colors({'left': '15%', 'options': '--reverse --margin 30%,0'})
+
+    " Mapping selecting mappings
+    nmap <leader><tab> <plug>(fzf-maps-n)
+    xmap <leader><tab> <plug>(fzf-maps-x)
+    omap <leader><tab> <plug>(fzf-maps-o)
+
+    " Ctrl-P
+    nnoremap <silent> <c-p> :Files<CR>
+
     "}
 
     " Fugitive {
