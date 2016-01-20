@@ -44,7 +44,7 @@
     Plug 'Shougo/neco-vim', { 'for': 'vim' }
 
     Plug 'Shougo/deoplete.nvim'
-    Plug 'Shougo/neco-syntax'
+    " Plug 'Shougo/neco-syntax'
     " Plug 'Shougo/neosnippet.vim'
 
     call plug#end()
@@ -437,10 +437,8 @@
         let g:undotree_SetFocusWhenToggle=1
     " }
 
-    " Syntastic {
-        let g:syntastic_python_pylint_args="--disable=C,R0903,R0904,W0232"
-        let g:syntastic_error_symbol = "✗"
-        let g:syntastic_warning_symbol = "⚠"
+    " Neomake {
+        let g:neomake_python_pylint_args="--disable=C,R0903,R0904,W0232"
         map <silent> <Leader>e :Errors<CR>
 
         autocmd! BufWritePost * Neomake
@@ -494,25 +492,50 @@
 
     " Deoplete {
     set completeopt+=noinsert,noselect
+    let g:acp_enableAtStartup = 0
     let g:deoplete#enable_at_startup = 1
     let g:deoplete#enable_smart_case = 1
+    let g:deoplete#enable_auto_delimiter = 1
+    let g:deoplete#max_list = 15
 
-    let g:deoplete#sources#go = 'vim-go'
-    " autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-    let g:deoplete#omni_patterns = {}
-    let g:deoplete#omni_patterns.ruby = ['[^. *\t]\.\w*', '\h\w*::']
-    let g:deoplete#sources = {}
-    let g:deoplete#sources._ = ['omni', 'buffer', 'tag']
+    " let g:neocomplete#keyword_patterns = {}
+    " let g:neocomplete#keyword_patterns.default = '\h\w*'
 
-    " <C-h>, <BS>: close popup and delete backword char.
-    inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
-    inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
+    let g:deoplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell' : $HOME.'/.vimshell_hist',
+    \ 'scheme' : $HOME.'/.gosh_completions'
+        \ }
+
+     " Define keyword.
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:deoplete#keyword_patterns = {}
+    endif
+    let g:deoplete#keyword_patterns['default'] = '\h\w*'
+
+
+    if !exists('g:deoplete#omni#input_patterns')
+        let g:deoplete#omni#input_patterns = {}
+    endif
+    let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '\h\w*::']
+    autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags<Paste>
+
+    if !exists('g:deoplete#sources')
+        let g:deoplete#sources = {}
+    endif
+    let g:deoplete#sources._ = ['omni', 'buffer', 'syntax']
 
     " <CR>: close popup and save indent.
     inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
     function! s:my_cr_function()
       return deoplete#mappings#close_popup() . "\<CR>"
     endfunction
+    inoremap <expr><Esc>  pumvisible() ? "\<C-y>\<Esc>" : "\<Esc>"
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
     " }
 
 " }
