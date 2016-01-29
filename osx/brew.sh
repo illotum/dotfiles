@@ -45,11 +45,11 @@ brew install wget --with-iri
 # brew install narwhal
 
 # Install more recent versions of some OS X tools.
-brew install vim --override-system-vi
+# brew install vim --override-system-vi
 brew install homebrew/dupes/grep
 brew install homebrew/dupes/openssh
 brew install homebrew/dupes/screen
-brew install homebrew/php/php55 --with-gmp
+# brew install homebrew/php/php55 --with-gmp
 
 # Install font tools.
 # brew tap bramstein/webfonttools
@@ -85,7 +85,7 @@ brew install homebrew/php/php55 --with-gmp
 
 # Install other useful binaries.
 brew install ack
-brew install dark-mode
+# brew install dark-mode
 brew install the_silver_searcher
 brew install fzf
 #brew install exiv2
@@ -106,7 +106,7 @@ brew install tree
 brew install webkit2png
 brew install stow
 brew install tmux
-brew install openconnect
+# brew install openconnect
 # brew install zopfli
 
 # Install everyday apps
@@ -115,13 +115,12 @@ brew cask install seil
 brew cask install calibre
 brew cask install iterm2
 brew cask install flux
-brew cask install google-chrome
+# brew cask install google-chrome
 brew cask install transmission
 brew cask install dropbox
-brew cask install appcleaner
+# brew cask install appcleaner
 brew cask install skype
 brew cask install java
-brew cask install appcleaner
 brew cask install vagrant
 brew cask install slack
 brew cask install audioscrobbler
