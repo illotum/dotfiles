@@ -13,3 +13,7 @@ nvim/.config/nvim/autoload/plug.vim.old
 fish/.config/fish/*
 !fish/.config/fish/config.fish
 !fish/.config/fish/custom
+
+# GHC
+ghc/*
+!ghc/.ghc/ghci.conf

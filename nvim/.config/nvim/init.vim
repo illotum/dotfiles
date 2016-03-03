@@ -4,7 +4,6 @@
     call plug#begin('~/.config/nvim/plugged')
 
     Plug 'junegunn/seoul256.vim'
-    Plug 'junegunn/vim-easy-align'
     Plug 'altercation/vim-colors-solarized'
     Plug 'ap/vim-css-color'
 
@@ -14,8 +13,9 @@
     Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-surround'
 
+    Plug 'junegunn/vim-easy-align'
+    Plug 'tmhedberg/matchit'
     Plug 'Lokaltog/vim-easymotion'
-    " Plug 'kien/ctrlp.vim'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'benekastah/neomake'
@@ -30,18 +30,20 @@
 
     Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
     Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
-    " Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+    Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
     Plug 'dag/vim2hs', { 'for': 'haskell' }
 
     Plug 'fatih/vim-go', { 'for': 'go' }
-    Plug 'zchee/deoplete-go', { 'for': 'go' }
-    " Plug 'racer-rust/vim-racer' { 'for': 'rust'}
+    Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
+    Plug 'racer-rust/vim-racer', { 'for': 'rust'}
     Plug 'klen/python-mode', { 'for': 'python' }
     Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
     Plug 'dag/vim-fish', { 'for': 'fish' }
     Plug 'Shougo/neco-vim', { 'for': 'vim' }
+    Plug 'saltstack/salt-vim'
+    Plug 'fatih/vim-hclfmt'
 
     Plug 'Shougo/deoplete.nvim'
     " Plug 'Shougo/neco-syntax'
@@ -354,41 +356,13 @@
 "}
 
     " PyMode {
-        let g:pymode_lint_checker = "pyflakes"
+        let g:pymode_lint_checker = "pylama"
         let g:pymode_utils_whitespaces = 0
         let g:pymode_options = 0
         if !has('python')
             let g:pymode = 0
         endif
     " }
-
-    "" ctrlp {
-    "    let g:ctrlp_working_path_mode = 'ra'
-    "    let g:ctrlp_match_window = 'bottom,order:ttb'
-    "    nnoremap <silent> <D-t> :CtrlP<CR>
-    "    nnoremap <silent> <D-r> :CtrlPMRU<CR>
-    "    nnoremap <silent> <c-t> :CtrlPBufTag<CR>
-    "    let g:ctrlp_custom_ignore = {
-    "      \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-    "      \ 'file': '\v\.(exe|so|dll|pyc|o)$',
-    "      \ }
-
-    "    if executable('ag')
-    "        let s:ctrlp_fallback = 'ag %s --nocolor -l -g ""'
-    "    elseif executable('ack')
-    "        let s:ctrlp_fallback = 'ack %s --nocolor -f'
-    "    else
-    "        let s:ctrlp_fallback = 'find %s -type f'
-    "    endif
-
-    "    let g:ctrlp_user_command = {
-    "        \ 'types': {
-    "            \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-    "            \ 2: ['.hg', 'hg --cwd %s locate -I .'],
-    "        \ },
-    "        \ 'fallback': s:ctrlp_fallback
-    "    \ }
-    ""}
 
     " fzf {
     " This is the default extra key bindings
@@ -413,6 +387,7 @@
 
     " Ctrl-P
     nnoremap <silent> <c-p> :Files<CR>
+    nnoremap <silent> <c-n> :Ag<CR>
 
     "}
 
@@ -430,12 +405,6 @@
         nnoremap <silent> <leader>gi :Git add -p %<CR>
         nnoremap <silent> <leader>gg :SignifyToggle<CR>
     "}
-
-    " UndoTree {
-        nnoremap <Leader>u :UndotreeToggle<CR>
-        " If undotree is opened, it is likely one wants to interact with it.
-        let g:undotree_SetFocusWhenToggle=1
-    " }
 
     " Neomake {
         let g:neomake_python_pylint_args="--disable=C,R0903,R0904,W0232"
@@ -494,39 +463,8 @@
     set completeopt+=noinsert,noselect
     let g:acp_enableAtStartup = 0
     let g:deoplete#enable_at_startup = 1
-    let g:deoplete#enable_smart_case = 1
     let g:deoplete#enable_auto_delimiter = 1
     let g:deoplete#max_list = 15
-
-    " let g:neocomplete#keyword_patterns = {}
-    " let g:neocomplete#keyword_patterns.default = '\h\w*'
-
-    let g:deoplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-     " Define keyword.
-    if !exists('g:neocomplete#keyword_patterns')
-        let g:deoplete#keyword_patterns = {}
-    endif
-    let g:deoplete#keyword_patterns['default'] = '\h\w*'
-
-
-    if !exists('g:deoplete#omni#input_patterns')
-        let g:deoplete#omni#input_patterns = {}
-    endif
-    let g:deoplete#omni#input_patterns.ruby = ['[^. *\t]\.\w*', '\h\w*::']
-    autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-    autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags<Paste>
-
-    if !exists('g:deoplete#sources')
-        let g:deoplete#sources = {}
-    endif
-    let g:deoplete#sources._ = ['omni', 'buffer', 'syntax']
 
     " <CR>: close popup and save indent.
     inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
