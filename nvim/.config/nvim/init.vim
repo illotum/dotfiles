@@ -184,7 +184,7 @@
     let maplocalleader = '_'
 
     " Easy command mode
-    nmap ; :
+    " nmap ; :
 
     " Easy fold
     nnoremap <Space> za
