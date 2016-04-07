@@ -48,7 +48,7 @@ brew install wget --with-iri
 # brew install vim --override-system-vi
 brew install homebrew/dupes/grep
 brew install homebrew/dupes/openssh
-brew install homebrew/dupes/screen
+# brew install homebrew/dupes/screen
 # brew install homebrew/php/php55 --with-gmp
 
 # Install font tools.
@@ -110,7 +110,7 @@ brew install tmux
 # brew install zopfli
 
 # Install everyday apps
-brew install caskroom/cask/brew-cask
+brew install cask
 brew cask install seil
 brew cask install calibre
 brew cask install iterm2
@@ -124,6 +124,8 @@ brew cask install java
 brew cask install vagrant
 brew cask install slack
 brew cask install audioscrobbler
+brew cask install caskroom/fonts/font-hack
+brew install neovim/neovim/neovim
 
 # Remove outdated versions from the cellar.
 brew cleanup
