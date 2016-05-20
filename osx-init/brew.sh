@@ -106,6 +106,7 @@ brew install tree
 brew install webkit2png
 brew install stow
 brew install tmux
+brew install yadm
 # brew install openconnect
 # brew install zopfli
 
