@@ -1,1 +1,9 @@
-src/dotfiles/git/.gitconfig
+[user]
+	name = alex
+	email = alex.valiushko@lendesk.com
+[credential]
+	helper = osxkeychain
+[push]
+	default = upstream
+[color]
+	ui = true
