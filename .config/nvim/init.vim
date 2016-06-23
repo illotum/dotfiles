@@ -5,6 +5,7 @@
 
     Plug 'junegunn/seoul256.vim'
     Plug 'altercation/vim-colors-solarized'
+    Plug 'chriskempson/base16-vim'
     Plug 'ap/vim-css-color'
 
     Plug 'tpope/vim-commentary'
@@ -18,7 +19,7 @@
     Plug 'Lokaltog/vim-easymotion'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
-    Plug 'benekastah/neomake'
+    Plug 'neomake/neomake'
     Plug 'majutsushi/tagbar'
     Plug 'Konfekt/FastFold'
     Plug 'kopischke/vim-stay'
@@ -45,6 +46,7 @@
     Plug 'elixir-lang/vim-elixir'
     Plug 'pearofducks/ansible-vim'
     Plug 'fatih/vim-hclfmt'
+    Plug 'hashivim/vim-terraform'
 
     Plug 'Shougo/deoplete.nvim'
     " Plug 'Shougo/neco-syntax'
@@ -409,6 +411,8 @@
 
     " Neomake {
         let g:neomake_python_pylint_args="--disable=C,R0903,R0904,W0232"
+        let g:neomake_sh_shellcheck_args=['-x', '-fgcc']
+
         map <silent> <Leader>e :Errors<CR>
 
         autocmd! BufWritePost * Neomake
