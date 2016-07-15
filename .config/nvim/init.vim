@@ -19,36 +19,45 @@
     Plug 'Lokaltog/vim-easymotion'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
+    Plug 'ctags.vim'
     Plug 'neomake/neomake'
     Plug 'majutsushi/tagbar'
     Plug 'Konfekt/FastFold'
     Plug 'kopischke/vim-stay'
 
-    Plug 'luochen1990/rainbow', { 'for': 'clojure' }
-    Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-    Plug 'guns/vim-sexp', { 'for': 'clojure' }
-    Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
+    " Plug 'luochen1990/rainbow', { 'for': 'clojure' }
+    " Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+    " Plug 'guns/vim-sexp', { 'for': 'clojure' }
+    " Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': 'clojure' }
 
     Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
     Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
     Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
     Plug 'dag/vim2hs', { 'for': 'haskell' }
 
+    Plug 'klen/python-mode'
+    Plug 'vim-ruby/vim-ruby'
     Plug 'fatih/vim-go', { 'for': 'go' }
-    Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
-    Plug 'racer-rust/vim-racer', { 'for': 'rust'}
-    Plug 'klen/python-mode', { 'for': 'python' }
-    Plug 'vim-ruby/vim-ruby', { 'for': 'ruby' }
-    Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-    Plug 'cespare/vim-toml', { 'for': 'toml' }
-    Plug 'dag/vim-fish', { 'for': 'fish' }
-    Plug 'Shougo/neco-vim', { 'for': 'vim' }
+    Plug 'racer-rust/vim-racer'
+    Plug 'plasticboy/vim-markdown'
+    Plug 'cespare/vim-toml'
+    Plug 'dag/vim-fish'
     Plug 'elixir-lang/vim-elixir'
-    Plug 'pearofducks/ansible-vim'
+    " Plug 'pearofducks/ansible-vim'
     Plug 'fatih/vim-hclfmt'
     Plug 'hashivim/vim-terraform'
 
-    Plug 'Shougo/deoplete.nvim'
+    Plug 'vim-erlang/vim-erlang-runtime'
+    Plug 'vim-erlang/vim-erlang-compiler'
+    Plug 'vim-erlang/vim-erlang-omnicomplete'
+    Plug 'vim-erlang/vim-erlang-tags'
+
+    function! DoRemote(arg)
+        UpdateRemotePlugins
+    endfunction
+    Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+    Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
+    Plug 'Shougo/neco-vim', { 'for': 'vim' }
     " Plug 'Shougo/neco-syntax'
     " Plug 'Shougo/neosnippet.vim'
 
@@ -128,16 +137,16 @@
     highlight clear CursorLineNr    " Remove highlight color from current line number
     "let g:CSApprox_hook_post = ['hi clear SignColumn']
 
-    set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
+    " set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " A ruler on steroids
 
     if has('statusline')
         " Broken down into easily includeable segments
         set statusline=%<%f\                     " Filename
-        set statusline+=%w%h%m%r                 " Options
+        set statusline+=%w%h%m%r%q               " Options
         set statusline+=%{fugitive#statusline()} " Git Hotness
-        set statusline+=\ [%{&ff}/%Y]            " Filetype
-        set statusline+=\ [%{getcwd()}]          " Current dir
-        set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+        set statusline+=\ [%{strlen(&fenc)?&fenc:&enc}/%Y]            " Filetype
+        " set statusline+=\ [%{getcwd()}]        " Current dir
+        set statusline+=%=%-14.(%l,%c%V%) "\ %p%%" Right aligned file nav info
     endif
 
     set linespace=0                 " No extra spaces between rows
@@ -187,7 +196,7 @@
     let maplocalleader = '_'
 
     " Easy command mode
-    " nmap ; :
+    nmap ; :
 
     " Easy fold
     nnoremap <Space> za
@@ -471,6 +480,30 @@
     let g:deoplete#enable_auto_delimiter = 1
     let g:deoplete#max_list = 15
 
+    " Sources
+    " let g:deoplete#sources = {}
+    " let g:deoplete#sources._ = ['omni', 'tag', 'buffer', 'shell' ]
+
+    " Omni patterns
+    if !exists('g:deoplete#omni_patterns')
+        let g:deoplete#omni_patterns = {}
+        let g:deoplete#omni_patterns.erlang = ['[^: \t0-9]\:\w*', '[a-zA-Z_]\w*']
+    endif
+
+
+    if !exists('g:deoplete#omni#input_patterns')
+        let g:deoplete#omni#input_patterns = {}
+        " let g:deoplete#omni#input_patterns.python = '\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+        " let g:deoplete#omni#input_patterns.sass = ['\w+', '\w+[):;]?\s+\w*', '[@!]']
+        " let g:deoplete#omni#input_patterns.scss = ['\w+', '\w+[):;]?\s+\w*', '[@!]']
+        " let g:deoplete#omni#input_patterns.css = ['\w+', '\w+[):;]?\s+\w*', '[@!]']
+        " let g:deoplete#omni#input_patterns.less = ['\w+', '\w+[):;]?\s+\w*', '[@!]']
+        " let g:deoplete#omni#input_patterns.lua = ['\w+[. :]', 'require\s*\(?["'']\w*']
+        " let g:deoplete#omni#input_patterns.ruby = ['[^. \t0-9]\.\w*', '[a-zA-Z_]\w*::\w*']
+        " let g:deoplete#omni#input_patterns.erlang = ['[^: \t0-9]\:\w*', '[a-zA-Z_]\w*']
+    endif
+
+
     " <CR>: close popup and save indent.
     inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
     function! s:my_cr_function()
@@ -557,4 +590,3 @@
     " }
 
 " }
-
