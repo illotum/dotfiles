@@ -10,6 +10,9 @@ setenv EDITOR vim
 set fish_user_paths $GOPATH/bin /usr/local/sbin
 set default_user illtm
 
+# Command mode
+fish_vi_key_bindings
+
 
 # Aliases
 alias gws "git status --short"
@@ -22,6 +25,8 @@ alias gm "git merge"
 alias gps "git push"
 alias gpl "git pull"
 alias vim "nvim"
+alias kube "kubectl"
+alias skube "kubectl --namespace=kube-system"
 function tmux
   command tmux -2 $argv
 end
