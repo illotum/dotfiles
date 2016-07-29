@@ -128,5 +128,9 @@ brew cask install audioscrobbler
 brew cask install caskroom/fonts/font-hack
 brew install neovim/neovim/neovim
 
+brew tap railwaycat/emacsmacport
+brew install brew install emacs-mac --with-gnutls --with-imagemagick --with-spacemacs-icon
+
+
 # Remove outdated versions from the cellar.
 brew cleanup
