@@ -11,7 +11,7 @@ set fish_user_paths $GOPATH/bin /usr/local/sbin
 set default_user illtm
 
 # Command mode
-fish_vi_key_bindings
+# fish_vi_key_bindings
 
 
 # Aliases
@@ -36,7 +36,7 @@ function speedtest
 end
 
 # Maintain a persistent Tmux session
-if not set -q TMUX
+if not set -q TMUX; and [ $TERM = 'xterm-256color' ]
     set tmux_session fish
 
     if not tmux has-session ^/dev/null
@@ -46,6 +46,10 @@ if not set -q TMUX
             set-option -t "$tmux_session" destroy-unattached off >/dev/null ^/dev/null
     end
     exec tmux attach-session
+end
+
+if [ $TERM = 'eterm-color' ]
+    tic -o ~/.terminfo $TERMINFO/e/eterm-color.ti
 end
 
 # GPG startup
