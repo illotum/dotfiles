@@ -4,10 +4,10 @@ set --erase fish_greeting
 setenv GOPATH $HOME
 setenv ARCHFLAGS '-arch x86_64'
 setenv EDITOR vi
-setenv HOMEBREW_GITHUB_API_TOKEN a795a7ea872b891ed4b61702df7223637d7588bd
 setenv HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 set fish_user_paths $HOME/bin /usr/local/sbin $HOME/.cargo/bin $HOME/FlameGraph $HOME/.cargo/bin
 set default_user illtm
+source $HOME/.config/fish/private-config.fish
 
 # Command mode
 # fish_vi_key_bindings
