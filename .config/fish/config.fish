@@ -1,18 +1,16 @@
-set fisher_home ~/.local/share/fisherman
-set fisher_config ~/.config/fisherman
-source $fisher_home/config.fish
 set --erase fish_greeting
 
 # Dev variables
-setenv GOPATH $HOME/go
+setenv GOPATH $HOME
 setenv ARCHFLAGS '-arch x86_64'
-setenv EDITOR vim
-set fish_user_paths $GOPATH/bin /usr/local/sbin
+setenv EDITOR vi
+setenv HOMEBREW_GITHUB_API_TOKEN a795a7ea872b891ed4b61702df7223637d7588bd
+setenv HOMEBREW_CASK_OPTS "--appdir=~/Applications"
+set fish_user_paths $HOME/bin /usr/local/sbin $HOME/.cargo/bin $HOME/FlameGraph $HOME/.cargo/bin
 set default_user illtm
 
 # Command mode
 # fish_vi_key_bindings
-
 
 # Aliases
 alias gws "git status --short"
@@ -24,9 +22,8 @@ alias gb "git branch"
 alias gm "git merge"
 alias gps "git push"
 alias gpl "git pull"
-alias vim "nvim"
-alias kube "kubectl"
-alias skube "kubectl --namespace=kube-system"
+alias vi "nvim"
+
 function tmux
   command tmux -2 $argv
 end
@@ -47,16 +44,3 @@ if not set -q TMUX; and [ $TERM = 'xterm-256color' ]
     end
     exec tmux attach-session
 end
-
-if [ $TERM = 'eterm-color' ]
-    tic -o ~/.terminfo $TERMINFO/e/eterm-color.ti
-end
-
-# GPG startup
-# set -x GPG_TTY (tty)
-# if not set -q GPG_AGENT_INFO
-#     set -gx GPG_AGENT_INFO (gpg-agent --daemon | cut -d';' -f1 | cut -d'=' -f 2)
-# end
-
-
-alias how2='docker run -it --rm gdraynz/how2'

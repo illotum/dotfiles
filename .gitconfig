@@ -1,6 +1,6 @@
 [user]
 	name = Alex Valiushko
-	email = alex.valiushko@gmail.com
+	email = alex.valiushko@whiteops.com
 [github]
 	user = illotum
 [core]
@@ -25,10 +25,10 @@
 [interactive]
 	diffFilter = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight
 [gitflow "prefix"]
-	feature = feature-
-	release = release-
-	hotfix = hotfix-
-	support = support-
+	feature = feature/
+	release = release/
+	hotfix = hotfix/
+	support = support/
 	versiontag = v
 [alias]
 	a = add --all

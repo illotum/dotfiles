@@ -22,21 +22,21 @@ sudo ln -s /usr/local/bin/gsha256sum /usr/local/bin/sha256sum
 # Install some other useful utilities like `sponge`.
 brew install moreutils
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
-brew install findutils
+# brew install findutils
 # Install GNU `sed`, overwriting the built-in `sed`.
 brew install gnu-sed --with-default-names
 # Install Bash 4.
 # Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before
 # running `chsh`.
-brew install bash
-brew tap homebrew/versions
-brew install bash-completion2
+# brew install bash
+# brew tap homebrew/versions
+# brew install bash-completion2
 
 # Install fish
 brew install fish
 
 # Install `wget` with IRI support.
-brew install wget --with-iri
+# brew install wget --with-iri
 
 # Install RingoJS and Narwhal.
 # Note that the order in which these are installed is important;
@@ -84,16 +84,16 @@ brew install homebrew/dupes/openssh
 # brew install xz
 
 # Install other useful binaries.
-brew install ack
+# brew install ack
 # brew install dark-mode
 brew install the_silver_searcher
-brew install fzf
+# brew install fzf
 #brew install exiv2
 brew install git
-brew install git-lfs
+# brew install git-lfs
 brew install imagemagick --with-webp
-brew install lua
-brew install lynx
+# brew install lua
+# brew install lynx
 brew install go
 brew install p7zip
 # brew install pigz
@@ -104,7 +104,7 @@ brew install speedtest_cli
 brew install ssh-copy-id
 brew install tree
 brew install webkit2png
-brew install stow
+# brew install stow
 brew install tmux
 brew install yadm
 # brew install openconnect
@@ -122,14 +122,14 @@ brew cask install dropbox
 # brew cask install appcleaner
 brew cask install skype
 brew cask install java
-brew cask install vagrant
-brew cask install slack
-brew cask install audioscrobbler
-brew cask install caskroom/fonts/font-hack
+# brew cask install vagrant
+# brew cask install slack
+# brew cask install audioscrobbler
+# brew cask install caskroom/fonts/font-hack
 brew install neovim/neovim/neovim
 
 brew tap railwaycat/emacsmacport
-brew install brew install emacs-mac --with-gnutls --with-imagemagick --with-spacemacs-icon
+brew install emacs-mac --with-gnutls --with-imagemagick --with-spacemacs-icon
 
 
 # Remove outdated versions from the cellar.
