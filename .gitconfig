@@ -1,29 +1,63 @@
 [user]
-	name = Alex Valiushko
+	name = Alex V
 	email = alex.valiushko@whiteops.com
 [github]
 	user = illotum
 [core]
-	editor = nvim
-	whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	whitespace = fix,-indent-with-non-tab,space-before-tab,trailing-space,cr-at-eol
+    legacyheaders = false
+    quotepath = false
+    trustctime = false
 	excludesfile = ~/.gitignore
+[repack]
+    usedeltabaseoffset = true
+[apply]
+    whitespace = fix
 [credential]
 	helper = osxkeychain
+[transfer]
+	fsckobjects = true
+[fetch]
+	fsckobjects = true
+[receive]
+	fsckobjects = true
 [push]
 	default = matching
+[pull]
+	rebase = preserve
+[branch]
+	autosetupmerge = always
+[submodule]
+	fetchjobs = 4
+[status]
+	submodulesummary = true
+	branch = true
 [rerere]
 	enabled = 1
 	autoupdate = 1
 [color]
 	ui = auto
-[pager]
-	log = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
-	show = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
-	diff = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
+    interactive = auto
+; [pager]
+; 	log = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
+; 	show = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
+; 	diff = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
 [diff]
-	compactionHeuristic = true
-[interactive]
-	diffFilter = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight
+    algorithm = histogram
+	renames = copy
+	wordregex = [^[:space:]]
+	mnemonicprefix = true
+	compactionheuristic = true
+	submodule = log
+[mergetool "splice"]
+	cmd = "vi -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
+	trustexitcode = true
+[merge]
+	summary = true
+	tool = splice
+	conflictstyle = diff3
+; [interactive]
+; 	diffFilter = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight
 [gitflow "prefix"]
 	feature = feature/
 	release = release/
@@ -181,3 +215,5 @@
 	human = name-rev --name-only --refs=refs/heads/*
 	serve = !git daemon --reuseaddr --verbose  --base-path=. --export-all ./.git
 	snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
+[url "git@github.com:"]
+	pushInsteadOf = "git://github.com/"

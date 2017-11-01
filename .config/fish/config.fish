@@ -5,7 +5,7 @@ setenv GOPATH $HOME
 setenv ARCHFLAGS '-arch x86_64'
 setenv EDITOR vi
 setenv HOMEBREW_CASK_OPTS "--appdir=~/Applications"
-set fish_user_paths $HOME/bin /usr/local/sbin $HOME/.cargo/bin $HOME/FlameGraph $HOME/.cargo/bin
+set fish_user_paths $HOME/bin /usr/local/sbin $HOME/.cargo/bin $HOME/FlameGraph $HOME/.cargo/bin "/usr/local/opt/erlang@18/bin" 
 set default_user illtm
 source $HOME/.config/fish/private-config.fish
 
@@ -13,15 +13,8 @@ source $HOME/.config/fish/private-config.fish
 # fish_vi_key_bindings
 
 # Aliases
-alias gws "git status --short"
-alias gc "git commit"
-alias gca "git commit -a"
-alias gco "git checkout"
-alias ga "git add"
-alias gb "git branch"
-alias gm "git merge"
-alias gps "git push"
-alias gpl "git pull"
+alias g "git"
+alias y "yadm"
 alias vi "nvim"
 
 function tmux
