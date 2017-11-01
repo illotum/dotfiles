@@ -4,25 +4,19 @@ scriptencoding utf-8
     call plug#begin('~/.config/nvim/plugged')
     Plug 'altercation/vim-colors-solarized'
     Plug 'romainl/flattened'
-    " Plug 'itchyny/lightline.vim'
+    Plug 'sjl/splice.vim'
 
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-endwise'
     Plug 'tpope/vim-surround'
-
     Plug 'junegunn/vim-easy-align'
     Plug 'tmhedberg/matchit'
     Plug 'Lokaltog/vim-easymotion'
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-    Plug 'junegunn/fzf.vim'
     Plug 'ctrlpvim/ctrlp.vim'
-    " Plug 'ctags.vim'
-    Plug 'neomake/neomake'
     Plug 'majutsushi/tagbar'
-    " Plug 'Konfekt/FastFold'
     Plug 'kopischke/vim-stay'
+    Plug 'w0rp/ale'
 
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
@@ -32,12 +26,12 @@ scriptencoding utf-8
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
     Plug 'dag/vim-fish', { 'for': 'fish' }
     Plug 'Shougo/neco-vim', { 'for': 'vim' }
+    Plug 'dleonard0/pony-vim-syntax'
+    Plug 'b4b4r07/vim-hcl'
+    Plug 'cespare/vim-toml'
 
-    " Plug 'Shougo/neco-syntax'
-    " Plug 'Shougo/neosnippet.vim'
     call plug#end()
 " }
-
 " General {
     set modeline
     set background=dark           " Assume a dark background
@@ -70,7 +64,7 @@ scriptencoding utf-8
 
     " Adapt to fish
     if &shell =~# 'fish$'
-        set shell=/bin/sh
+        set shell=/bin/bash
     endif
 
 
@@ -82,7 +76,6 @@ scriptencoding utf-8
     endif
     " }
 " }
-
 " Vim UI {
     color solarized
     set title
@@ -98,6 +91,7 @@ scriptencoding utf-8
     set statusline+=%w%h%m%r%q               " Options
     set statusline+=%{fugitive#statusline()} " Git Hotness
     set statusline+=\ [%{strlen(&fenc)?&fenc:&enc}/%Y]            " Filetype
+    set statusline+=\ [%{LinterStatus()}]
     " set statusline+=%#goStatuslineColor#
     set statusline+=\ %{go#statusline#Show()}
     set statusline+=\ %{go#complete#GetInfo()}
@@ -105,7 +99,7 @@ scriptencoding utf-8
     set statusline+=%=%-14.(%l,%c%V%) "\ %p%%" Right aligned file nav info
 
     set number                      " Line numbers on
-    set relativenumber              " Numbers relative to current position
+    " set relativenumber              " Numbers relative to current position
     set showcmd
     set showmatch                   " Show matching brackets/parenthesis
     set hlsearch                    " Highlight search terms
@@ -116,17 +110,19 @@ scriptencoding utf-8
     set gdefault
     set lazyredraw                  " Redraw only when we need to.
     set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
-    set whichwrap=b,s,<,>,[,]   " Backspace and cursor keys wrap too
+    set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+    set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe  " Windows
+    set whichwrap=b,s,<,>,[,]       " Backspace and cursor keys wrap too
     set scrolloff=5                 " Minimum lines to keep above and below cursor
     set sidescrolloff=5             " Minimum chars to keep left and right of cursor
     set foldlevelstart=10           " Open most folds by default
     set foldnestmax=10              " 10 nested fold max
     set foldminlines=5              " Do not hide folds shorter than 5
     set foldmethod=indent           " Default fold based on indent level
-    set list                        " Highlight problematic whitespace
-    set listchars=tab:›\ ,trail:.,extends:#,nbsp:.
+    set nolist
+    " set list                        " Highlight problematic whitespace
+    " set listchars=tab:›\ ,trail:.,extends:#,nbsp:.
 " }
-
 " Formatting {
     set nowrap                      " Do not wrap long lines
     set tabstop=4                   " An indentation every four columns
@@ -137,24 +133,23 @@ scriptencoding utf-8
     set splitright                  " Puts new vsplit windows to the right of the current
     set splitbelow                  " Puts new split windows to the bottom of the current
     set pastetoggle=<F12>           " pastetoggle (sane indentation on pastes)
-    set comments=sl:/*,mb:*,elx:*/  " auto format comment blocks
+    " set colorcolumn=72
+    " set textwidth=72
+
 
     " Remove trailing whitespaces and ^M chars
     autocmd FileType haskell,ruby,clojure,coffee,javascript autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     " autocmd FileType haskell,ruby,clojure,coffee,javascript setlocal tabstop=2 shiftwidth=2
 " }
-
 " Key (re)Mappings {
-    " let mapleader = ','
-    let mapleader ="\<Space>"
+    let mapleader = ','
     let maplocalleader = '_'
-    nmap , <Leader>m
 
     " Easy command mode
     nmap ; :
 
     " Easy fold
-    nnoremap <Leader><Space> za
+    nnoremap <Space> za
 
     " Easy scroll
     " nnoremap <Space> <C-D>
@@ -163,7 +158,7 @@ scriptencoding utf-8
     " vnoremap <Tab> <C-U>
 
     " Easy join
-    nnoremap K i<CR><Esc>
+    " nnoremap K i<CR><Esc>
 
     " Easier moving in tabs and windows
     map <C-J> <C-W>j<C-W>_
@@ -220,15 +215,14 @@ scriptencoding utf-8
     " http://stackoverflow.com/a/8064607/127816
     vnoremap . :normal .<CR>
 
-    " For when you forget to sudo.. Really Write the file.
+    " For when you forget to sudo. Really Write the file.
     cmap w!! w !sudo tee % >/dev/null
 
     " Adjust viewports to the same size
     map <Leader>= <C-w>=
 
-    " Map <Leader>ff to display all lines with keyword under cursor
-    " and ask which one to jump to
-    nmap <Leader>sw [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+    " Display all lines with keyword under cursor and ask which one to jump to
+    " nmap <Leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
 
     " Easier horizontal scrolling
     map zl zL
@@ -238,11 +232,8 @@ scriptencoding utf-8
     nnoremap <silent> <Leader>xf gwip
 
     " Error lists
-    nmap <Leader>en :cnext<CR>
-    nmap <Leader>ep :cprevious<CR>
     nnoremap <leader>ec :cclose<CR>
 " }
-
 " Plugins {
     " matchit.vim {
         let b:match_ignorecase = 1
@@ -276,18 +267,7 @@ scriptencoding utf-8
         " Start interactive EasyAlign for a motion/text object (e.g. <Space>taip)
         nmap <Leader>xa <Plug>(EasyAlign)
     "}
-    " fzf {
-        function! s:fzf_statusline()
-          " Override statusline as you like
-          highlight fzf1 ctermfg=0 ctermbg=14
-          setlocal statusline=%#fzf1#\ >fzf
-        endfunction
-        autocmd! User FzfStatusLine call <SID>fzf_statusline()
-        " Mapping selecting mappings
-        nmap <leader><tab> <plug>(fzf-maps-n)
-        xmap <leader><tab> <plug>(fzf-maps-x)
-        omap <leader><tab> <plug>(fzf-maps-o)
-        " Ctrl-P
+    " Ctrl-P
         nnoremap <silent> <Leader>ff :Files<CR>
         nnoremap <silent> <Leader>fs :Ag<CR>
         nnoremap <silent> <Leader>bb :Buffers<CR>
@@ -306,10 +286,37 @@ scriptencoding utf-8
         nnoremap <silent> <leader>gi :Git add -p %<CR>
         nnoremap <silent> <leader>gg :SignifyToggle<CR>
     "}
-    " Neomake {
-        let g:neomake_python_pylint_args="--disable=C,R0903,R0904,W0232"
-        let g:neomake_sh_shellcheck_args=['-x', '-fgcc']
-        autocmd! BufWritePost * Neomake
+    " ALE {
+        " let g:neomake_python_pylint_args="--disable=C,R0903,R0904,W0232"
+        " let g:neomake_sh_shellcheck_args=['-x', '-fgcc']
+        " Error and warning signs.
+        let g:ale_sign_error = '⤫'
+        let g:ale_sign_warning = '⚠'
+        let g:ale_echo_msg_error_str = 'E'
+        let g:ale_echo_msg_warning_str = 'W'
+        let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+        let g:ale_set_loclist = 0
+        let g:ale_set_quickfix = 0
+        let g:ale_sign_column_always = 1
+
+        let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
+        let g:ale_go_gometalinter_options = '--aggregate --fast'
+
+        nmap <Leader>en <Plug>(ale_previous_wrap)
+        nmap <Leader>ep <Plug>(ale_next_wrap)
+
+        function! LinterStatus() abort
+            let l:counts = ale#statusline#Count(bufnr(''))
+
+            let l:all_errors = l:counts.error + l:counts.style_error
+            let l:all_non_errors = l:counts.total - l:all_errors
+
+            return l:counts.total == 0 ? 'OK' : printf(
+            \   '%dW %dE',
+            \   all_non_errors,
+            \   all_errors
+            \)
+        endfunction
     "}
     " vim-go {
         " run :GoBuild or :GoTestCompile based on the go file
@@ -323,35 +330,35 @@ scriptencoding utf-8
         endfunction
 
         au FileType go set fdm=syntax
-        au FileType go nmap <leader>mx <Plug>(go-run)
-        au FileType go nmap <leader>mb :<C-u>call <SID>build_go_files()<CR>
-        au FileType go nmap <leader>mt <Plug>(go-test)
-        au FileType go nmap <leader>mc <Plug>(go-coverage-toggle)
-        au FileType go nmap <Leader>mh <Plug>(go-doc)
-        au FileType go nmap <Leader>ms <Plug>(go-implements)
-        au FileType go nmap <Leader>mi <Plug>(go-info)
-        au FileType go nmap <Leader>mr <Plug>(go-rename)
-        au FileType go nmap <Leader>mg :GoDeclsDir<CR>
+        " au FileType go nmap <leader>x <Plug>(go-run)
+        " au FileType go nmap <leader>gm :<C-u>call <SID>build_go_files()<CR>
+        " au FileType go nmap <Leader>mi <Plug>(go-info)
+        au FileType go nmap <leader>t <Plug>(go-test)
+        au FileType go nmap <Leader>e :GoAlternate<CR>
+        au FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+        au FileType go nmap <Leader>s <Plug>(go-implements)
+        au FileType go nmap <Leader>r <Plug>(go-rename)
+        au FileType go nmap <Leader>gf :GoDeclsDir<CR>
         let g:go_highlight_functions = 0
         let g:go_highlight_methods = 0
         let g:go_highlight_structs = 0
         let g:go_highlight_operators = 0
         let g:go_highlight_build_constraints = 0
+        let g:go_highlight_trailing_whitespace_error = 1
         let g:go_echo_command_info = 0
         let g:go_echo_go_info = 0
-        let g:go_highlight_trailing_whitespace_error = 0
-        let g:go_metalinter_autosave = 1
         let g:go_fmt_fail_silently = 1
         let g:go_fmt_command = "goimports"
         let g:go_list_type = "quickfix"
         let g:go_info_mode = 'guru'
-        let g:go_fmt_experimental = 0
-        let g:go_def_mapping_enabled = 0
+        let g:go_fmt_experimental = 1
+        let g:go_def_mapping_enabled = 1
         let g:go_def_reuse_buffer = 1
         let g:go_guru_scope = ["whiteops.com", "git.whiteops.com"]
     " }
     " Deoplete {
         set completeopt+=noselect
+        " set completeopt+=longest
         let g:deoplete#enable_at_startup = 1
         let g:deoplete#enable_ignore_case = 1
         let g:deoplete#enable_smart_case = 1
@@ -362,23 +369,28 @@ scriptencoding utf-8
         let g:deoplete#enable_auto_delimiter = 1
         " init language options
         let g:deoplete#ignore_sources = get(g:,'deoplete#ignore_sources',{})
-        let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
-        let g:deoplete#omni_patterns = get(g:, 'deoplete#omni_patterns', {})
-        let g:deoplete#ignore_sources.go = ['omni']
+        " let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
+        " let g:deoplete#omni_patterns = get(g:, 'deoplete#omni_patterns', {})
+        " let g:deoplete#ignore_sources.go = ['omni']
         call deoplete#custom#set('go', 'mark', '')
         call deoplete#custom#set('go', 'rank', 9999)
-        let g:deoplete#omni_patterns.lua = '.'
-        let g:deoplete#ignore_sources.rust = ['omni']
-        call deoplete#custom#set('racer', 'mark', '')
-        call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+        " let g:deoplete#omni_patterns.lua = '.'
+        " let g:deoplete#ignore_sources.rust = ['omni']
+        " call deoplete#custom#set('racer', 'mark', '')
+        " call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
         let g:deoplete#ignore_sources._ = ['around']
-        set isfname-==
+        " set isfname-==
 
-        inoremap <expr><Esc>  pumvisible() ? "\<C-y>\<Esc>" : "\<Esc>"
         inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+        inoremap <expr><CR>   pumvisible() ? "\<C-y>" : "\<CR>"
         inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
         inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
-    " }
+      " }
+      " CtrlP {
+        let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+        let g:ctrlp_map = 'gf'
+        let g:ctrlp_cmd = 'CtrlP'
+      " }
 " }
 
 " Functions {
