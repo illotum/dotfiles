@@ -27,6 +27,7 @@
 	rebase = preserve
 [branch]
 	autosetupmerge = always
+	autosetuprebase = always
 [submodule]
 	fetchjobs = 4
 [status]
