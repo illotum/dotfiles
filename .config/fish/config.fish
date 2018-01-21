@@ -7,7 +7,7 @@ setenv EDITOR vi
 setenv HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 set fish_user_paths $HOME/bin /usr/local/sbin $HOME/.cargo/bin $HOME/FlameGraph $HOME/.cargo/bin "/usr/local/opt/erlang@18/bin" 
 set default_user illtm
-source $HOME/.config/fish/private-config.fish
+source $HOME/.config/fish/private-config.fish > /dev/null 2> /dev/null or true
 
 # Command mode
 # fish_vi_key_bindings

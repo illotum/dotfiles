@@ -29,6 +29,7 @@ scriptencoding utf-8
     Plug 'dleonard0/pony-vim-syntax'
     Plug 'b4b4r07/vim-hcl'
     Plug 'cespare/vim-toml'
+    Plug 'jasontbradshaw/pigeon.vim'
 
     call plug#end()
 " }
