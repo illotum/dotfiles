@@ -11,7 +11,6 @@ scriptencoding utf-8
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-surround'
     Plug 'junegunn/vim-easy-align'
-    Plug 'tmhedberg/matchit'
     Plug 'Lokaltog/vim-easymotion'
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'majutsushi/tagbar'
