@@ -5,7 +5,7 @@ setenv GOPATH $HOME
 setenv ARCHFLAGS '-arch x86_64'
 setenv EDITOR vi
 setenv HOMEBREW_CASK_OPTS "--appdir=~/Applications"
-set fish_user_paths $HOME/bin
+set fish_user_paths $HOME/bin $HOME/bin/FlameGraph
 set default_user illtm
 source $HOME/.config/fish/private-config.fish > /dev/null 2> /dev/null or true
 

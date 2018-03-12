@@ -16,11 +16,11 @@ brew upgrade --all
 
 # Install GNU core utilities (those that come with OS X are outdated).
 # Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`.
-brew install coreutils
-sudo ln -s /usr/local/bin/gsha256sum /usr/local/bin/sha256sum
+# brew install coreutils
+# sudo ln -s /usr/local/bin/gsha256sum /usr/local/bin/sha256sum
 
 # Install some other useful utilities like `sponge`.
-brew install moreutils
+# brew install moreutils
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
 # brew install findutils
 # Install GNU `sed`, overwriting the built-in `sed`.
@@ -33,7 +33,7 @@ brew install gnu-sed --with-default-names
 # brew install bash-completion2
 
 # Install fish
-brew install fish
+# brew install fish
 
 # Install `wget` with IRI support.
 # brew install wget --with-iri
@@ -86,7 +86,7 @@ brew install homebrew/dupes/openssh
 # Install other useful binaries.
 # brew install ack
 # brew install dark-mode
-brew install the_silver_searcher
+# brew install the_silver_searcher
 # brew install fzf
 #brew install exiv2
 brew install git
@@ -98,10 +98,10 @@ brew install go
 brew install p7zip
 # brew install pigz
 brew install pv
-brew install rename
+# brew install rename
 # brew install rhino
-brew install speedtest_cli
-brew install ssh-copy-id
+# brew install speedtest_cli
+# brew install ssh-copy-id
 brew install tree
 brew install webkit2png
 # brew install stow
@@ -111,25 +111,25 @@ brew install yadm
 # brew install zopfli
 
 # Install everyday apps
-brew install cask
-brew cask install seil
+# brew install cask
+# brew cask install seil
 brew cask install calibre
-brew cask install iterm2
-brew cask install flux
+# brew cask install iterm2
+# brew cask install flux
 # brew cask install google-chrome
 brew cask install transmission
-brew cask install dropbox
+# brew cask install dropbox
 # brew cask install appcleaner
 brew cask install skype
-brew cask install java
+# brew cask install java
 # brew cask install vagrant
 # brew cask install slack
 # brew cask install audioscrobbler
 # brew cask install caskroom/fonts/font-hack
-brew install neovim/neovim/neovim
+brew install neovim
 
-brew tap railwaycat/emacsmacport
-brew install emacs-mac --with-gnutls --with-imagemagick --with-spacemacs-icon
+# brew tap railwaycat/emacsmacport
+# brew install emacs-mac --with-gnutls --with-imagemagick --with-spacemacs-icon
 
 
 # Remove outdated versions from the cellar.

@@ -218,3 +218,6 @@
 	snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
 [url "git@github.com:"]
 	pushInsteadOf = "git://github.com/"
+	insteadOf = "https://github.com"
+[url "git@gitlab.whiteops.com:"]
+	insteadOf = "https://gitlab.whiteops.com"
