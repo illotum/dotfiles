@@ -13,8 +13,6 @@
     usedeltabaseoffset = true
 [apply]
     whitespace = fix
-[credential]
-	helper = osxkeychain
 [transfer]
 	fsckobjects = true
 [fetch]

@@ -19,12 +19,16 @@ scriptencoding utf-8
 
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
-    Plug 'fatih/vim-go'
+    Plug 'fatih/vim-go', { 'for': 'go', 'do': 'make'}
     Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
     Plug 'jodosha/vim-godebug', { 'for': 'go', 'do': 'make'}
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
     Plug 'dag/vim-fish', { 'for': 'fish' }
     Plug 'Shougo/neco-vim', { 'for': 'vim' }
+    Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }
+    Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }
+    Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }
+    Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }
     Plug 'dleonard0/pony-vim-syntax'
     Plug 'b4b4r07/vim-hcl'
     Plug 'cespare/vim-toml'
@@ -92,7 +96,6 @@ scriptencoding utf-8
     set statusline+=%{fugitive#statusline()} " Git Hotness
     set statusline+=\ [%{strlen(&fenc)?&fenc:&enc}/%Y]            " Filetype
     set statusline+=\ [%{LinterStatus()}]
-    " set statusline+=%#goStatuslineColor#
     set statusline+=\ %{go#statusline#Show()}
     set statusline+=\ %{go#complete#GetInfo()}
     " set statusline+=%*
@@ -235,9 +238,9 @@ scriptencoding utf-8
     nnoremap <leader>ec :cclose<CR>
 " }
 " Plugins {
-    " matchit.vim {
-        let b:match_ignorecase = 1
-    " }
+
+    let b:match_ignorecase = 1
+
     " Tagbar {
         nmap <Leader>tt :TagbarOpenAutoClose<CR>
         let g:tagbar_left = 1
@@ -267,11 +270,14 @@ scriptencoding utf-8
         " Start interactive EasyAlign for a motion/text object (e.g. <Space>taip)
         nmap <Leader>xa <Plug>(EasyAlign)
     "}
-    " Ctrl-P
+    " Ctrl-P {
+        let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+        let g:ctrlp_map = 'gf'
+        let g:ctrlp_cmd = 'CtrlP'
         nnoremap <silent> <Leader>ff :Files<CR>
         nnoremap <silent> <Leader>fs :Ag<CR>
         nnoremap <silent> <Leader>bb :Buffers<CR>
-    "}
+    " }
     " Fugitive {
         nnoremap <silent> <leader>gs :Gstatus<CR>
         nnoremap <silent> <leader>gd :Gdiff<CR>
@@ -386,13 +392,7 @@ scriptencoding utf-8
         inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
         inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
       " }
-      " CtrlP {
-        let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-        let g:ctrlp_map = 'gf'
-        let g:ctrlp_cmd = 'CtrlP'
-      " }
 " }
-
 " Functions {
     " Initialize directories {
     function! InitializeDirectories()
@@ -442,4 +442,3 @@ scriptencoding utf-8
     endfunction
     " }
 " }
-
