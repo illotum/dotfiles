@@ -19,7 +19,7 @@ scriptencoding utf-8
 
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
-    Plug 'fatih/vim-go', { 'for': 'go', 'do': 'make'}
+    Plug 'fatih/vim-go'
     Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
     Plug 'jodosha/vim-godebug', { 'for': 'go', 'do': 'make'}
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
