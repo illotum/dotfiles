@@ -217,3 +217,5 @@
 [url "git@github.com:"]
 	pushInsteadOf = "git://github.com/"
 	insteadOf = "https://github.com"
+[url "git@gitlab.whiteops.com:"]
+	insteadOf = "https://gitlab.whiteops.com"
