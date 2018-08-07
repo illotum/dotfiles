@@ -1,12 +1,12 @@
 set --erase fish_greeting
 
 # Dev variables
-setenv GOPATH $HOME
-setenv ARCHFLAGS '-arch x86_64'
-setenv EDITOR vi
-setenv HOMEBREW_CASK_OPTS "--appdir=~/Applications"
+set -Ux GOPATH $HOME
+set -Ux ARCHFLAGS '-arch x86_64'
+set -Ux EDITOR vi
+set -Ux HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 
-set fish_user_paths $HOME/bin $HOME/bin/FlameGraph
+set -U fish_user_paths $HOME/bin $HOME/bin/FlameGraph > /dev/null 2> /dev/null or true
 
 source $HOME/.config/fish/private-config.fish > /dev/null 2> /dev/null or true
 source $HOME/erls/18.1.5a/activate.fish > /dev/null 2> /dev/null or true
