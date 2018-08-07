@@ -18,6 +18,7 @@ source $HOME/erls/18.1.5a/activate.fish > /dev/null 2> /dev/null or true
 alias g "git"
 alias y "yadm"
 alias vi "nvim"
+alias rgg "rg --iglob '*.go' --iglob '!vendor'"
 
 function tmux
   command tmux -2 $argv

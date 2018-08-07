@@ -12,14 +12,15 @@ scriptencoding utf-8
     Plug 'tpope/vim-surround'
     Plug 'junegunn/vim-easy-align'
     Plug 'Lokaltog/vim-easymotion'
-    Plug 'ctrlpvim/ctrlp.vim'
     Plug 'majutsushi/tagbar'
     Plug 'kopischke/vim-stay'
     Plug 'w0rp/ale'
 
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
-    Plug 'fatih/vim-go'
+    Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries'}
     Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
     Plug 'jodosha/vim-godebug', { 'for': 'go', 'do': 'make'}
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
@@ -29,10 +30,10 @@ scriptencoding utf-8
     Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }
     Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }
     Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }
-    Plug 'dleonard0/pony-vim-syntax'
-    Plug 'b4b4r07/vim-hcl'
-    Plug 'cespare/vim-toml'
-    Plug 'jasontbradshaw/pigeon.vim'
+    Plug 'dleonard0/pony-vim-syntax', { 'for': 'pony' }
+    Plug 'b4b4r07/vim-hcl', { 'for': 'hcl' }
+    Plug 'cespare/vim-toml', { 'for': 'toml' }
+    Plug 'jasontbradshaw/pigeon.vim', { 'for': 'peg' }
 
     call plug#end()
 " }
@@ -84,24 +85,24 @@ scriptencoding utf-8
     color solarized
     set title
     set tabpagemax=15               " Only show 15 tabs
-    set cursorline                  " Highlight current line
+    " set cursorline                  " Highlight current line
     highlight clear SignColumn      " SignColumn should match background
     highlight clear LineNr          " Current line number row will have same background color in relative mode
     highlight clear SpecialKey      " Whitespace should match background
     highlight clear CursorLineNr    " Remove highlight color from current line number
 
     " Broken down into easily includeable segments
-    set statusline=%<%f\                     " Filename
-    set statusline+=%w%h%m%r%q               " Options
-    set statusline+=%{fugitive#statusline()} " Git Hotness
-    set statusline+=\ [%{strlen(&fenc)?&fenc:&enc}/%Y]            " Filetype
+    set laststatus=2
+    set statusline=
+    set statusline+=%<%f\                               " Filename
+    set statusline+=%w%h%m%r%q                         " Options
+    set statusline+=%{fugitive#statusline()}           " Git Hotness
+    set statusline+=\ [%{strlen(&fenc)?&fenc:&enc}/%Y] " Filetype
     set statusline+=\ [%{LinterStatus()}]
-    set statusline+=\ %{go#statusline#Show()}
-    set statusline+=\ %{go#complete#GetInfo()}
-    " set statusline+=%*
+    set statusline+=%*
     set statusline+=%=%-14.(%l,%c%V%) "\ %p%%" Right aligned file nav info
 
-    set number                      " Line numbers on
+    set nonumber                      " Line numbers off
     " set relativenumber              " Numbers relative to current position
     set showcmd
     set showmatch                   " Show matching brackets/parenthesis
@@ -270,13 +271,43 @@ scriptencoding utf-8
         " Start interactive EasyAlign for a motion/text object (e.g. <Space>taip)
         nmap <Leader>xa <Plug>(EasyAlign)
     "}
-    " Ctrl-P {
-        let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-        let g:ctrlp_map = 'gf'
-        let g:ctrlp_cmd = 'CtrlP'
+    " FZF {
+        let g:fzf_buffers_jump = 1
+        let g:fzf_colors =
+        \ { 'fg':      ['fg', 'Normal'],
+          \ 'bg':      ['bg', 'Normal'],
+          \ 'hl':      ['fg', 'Comment'],
+          \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+          \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+          \ 'hl+':     ['fg', 'Statement'],
+          \ 'info':    ['fg', 'PreProc'],
+          \ 'border':  ['fg', 'Ignore'],
+          \ 'prompt':  ['fg', 'Conditional'],
+          \ 'pointer': ['fg', 'Exception'],
+          \ 'marker':  ['fg', 'Keyword'],
+          \ 'spinner': ['fg', 'Label'],
+          \ 'header':  ['fg', 'Comment'] }
+        let g:fzf_layout = { 'window': 'enew' }
+        let g:fzf_layout = { 'window': '-tabnew' }
+        let g:fzf_layout = { 'window': '10split enew' }
+        command! -bang -nargs=* Rg
+          \ call fzf#vim#grep(
+          \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+          \   <bang>0 ? fzf#vim#with_preview('up:60%')
+          \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+          \   <bang>0)
+        " Mapping selecting mappings
+        nmap <leader><tab> <plug>(fzf-maps-n)
+        xmap <leader><tab> <plug>(fzf-maps-x)
+        omap <leader><tab> <plug>(fzf-maps-o)
+        " fzf statuslineautocmd! FileType fzf
+        autocmd  FileType fzf set laststatus=0 noshowmode noruler
+          \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
+        nnoremap <silent> gf :History<CR>
         nnoremap <silent> <Leader>ff :Files<CR>
-        nnoremap <silent> <Leader>fs :Ag<CR>
         nnoremap <silent> <Leader>bb :Buffers<CR>
+        nnoremap <silent> <Leader>fs :Rg<CR>
     " }
     " Fugitive {
         nnoremap <silent> <leader>gs :Gstatus<CR>
@@ -305,7 +336,15 @@ scriptencoding utf-8
         let g:ale_set_quickfix = 0
         let g:ale_sign_column_always = 1
 
-        let g:ale_linters = {'go': ['gometalinter', 'gofmt']}
+        call ale#linter#Define('go', {
+            \   'name': 'revive',
+            \   'output_stream': 'both',
+            \   'executable': 'revive',
+            \   'read_buffer': 0,
+            \   'command': 'revive -config ~/.revive.toml %t',
+            \   'callback': 'ale#handlers#unix#HandleAsWarning',
+            \})
+        let g:ale_linters = {'go': ['revive']}
         let g:ale_go_gometalinter_options = '--aggregate --fast'
 
         nmap <Leader>en <Plug>(ale_previous_wrap)
@@ -319,8 +358,8 @@ scriptencoding utf-8
 
             return l:counts.total == 0 ? 'OK' : printf(
             \   '%dW %dE',
-            \   all_non_errors,
-            \   all_errors
+            \   l:all_non_errors,
+            \   l:all_errors
             \)
         endfunction
     "}
@@ -337,7 +376,7 @@ scriptencoding utf-8
 
         au FileType go set fdm=syntax
         " au FileType go nmap <leader>x <Plug>(go-run)
-        " au FileType go nmap <leader>gm :<C-u>call <SID>build_go_files()<CR>
+        au FileType go nmap <silent> <leader>m :<C-u>call <SID>build_go_files()<CR>
         " au FileType go nmap <Leader>mi <Plug>(go-info)
         au FileType go nmap <leader>t <Plug>(go-test)
         au FileType go nmap <Leader>e :GoAlternate<CR>
@@ -351,8 +390,7 @@ scriptencoding utf-8
         let g:go_highlight_operators = 0
         let g:go_highlight_build_constraints = 0
         let g:go_highlight_trailing_whitespace_error = 1
-        let g:go_echo_command_info = 0
-        let g:go_echo_go_info = 0
+        let g:go_echo_command_info = 1
         let g:go_fmt_fail_silently = 1
         let g:go_fmt_command = "goimports"
         let g:go_list_type = "quickfix"
@@ -361,6 +399,13 @@ scriptencoding utf-8
         let g:go_def_mapping_enabled = 1
         let g:go_def_reuse_buffer = 1
         let g:go_guru_scope = ["whiteops.com", "git.whiteops.com"]
+
+        function! GoStatus()
+            let l:status = exists('*go#statusline#Show') ? go#statusline#Show() : ''
+            let l:info = exists('*go#complete#Info') ? go#complete#Info(0) : ''
+            return printf('%s %s', l:status, l:info)
+        endfunction
+
     " }
     " Deoplete {
         set completeopt+=noselect
@@ -378,8 +423,8 @@ scriptencoding utf-8
         " let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
         " let g:deoplete#omni_patterns = get(g:, 'deoplete#omni_patterns', {})
         " let g:deoplete#ignore_sources.go = ['omni']
-        call deoplete#custom#set('go', 'mark', '')
-        call deoplete#custom#set('go', 'rank', 9999)
+        call deoplete#custom#source('go', 'mark', '')
+        call deoplete#custom#source('go', 'rank', 9999)
         " let g:deoplete#omni_patterns.lua = '.'
         " let g:deoplete#ignore_sources.rust = ['omni']
         " call deoplete#custom#set('racer', 'mark', '')
