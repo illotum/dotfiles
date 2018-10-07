@@ -22,6 +22,8 @@ scriptencoding utf-8
 
     Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries'}
     Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
+    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+    Plug 'sebastianmarkow/deoplete-rust', { 'for': 'rust' }
     Plug 'jodosha/vim-godebug', { 'for': 'go', 'do': 'make'}
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
     Plug 'dag/vim-fish', { 'for': 'fish' }
@@ -344,7 +346,15 @@ scriptencoding utf-8
             \   'command': 'revive -config ~/.revive.toml %t',
             \   'callback': 'ale#handlers#unix#HandleAsWarning',
             \})
-        let g:ale_linters = {'go': ['revive']}
+        call ale#linter#Define('go', {
+            \   'name': 'clippy',
+            \   'output_stream': 'both',
+            \   'executable': 'cargo',
+            \   'read_buffer': 0,
+            \   'command': 'cargo clippy',
+            \   'callback': 'ale#handlers#unix#HandleAsWarning',
+            \})
+        let g:ale_linters = {'go': ['revive'], 'rust': ['rls', 'rustfmt']}
         let g:ale_go_gometalinter_options = '--aggregate --fast'
 
         nmap <Leader>en <Plug>(ale_previous_wrap)
@@ -418,19 +428,14 @@ scriptencoding utf-8
         let g:deoplete#max_abbr_width = 0
         let g:deoplete#max_menu_width = 0
         let g:deoplete#enable_auto_delimiter = 1
+
         " init language options
         let g:deoplete#ignore_sources = get(g:,'deoplete#ignore_sources',{})
-        " let g:deoplete#omni#input_patterns = get(g:,'deoplete#omni#input_patterns',{})
-        " let g:deoplete#omni_patterns = get(g:, 'deoplete#omni_patterns', {})
-        " let g:deoplete#ignore_sources.go = ['omni']
         call deoplete#custom#source('go', 'mark', '')
         call deoplete#custom#source('go', 'rank', 9999)
-        " let g:deoplete#omni_patterns.lua = '.'
-        " let g:deoplete#ignore_sources.rust = ['omni']
-        " call deoplete#custom#set('racer', 'mark', '')
-        " call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
         let g:deoplete#ignore_sources._ = ['around']
-        " set isfname-==
+        let g:deoplete#sources#rust#racer_binary = systemlist('which racer')[0]
+        let g:deoplete#sources#rust#rust_source_path = $RUSTSRC
 
         inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
         inoremap <expr><CR>   pumvisible() ? "\<C-y>" : "\<CR>"
