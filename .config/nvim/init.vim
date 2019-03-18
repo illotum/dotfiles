@@ -1,4 +1,4 @@
-" vim: sw=4 ts=4 sts=4 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
+" vim: sw=0 ts=4 sts=-1 et tw=78 foldmarker={,} foldlevel=0 foldmethod=marker spell:
 scriptencoding utf-8
 " Components {
     call plug#begin('~/.config/nvim/plugged')
@@ -18,24 +18,13 @@ scriptencoding utf-8
 
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+    Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 
-    Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries'}
-    Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make'}
-    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-    Plug 'sebastianmarkow/deoplete-rust', { 'for': 'rust' }
-    Plug 'jodosha/vim-godebug', { 'for': 'go', 'do': 'make'}
     Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
     Plug 'dag/vim-fish', { 'for': 'fish' }
-    Plug 'Shougo/neco-vim', { 'for': 'vim' }
-    Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }
-    Plug 'vim-erlang/vim-erlang-compiler', { 'for': 'erlang' }
-    Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }
-    Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }
     Plug 'dleonard0/pony-vim-syntax', { 'for': 'pony' }
     Plug 'b4b4r07/vim-hcl', { 'for': 'hcl' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
-    Plug 'jasontbradshaw/pigeon.vim', { 'for': 'peg' }
 
     call plug#end()
 " }
@@ -45,20 +34,17 @@ scriptencoding utf-8
     set clipboard+=unnamedplus    " When possible use + register for copy-paste
     set autowrite                 " Automatically write a file when leaving a modified buffer
     set noswapfile                " Use vcs
-    set shortmess+=filmnrxoOtT    " Abbrev. of messages (avoids 'hit enter')
+    set shortmess+=filmnrxoOtTc   " Abbrev. of messages (avoids 'hit enter')
     set virtualedit=block,onemore " Allow for cursor beyond last character
     set spell                     " Spell checking on
     set hidden                    " Allow buffer switching without saving
     set visualbell
     set noerrorbells
 
-    " Instead of reverting the cursor to the last position in the buffer, we
-    " set it to the first line when editing a git commit message
-    au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
 
     " Restore cursor to file position in previous editing session
     function! ResCur()
-        if line("'\"") <= line("$")
+        if line("'\"") <= line('$')
             normal! g`"
             return 1
         endif
@@ -126,12 +112,13 @@ scriptencoding utf-8
     set foldminlines=5              " Do not hide folds shorter than 5
     set foldmethod=indent           " Default fold based on indent level
     set nolist
+    set updatetime=300
     " set list                        " Highlight problematic whitespace
     " set listchars=tab:›\ ,trail:.,extends:#,nbsp:.
 " }
 " Formatting {
     set nowrap                      " Do not wrap long lines
-    set tabstop=4                   " An indentation every four columns
+    set tabstop=2                   " An indentation every four columns
     set shiftwidth=0                " Use indents of 'tabstop' spaces
     set expandtab                   " Tabs are spaces, not tabs
     set softtabstop=-1              " Let backspace delete indent
@@ -142,10 +129,17 @@ scriptencoding utf-8
     " set colorcolumn=72
     " set textwidth=72
 
-
-    " Remove trailing whitespaces and ^M chars
-    autocmd FileType haskell,ruby,clojure,coffee,javascript autocmd BufWritePre <buffer> call StripTrailingWhitespace()
-    " autocmd FileType haskell,ruby,clojure,coffee,javascript setlocal tabstop=2 shiftwidth=2
+    augroup fileTypes
+        autocmd!
+        au FileType json syntax match Comment +\/\/.\+$+
+        au FileType go,vim setlocal tabstop=4
+        au FileType vim autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+        au FileType fzf set laststatus=0 noshowmode noruler
+          \| au BufLeave <buffer> set laststatus=2 showmode ruler
+        " Instead of reverting the cursor to the last position in the buffer, we
+        " set it to the first line when editing a git commit message
+        au FileType gitcommit au! BufEnter COMMIT_EDITMSG call setpos('.', [0, 1, 1, 0])
+    augroup end
 " }
 " Key (re)Mappings {
     let mapleader = ','
@@ -190,7 +184,7 @@ scriptencoding utf-8
     map <S-L> gt
 
     " Stupid shift key fixes
-    if has("user_commands")
+    if has('user_commands')
         command! -bang -nargs=* -complete=file E e<bang> <args>
         command! -bang -nargs=* -complete=file W w<bang> <args>
         command! -bang -nargs=* -complete=file Wq wq<bang> <args>
@@ -241,9 +235,7 @@ scriptencoding utf-8
     nnoremap <leader>ec :cclose<CR>
 " }
 " Plugins {
-
     let b:match_ignorecase = 1
-
     " Tagbar {
         nmap <Leader>tt :TagbarOpenAutoClose<CR>
         let g:tagbar_left = 1
@@ -303,9 +295,6 @@ scriptencoding utf-8
         xmap <leader><tab> <plug>(fzf-maps-x)
         omap <leader><tab> <plug>(fzf-maps-o)
         " fzf statuslineautocmd! FileType fzf
-        autocmd  FileType fzf set laststatus=0 noshowmode noruler
-          \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
         nnoremap <silent> gf :History<CR>
         nnoremap <silent> <Leader>ff :Files<CR>
         nnoremap <silent> <Leader>bb :Buffers<CR>
@@ -326,8 +315,6 @@ scriptencoding utf-8
         nnoremap <silent> <leader>gg :SignifyToggle<CR>
     "}
     " ALE {
-        " let g:neomake_python_pylint_args="--disable=C,R0903,R0904,W0232"
-        " let g:neomake_sh_shellcheck_args=['-x', '-fgcc']
         " Error and warning signs.
         let g:ale_sign_error = '⤫'
         let g:ale_sign_warning = '⚠'
@@ -337,7 +324,6 @@ scriptencoding utf-8
         let g:ale_set_loclist = 0
         let g:ale_set_quickfix = 0
         let g:ale_sign_column_always = 1
-
         call ale#linter#Define('go', {
             \   'name': 'revive',
             \   'output_stream': 'both',
@@ -346,7 +332,7 @@ scriptencoding utf-8
             \   'command': 'revive -config ~/.revive.toml %t',
             \   'callback': 'ale#handlers#unix#HandleAsWarning',
             \})
-        call ale#linter#Define('go', {
+        call ale#linter#Define('rust', {
             \   'name': 'clippy',
             \   'output_stream': 'both',
             \   'executable': 'cargo',
@@ -354,18 +340,13 @@ scriptencoding utf-8
             \   'command': 'cargo clippy',
             \   'callback': 'ale#handlers#unix#HandleAsWarning',
             \})
-        let g:ale_linters = {'go': ['revive'], 'rust': ['rls', 'rustfmt']}
-        let g:ale_go_gometalinter_options = '--aggregate --fast'
-
+        let g:ale_linters = {'go': ['revive'], 'rust': ['clippy']}
         nmap <Leader>en <Plug>(ale_previous_wrap)
         nmap <Leader>ep <Plug>(ale_next_wrap)
-
         function! LinterStatus() abort
             let l:counts = ale#statusline#Count(bufnr(''))
-
             let l:all_errors = l:counts.error + l:counts.style_error
             let l:all_non_errors = l:counts.total - l:all_errors
-
             return l:counts.total == 0 ? 'OK' : printf(
             \   '%dW %dE',
             \   l:all_non_errors,
@@ -373,75 +354,74 @@ scriptencoding utf-8
             \)
         endfunction
     "}
-    " vim-go {
-        " run :GoBuild or :GoTestCompile based on the go file
-        function! s:build_go_files()
-          let l:file = expand('%')
-          if l:file =~# '^\f\+_test\.go$'
-            call go#cmd#Test(0, 1)
-          elseif l:file =~# '^\f\+\.go$'
-            call go#cmd#Build(0)
+    " CoC {
+        inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
+        inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+        function! s:check_back_space() abort
+          let col = col('.') - 1
+            return !col || getline('.')[col - 1]  =~# '\s'
+        endfunction
+        inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+        " Use `[c` and `]c` for navigate diagnostics
+        nmap <silent> [c <Plug>(coc-diagnostic-prev)
+        nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+        " Remap keys for gotos
+        nmap <silent> gd <Plug>(coc-definition)
+        nmap <silent> gy <Plug>(coc-type-definition)
+        nmap <silent> gi <Plug>(coc-implementation)
+        nmap <silent> gr <Plug>(coc-references)
+
+        " Use K for show documentation in preview window
+        nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+        function! s:show_documentation()
+          if &filetype ==# 'vim'
+            execute 'h '.expand('<cword>')
+          else
+            call CocAction('doHover')
           endif
         endfunction
 
-        au FileType go set fdm=syntax
-        " au FileType go nmap <leader>x <Plug>(go-run)
-        au FileType go nmap <silent> <leader>m :<C-u>call <SID>build_go_files()<CR>
-        " au FileType go nmap <Leader>mi <Plug>(go-info)
-        au FileType go nmap <leader>t <Plug>(go-test)
-        au FileType go nmap <Leader>e :GoAlternate<CR>
-        au FileType go nmap <leader>c <Plug>(go-coverage-toggle)
-        au FileType go nmap <Leader>s <Plug>(go-implements)
-        au FileType go nmap <Leader>r <Plug>(go-rename)
-        au FileType go nmap <Leader>gf :GoDeclsDir<CR>
-        let g:go_highlight_functions = 0
-        let g:go_highlight_methods = 0
-        let g:go_highlight_structs = 0
-        let g:go_highlight_operators = 0
-        let g:go_highlight_build_constraints = 0
-        let g:go_highlight_trailing_whitespace_error = 1
-        let g:go_echo_command_info = 1
-        let g:go_fmt_fail_silently = 1
-        let g:go_fmt_command = "goimports"
-        let g:go_list_type = "quickfix"
-        let g:go_info_mode = 'guru'
-        let g:go_fmt_experimental = 1
-        let g:go_def_mapping_enabled = 1
-        let g:go_def_reuse_buffer = 1
-        let g:go_guru_scope = ["whiteops.com", "git.whiteops.com"]
+        " Highlight symbol under cursor on CursorHold
+        " autocmd CursorHold * silent call CocActionAsync('highlight')
 
-        function! GoStatus()
-            let l:status = exists('*go#statusline#Show') ? go#statusline#Show() : ''
-            let l:info = exists('*go#complete#Info') ? go#complete#Info(0) : ''
-            return printf('%s %s', l:status, l:info)
-        endfunction
+        " Remap for rename current word
+        nmap <leader>rn <Plug>(coc-rename)
+
+        " Remap for format selected region
+        vmap <leader>f  <Plug>(coc-format-selected)
+        nmap <leader>f  <Plug>(coc-format-selected)
+
+        augroup mygroup
+          autocmd!
+          " Setup formatexpr specified filetype(s).
+          autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+          " Update signature help on jump placeholder
+          autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+        augroup end
+
+        " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+        vmap <leader>a  <Plug>(coc-codeaction-selected)
+        nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+        " Remap for do codeAction of current line
+        nmap <leader>ac  <Plug>(coc-codeaction)
+        " Fix autofix problem of current line
+        nmap <leader>qf  <Plug>(coc-fix-current)
+
+        " Use `:Format` for format current buffer
+        command! -nargs=0 Format :call CocAction('format')
+
+        " Use `:Fold` for fold current buffer
+        command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
     " }
-    " Deoplete {
-        set completeopt+=noselect
-        " set completeopt+=longest
-        let g:deoplete#enable_at_startup = 1
-        let g:deoplete#enable_ignore_case = 1
-        let g:deoplete#enable_smart_case = 1
-        let g:deoplete#enable_camel_case = 1
-        let g:deoplete#enable_refresh_always = 1
-        let g:deoplete#max_abbr_width = 0
-        let g:deoplete#max_menu_width = 0
-        let g:deoplete#enable_auto_delimiter = 1
-
-        " init language options
-        let g:deoplete#ignore_sources = get(g:,'deoplete#ignore_sources',{})
-        call deoplete#custom#source('go', 'mark', '')
-        call deoplete#custom#source('go', 'rank', 9999)
-        let g:deoplete#ignore_sources._ = ['around']
-        let g:deoplete#sources#rust#racer_binary = systemlist('which racer')[0]
-        let g:deoplete#sources#rust#rust_source_path = $RUSTSRC
-
-        inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-        inoremap <expr><CR>   pumvisible() ? "\<C-y>" : "\<CR>"
-        inoremap <expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
-        inoremap <expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
-      " }
 " }
 " Functions {
     " Initialize directories {
@@ -461,17 +441,17 @@ scriptencoding utf-8
 
         for [dirname, settingname] in items(dir_list)
             let directory = common_dir . dirname . '/'
-            if exists("*mkdir")
+            if exists('*mkdir')
                 if !isdirectory(directory)
                     call mkdir(directory)
                 endif
             endif
             if !isdirectory(directory)
-                echo "Warning: Unable to create backup directory: " . directory
-                echo "Try: mkdir -p " . directory
+                echo 'Warning: Unable to create backup directory: ' . directory
+                echo 'Try: mkdir -p ' . directory
             else
-                let directory = substitute(directory, " ", "\\\\ ", "g")
-                exec "set " . settingname . "=" . directory
+                let directory = substitute(directory, ' ', '\\\\ ', 'g')
+                exec 'set ' . settingname . '=' . directory
             endif
         endfor
     endfunction
@@ -482,8 +462,8 @@ scriptencoding utf-8
     function! StripTrailingWhitespace()
         " Preparation: save last search, and cursor position.
         let _s=@/
-        let l = line(".")
-        let c = col(".")
+        let l = line('.')
+        let c = col('.')
         " do the business:
         %s/\s\+$//e
         " clean up: restore previous search history, and cursor position

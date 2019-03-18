@@ -1,0 +1,19 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "go", "rust"],
+  "languageserver": {
+    "golang": {
+      "command": "bingo",
+      "args": ["--diagnostics-style=instant"],
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    },
+    "efm": {
+      // npm install -g markdownlint-cli
+      // pip3 install vim-vint
+      // go get github.com/mattn/efm-langserver/cmd/efm-langserver
+      "command": "efm-langserver",
+      "args": [],
+      "filetypes": ["vim", "markdown"]
+    }
+  }
+}
