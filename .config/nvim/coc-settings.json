@@ -1,5 +1,7 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "go", "rust"],
+  "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "go", "rust", "hcl"],
+  "python.jediEnabled": false,
+  "python.formatting.provider": "black",
   "languageserver": {
     "golang": {
       "command": "bingo",
@@ -15,5 +17,5 @@
       "args": [],
       "filetypes": ["vim", "markdown"]
     }
-  }
+  },
 }

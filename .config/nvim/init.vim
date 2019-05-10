@@ -24,7 +24,9 @@ scriptencoding utf-8
     Plug 'dag/vim-fish', { 'for': 'fish' }
     Plug 'dleonard0/pony-vim-syntax', { 'for': 'pony' }
     Plug 'b4b4r07/vim-hcl', { 'for': 'hcl' }
+    Plug 'fatih/vim-hclfmt', { 'for': 'hcl' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
+    Plug 'calviken/vim-gdscript3'
 
     call plug#end()
 " }
