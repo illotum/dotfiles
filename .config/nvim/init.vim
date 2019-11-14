@@ -26,7 +26,12 @@ scriptencoding utf-8
     Plug 'b4b4r07/vim-hcl', { 'for': 'hcl' }
     Plug 'fatih/vim-hclfmt', { 'for': 'hcl' }
     Plug 'cespare/vim-toml', { 'for': 'toml' }
+    Plug 'ziglang/zig.vim', { 'for': 'zig' }
+    Plug 'mhinz/vim-mix-format', { 'for': 'elixir' }
+    Plug 'elixir-editors/vim-elixir', { 'for': 'elixir' }
+    Plug 'vim-erlang/vim-erlang-runtime', { 'for': 'erlang' }
     Plug 'calviken/vim-gdscript3'
+    Plug 'JuliaEditorSupport/julia-vim', { 'for': 'julia' }
 
     call plug#end()
 " }
@@ -135,6 +140,7 @@ scriptencoding utf-8
         autocmd!
         au FileType json syntax match Comment +\/\/.\+$+
         au FileType go,vim setlocal tabstop=4
+        " au FileType erlang setlocal tabstop=4 noexpandtab
         au FileType vim autocmd BufWritePre <buffer> call StripTrailingWhitespace()
         au FileType fzf set laststatus=0 noshowmode noruler
           \| au BufLeave <buffer> set laststatus=2 showmode ruler
@@ -238,6 +244,7 @@ scriptencoding utf-8
 " }
 " Plugins {
     let b:match_ignorecase = 1
+    let g:mix_format_on_save = 1
     " Tagbar {
         nmap <Leader>tt :TagbarOpenAutoClose<CR>
         let g:tagbar_left = 1
