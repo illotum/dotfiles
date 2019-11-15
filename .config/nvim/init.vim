@@ -43,7 +43,7 @@ scriptencoding utf-8
     set noswapfile                " Use vcs
     set shortmess+=filmnrxoOtTc   " Abbrev. of messages (avoids 'hit enter')
     set virtualedit=block,onemore " Allow for cursor beyond last character
-    set spell                     " Spell checking on
+    set nospell                   " Spell checking off
     set hidden                    " Allow buffer switching without saving
     set visualbell
     set noerrorbells
