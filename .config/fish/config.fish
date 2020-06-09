@@ -1,14 +1,16 @@
 set --erase fish_greeting
 
 # Dev variables
-set -g GOPATH $HOME/go
-set -g RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
-set -g GOBIN $HOME/bin
-set -g ARCHFLAGS '-arch x86_64'
-set -g EDITOR vi
+set -xg ARCHFLAGS '-arch x86_64'
+set -xg EDITOR vi
 set -g HOMEBREW_CASK_OPTS "--appdir=~/Applications"
+set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
+set -xg GOPRIVATE "gitlab.whiteops.com/*"
+set -xg GOROOT "/usr/local/go"
+set -xg GOBIN $HOME/bin
+set -xg CARGO_INSTALL_ROOT $HOME
 
-set -g fish_user_paths $HOME/bin $HOME/.cargo/bin $HOME/bin/FlameGraph /usr/local/opt/openssl/bin /usr/local/opt/node@10/bin $HOME/.emacs.d/bin > /dev/null 2> /dev/null or true
+set -g fish_user_paths $HOME/bin /usr/local/opt/openssl/bin > /dev/null 2> /dev/null or true
 
 source $HOME/.config/fish/private-config.fish > /dev/null 2> /dev/null or true
 
