@@ -13,6 +13,7 @@ scriptencoding utf-8
     Plug 'tpope/vim-sleuth'
     Plug 'junegunn/vim-easy-align'
     Plug 'axelf4/vim-strip-trailing-whitespace'
+    Plug 'sbdchd/neoformat'
 
     " Navigation
     Plug 'haya14busa/incsearch.vim'
@@ -22,16 +23,15 @@ scriptencoding utf-8
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
 
-    " Git TODO
+    " Git
     Plug 'tpope/vim-fugitive'
     Plug 'airblade/vim-gitgutter'
     Plug 'rhysd/git-messenger.vim', { 'on': 'GitMessenger' }
-    Plug 'salcode/vim-interactive-rebase-reverse'
 
-    " LSP TODO
+    " LSP
     Plug 'neovim/nvim-lsp'
-    Plug 'haorenw1025/completion-nvim'
-    Plug 'haorenW1025/diagnostic-nvim'
+    Plug 'nvim-lua/completion-nvim'
+    Plug 'nvim-lua/diagnostic-nvim'
 
     " Languages
     Plug 'mhinz/vim-mix-format',               { 'for': 'elixir' }
@@ -42,6 +42,7 @@ scriptencoding utf-8
     Plug 'vim-erlang/vim-erlang-omnicomplete', { 'for': 'erlang' }
     Plug 'vim-erlang/vim-erlang-compiler',     { 'for': 'erlang' }
     Plug 'georgewitteman/vim-fish',            { 'for': 'fish' }
+    Plug 'sebdah/vim-delve',                   { 'for': 'go' }
     Plug 'JuliaEditorSupport/julia-vim',       { 'for': 'julia' }
     Plug 'mtdl9/vim-log-highlighting',         { 'for': 'log' }
     Plug 'wsdjeg/vim-lua',                     { 'for': 'lua' }
@@ -125,6 +126,7 @@ scriptencoding utf-8
     set showmatch                   " Show matching brackets/parenthesis
     set hlsearch                    " Highlight search terms
     set incsearch                   " Don't wait for <cr>
+    set inccommand=nosplit          " incremental :s
     set winminheight=0              " Windows can be 0 line high
     set ignorecase                  " Case insensitive search
     set smartcase                   " Case sensitive when uc present
@@ -165,6 +167,11 @@ scriptencoding utf-8
         au FileType fzf set laststatus=0 noshowmode noruler
           \| au BufLeave <buffer> set laststatus=2 showmode ruler
     augroup end
+
+    augroup luaHighlight
+        autocmd!
+        autocmd TextYankPost * silent! lua require'vim.highlight'.on_yank()
+    augroup END
 " }
 " Key (re)Mappings {
     " let mapleader = ','
@@ -246,129 +253,140 @@ scriptencoding utf-8
 
 " }
 " Plugins {
-    let g:vim_markdown_conceal = 0
-    " WhichKey {
-        let g:mapleader = "\<Space>"
-        let g:maplocalleader = ','
-        let g:which_key_use_floating_win = 1
-        nnoremap <silent> <Leader> :<C-U>WhichKey '<Space>'<CR>
-        nnoremap <silent> <LocalLeader> :<C-U>WhichKey ','<CR>
-        highlight clear WhichKey
-        highlight clear WhichKeyDesc
-        highlight clear WhichKeySeperator
-        highlight clear WhichKeyGroup
-        highlight clear WhichKeyFloating
+        " Languages {
+            let g:vim_markdown_conceal = 0
+        "}
+        " neoformat {
+            let g:neoformat_enabled_go = ['goimports']
+            augroup fmt
+                autocmd!
+                autocmd BufWritePre * undojoin | Neoformat
+            augroup END
+        "}
+        " WhichKey {
+            let g:mapleader = "\<Space>"
+            let g:maplocalleader = ','
+            let g:which_key_use_floating_win = 1
+            nnoremap <silent> <Leader> :<C-U>WhichKey '<Space>'<CR>
+            nnoremap <silent> <LocalLeader> :<C-U>WhichKey ','<CR>
+            highlight clear WhichKey
+            highlight clear WhichKeyDesc
+            highlight clear WhichKeySeperator
+            highlight clear WhichKeyGroup
+            highlight clear WhichKeyFloating
 
-    "}
-    " vim-sneak {
-        let g:sneak#label = 1
-        let g:sneak#s_next = 1
-        let g:sneak#use_ic_scs = 0
-    "}
-    " incsearch {
-	    nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
-	    let g:incsearch#auto_nohlsearch = 1
-	    map n  <Plug>(incsearch-nohl-n)
-	    map N  <Plug>(incsearch-nohl-N)
-	    map *  <Plug>(incsearch-nohl-*)
-	    map #  <Plug>(incsearch-nohl-#)
-	    map g* <Plug>(incsearch-nohl-g*)
-	    map g# <Plug>(incsearch-nohl-g#)
-    "}
-    " EasyAlign {
-        " Start interactive EasyAlign in visual mode (e.g. vip<Space>ta)
-        xmap <Leader>ta <Plug>(EasyAlign)
-        " Start interactive EasyAlign for a motion/text object (e.g. <Space>taip)
-        nmap <Leader>ta <Plug>(EasyAlign)
-    "}
-    " FZF {
-        let g:fzf_buffers_jump = 1
-        let g:fzf_colors =
-        \ { 'fg':      ['fg', 'Normal'],
-          \ 'bg':      ['bg', 'Normal'],
-          \ 'hl':      ['fg', 'Comment'],
-          \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-          \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-          \ 'hl+':     ['fg', 'Statement'],
-          \ 'info':    ['fg', 'PreProc'],
-          \ 'border':  ['fg', 'Ignore'],
-          \ 'prompt':  ['fg', 'Conditional'],
-          \ 'pointer': ['fg', 'Exception'],
-          \ 'marker':  ['fg', 'Keyword'],
-          \ 'spinner': ['fg', 'Label'],
-          \ 'header':  ['fg', 'Comment'] }
-        let g:fzf_layout = { 'window': 'enew' }
-        let g:fzf_layout = { 'window': '-tabnew' }
-        let g:fzf_layout = { 'window': '10split enew' }
-        command! -bang -nargs=* Rg
-          \ call fzf#vim#grep(
-          \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-          \   <bang>0 ? fzf#vim#with_preview('up:60%')
-          \           : fzf#vim#with_preview('right:50%:hidden', '?'),
-          \   <bang>0)
-        " Mapping selecting mappings
-        nmap <leader><tab> <plug>(fzf-maps-n)
-        xmap <leader><tab> <plug>(fzf-maps-x)
-        omap <leader><tab> <plug>(fzf-maps-o)
-        " fzf statuslineautocmd! FileType fzf
-        nnoremap <silent> <Leader>fh :History<CR>
-        nnoremap <silent> <Leader>ff :Files<CR>
-        nnoremap <silent> <Leader>bb :Buffers<CR>
-        nnoremap <silent> <Leader>fs :Rg<CR>
-    " }
-    " Fugitive {
-        nnoremap gdh :diffget //2<CR>
-        nnoremap gdl :diffget //3<CR>
-        nnoremap <silent> <leader>gs :Gstatus<CR>
-        nnoremap <silent> <leader>gd :Gdiff<CR>
-        nnoremap <silent> <leader>gc :Gcommit<CR>
-        nnoremap <silent> <leader>gb :Gblame<CR>
-        nnoremap <silent> <leader>gl :Glog<CR>
-        nnoremap <silent> <leader>gp :Git push<CR>
-        nnoremap <silent> <leader>gr :Gread<CR>
-        nnoremap <silent> <leader>gw :Gwrite<CR>
-        nnoremap <silent> <leader>ge :Gedit<CR>
-        nnoremap <silent> <leader>gi :Git add -p %<CR>
-        nnoremap <silent> <leader>gg :SignifyToggle<CR>
-    "}
-    " completion-nvim {
-        let g:completion_auto_change_source = 1
-        set completeopt=menuone,noinsert,noselect
-        " Use <Tab> and <S-Tab> to navigate through popup menu
-        inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-        inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-        function! s:check_back_space() abort
-            let col = col('.') - 1
-            return !col || getline('.')[col - 1]  =~ '\s'
-        endfunction
+        "}
+        " vim-sneak {
+            let g:sneak#label = 1
+            let g:sneak#s_next = 1
+            let g:sneak#use_ic_scs = 0
+        "}
+        " incsearch {
+            nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
+            let g:incsearch#auto_nohlsearch = 1
+            map n  <Plug>(incsearch-nohl-n)
+            map N  <Plug>(incsearch-nohl-N)
+            map *  <Plug>(incsearch-nohl-*)
+            map #  <Plug>(incsearch-nohl-#)
+            map g* <Plug>(incsearch-nohl-g*)
+            map g# <Plug>(incsearch-nohl-g#)
+        "}
+        " EasyAlign {
+            " Start interactive EasyAlign in visual mode (e.g. vip<Space>ta)
+            xmap <Leader>ta <Plug>(EasyAlign)
+            " Start interactive EasyAlign for a motion/text object (e.g. <Space>taip)
+            nmap <Leader>ta <Plug>(EasyAlign)
+        "}
+        " FZF {
+            let g:fzf_buffers_jump = 1
+            let g:fzf_colors =
+            \ { 'fg':      ['fg', 'Normal'],
+              \ 'bg':      ['bg', 'Normal'],
+              \ 'hl':      ['fg', 'Comment'],
+              \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+              \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+              \ 'hl+':     ['fg', 'Statement'],
+              \ 'info':    ['fg', 'PreProc'],
+              \ 'border':  ['fg', 'Ignore'],
+              \ 'prompt':  ['fg', 'Conditional'],
+              \ 'pointer': ['fg', 'Exception'],
+              \ 'marker':  ['fg', 'Keyword'],
+              \ 'spinner': ['fg', 'Label'],
+              \ 'header':  ['fg', 'Comment'] }
+            let g:fzf_layout = { 'window': 'enew' }
+            let g:fzf_layout = { 'window': '-tabnew' }
+            let g:fzf_layout = { 'window': '10split enew' }
+            command! -bang -nargs=* Rg
+              \ call fzf#vim#grep(
+              \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+              \   <bang>0 ? fzf#vim#with_preview('up:60%')
+              \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+              \   <bang>0)
+            " Mapping selecting mappings
+            nmap <leader><tab> <plug>(fzf-maps-n)
+            xmap <leader><tab> <plug>(fzf-maps-x)
+            omap <leader><tab> <plug>(fzf-maps-o)
+            " fzf statuslineautocmd! FileType fzf
+            nnoremap <silent> <Leader>fh :History<CR>
+            nnoremap <silent> <Leader>ff :Files<CR>
+            nnoremap <silent> <Leader>bb :Buffers<CR>
+            nnoremap <silent> <Leader>fs :Rg<CR>
+        " }
+        " Fugitive {
+            nnoremap <silent> <leader>dh :diffget //2<CR>
+            nnoremap <silent> <leader>dl :diffget //3<CR>
+            nnoremap <silent> <leader>gs :Gstatus<CR>
+            nnoremap <silent> <leader>gd :Gvdiff!<CR>
+            nnoremap <silent> <leader>gc :Gcommit<CR>
+            nnoremap <silent> <leader>gb :Gblame<CR>
+            nnoremap <silent> <leader>gl :Glog<CR>
+            nnoremap <silent> <leader>gp :Git push<CR>
+            nnoremap <silent> <leader>gr :Gread<CR>
+            nnoremap <silent> <leader>gw :Gwrite<CR>
+            nnoremap <silent> <leader>ge :Gedit<CR>
+            nnoremap <silent> <leader>gi :Git add -p %<CR>
+            nnoremap <silent> <leader>gg :SignifyToggle<CR>
+        "}
+        " completion-nvim {
+            let g:completion_auto_change_source = 1
+            let g:completion_matching_ignore_case = 1
+            set completeopt=menuone,noinsert,noselect
+            " Use <Tab> and <S-Tab> to navigate through popup menu
+            inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+            inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+            function! s:check_back_space() abort
+                let col = col('.') - 1
+                return !col || getline('.')[col - 1]  =~ '\s'
+            endfunction
 
-        inoremap <silent><expr> <TAB>
-          \ pumvisible() ? "\<C-n>" :
-          \ <SID>check_back_space() ? "\<TAB>" :
-          \ completion#trigger_completion()
-    "}
-    " diagnostic-nvim {
-        let g:diagnostic_enable_virtual_text = 1
-        let g:diagnostic_virtual_text_prefix = ' '
-        let g:diagnostic_auto_popup_while_jump = 1
-        let g:diagnostic_insert_delay = 1
-        let g:diagnostic_show_sign = 1
-        call sign_define("LspDiagnosticsErrorSign", {"text" : "⤫", "texthl" : "LspDiagnosticsError"})
-        call sign_define("LspDiagnosticsWarningSign", {"text" : "⚠", "texthl" : "LspDiagnosticsWarning"})
-        call sign_define("LspDiagnosticInformationSign", {"text" : "I", "texthl" : "LspDiagnosticsInformation"})
-        call sign_define("LspDiagnosticHintSign", {"text" : "H", "texthl" : "LspDiagnosticsHint"})
-    "}
+            inoremap <silent><expr> <TAB>
+              \ pumvisible() ? "\<C-n>" :
+              \ <SID>check_back_space() ? "\<TAB>" :
+              \ completion#trigger_completion()
+        "}
+        " diagnostic-nvim {
+            let g:diagnostic_enable_virtual_text = 1
+            let g:diagnostic_virtual_text_prefix = ' '
+            let g:diagnostic_auto_popup_while_jump = 1
+            let g:diagnostic_insert_delay = 1
+            let g:diagnostic_show_sign = 1
+            call sign_define("LspDiagnosticsErrorSign", {"text" : "⤫", "texthl" : "LspDiagnosticsError"})
+            call sign_define("LspDiagnosticsWarningSign", {"text" : "⚠", "texthl" : "LspDiagnosticsWarning"})
+            call sign_define("LspDiagnosticInformationSign", {"text" : "I", "texthl" : "LspDiagnosticsInformation"})
+            call sign_define("LspDiagnosticHintSign", {"text" : "H", "texthl" : "LspDiagnosticsHint"})
+        "}
 " }
 
 lua <<EOF
-local on_attach_vim = function(_, bufnr)
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  require'completion'.on_attach()
-  require'diagnostic'.on_attach()
-  local opts = { noremap=true, silent=true }
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K',  '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+local on_attach_lsp = function(_, bufnr)
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    require'completion'.on_attach()
+    require'diagnostic'.on_attach()
+    local opts = { noremap=true, silent=true }
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K',  '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 end
-require'nvim_lsp'.gopls.setup{on_attach=on_attach_vim}
+require'nvim_lsp'.gopls.setup{on_attach=on_attach_lsp}
 EOF
 
