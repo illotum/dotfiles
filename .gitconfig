@@ -54,7 +54,6 @@
 [merge]
 	summary = true
 	tool = splice
-	conflictstyle = diff3
 ; [interactive]
 ; 	diffFilter = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight
 [gitflow "prefix"]
@@ -218,4 +217,6 @@
 	pushInsteadOf = "git://github.com/"
 	pushInsteadOf = "https://github.com/"
 [url "git@gitlab.whiteops.com:"]
-	insteadOf = "https://gitlab.whiteops.com"
+	insteadOf = https://gitlab.whiteops.com
+[mergetool]
+	keepBackup = false
