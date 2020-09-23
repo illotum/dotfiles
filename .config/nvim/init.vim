@@ -12,7 +12,6 @@ scriptencoding utf-8
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-sleuth'
     Plug 'junegunn/vim-easy-align'
-    Plug 'axelf4/vim-strip-trailing-whitespace'
     Plug 'sbdchd/neoformat'
 
     " Navigation
@@ -257,7 +256,8 @@ scriptencoding utf-8
             let g:vim_markdown_conceal = 0
         "}
         " neoformat {
-            let g:neoformat_enabled_go = ['goimports']
+            let g:neoformat_enabled_go = ['gofumports', 'goimports', 'gofmt']
+            let g:neoformat_basic_format_trim = 1
             augroup fmt
                 autocmd!
                 autocmd BufWritePre * undojoin | Neoformat
