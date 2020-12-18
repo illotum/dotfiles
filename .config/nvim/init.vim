@@ -5,6 +5,7 @@ scriptencoding utf-8
     " UI
     Plug 'romainl/flattened'
     Plug 'liuchengxu/vim-which-key'
+    Plug 'nvim-treesitter/nvim-treesitter'
 
     " Edit
     Plug 'tpope/vim-commentary'
@@ -28,7 +29,7 @@ scriptencoding utf-8
     Plug 'rhysd/git-messenger.vim', { 'on': 'GitMessenger' }
 
     " LSP
-    Plug 'neovim/nvim-lsp'
+    Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-lua/completion-nvim'
     Plug 'nvim-lua/diagnostic-nvim'
 
@@ -256,6 +257,9 @@ scriptencoding utf-8
             let g:vim_markdown_conceal = 0
         "}
         " neoformat {
+            let g:neoformat_enabled_typescipt = ['prettier']
+            " let g:neoformat_toml_tomlfmt = {'exe': 'toml-fmt', 'stdin': 1 }
+            " let g:neoformat_enabled_toml = ['tomlfmt']
             let g:neoformat_enabled_go = ['gofumports', 'goimports', 'gofmt']
             let g:neoformat_basic_format_trim = 1
             augroup fmt
@@ -365,28 +369,95 @@ scriptencoding utf-8
               \ completion#trigger_completion()
         "}
         " diagnostic-nvim {
-            let g:diagnostic_enable_virtual_text = 1
-            let g:diagnostic_virtual_text_prefix = ' '
-            let g:diagnostic_auto_popup_while_jump = 1
-            let g:diagnostic_insert_delay = 1
-            let g:diagnostic_show_sign = 1
-            call sign_define("LspDiagnosticsErrorSign", {"text" : "⤫", "texthl" : "LspDiagnosticsError"})
-            call sign_define("LspDiagnosticsWarningSign", {"text" : "⚠", "texthl" : "LspDiagnosticsWarning"})
-            call sign_define("LspDiagnosticInformationSign", {"text" : "I", "texthl" : "LspDiagnosticsInformation"})
-            call sign_define("LspDiagnosticHintSign", {"text" : "H", "texthl" : "LspDiagnosticsHint"})
-        "}
+        sign define LspDiagnosticsSignError text=⤫ texthl=LspDiagnosticsSignError linehl= numhl=
+        sign define LspDiagnosticsSignWarning text=⚠ texthl=LspDiagnosticsSignWarning linehl= numhl=
+        sign define LspDiagnosticsSignInformation text=I texthl=LspDiagnosticsSignInformation linehl= numhl=
+        sign define LspDiagnosticsSignHint text=H texthl=LspDiagnosticsSignHint linehl= numhl=
+
+        "    let g:diagnostic_enable_virtual_text = 1
+        "    let g:diagnostic_virtual_text_prefix = ' '
+        "    let g:diagnostic_auto_popup_while_jump = 1
+        "    let g:diagnostic_insert_delay = 1
+        "    let g:diagnostic_show_sign = 1
+        "    call sign_define("LspDiagnosticsErrorSign", {"text" : "⤫", "texthl" : "LspDiagnosticsError"})
+        "    call sign_define("LspDiagnosticsWarningSign", {"text" : "⚠", "texthl" : "LspDiagnosticsWarning"})
+        "    call sign_define("LspDiagnosticInformationSign", {"text" : "I", "texthl" : "LspDiagnosticsInformation"})
+        "    call sign_define("LspDiagnosticHintSign", {"text" : "H", "texthl" : "LspDiagnosticsHint"})
+        ""}
 " }
 
 lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {"c", "java", "python", "lua", "go", "json", "yaml", "toml", "bash", "rust"},
+  highlight = {enable = true},
+  indent = {enable = true},
+}
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    -- This will disable virtual text, like doing:
+    -- let g:diagnostic_enable_virtual_text = 0
+    virtual_text = {
+        spacing = 4,
+        prefix = ' '
+    },
+    -- This is similar to:
+    -- let g:diagnostic_show_sign = 1
+    -- To configure sign display,
+    --  see: ":help vim.lsp.diagnostic.set_signs()"
+    signs = true,
+
+    -- This is similar to:
+    -- "let g:diagnostic_insert_delay = 1"
+    update_in_insert = false,
+  }
+)
 local on_attach_lsp = function(_, bufnr)
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
     require'completion'.on_attach()
-    require'diagnostic'.on_attach()
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
     local opts = { noremap=true, silent=true }
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K',  '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    -- diag
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dn', '<cmd>lua vim.lsp.diagnostic.goto_next { wrap = false }<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dp', '<cmd>lua vim.lsp.diagnostic.goto_prev { wrap = false }<CR>', opts)
 end
-require'nvim_lsp'.gopls.setup{on_attach=on_attach_lsp}
+local lspconfig = require'lspconfig'
+local configs = require'lspconfig/configs'
+if not configs.zls then
+  configs.zls = {
+    default_config = {
+      cmd = {'/home/illotum/zls'};
+      filetypes = {'zig'};
+      root_dir = function(fname)
+        return lspconfig.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+      end;
+      settings = {};
+    };
+  }
+end
+lspconfig.zls.setup{on_attach=on_attach_lsp}
+lspconfig.gopls.setup{
+    on_attach=on_attach_lsp,
+    cmd = {"gopls", "serve"},
+    settings = {
+        gopls = {
+            allExperiments = true,
+            hoverKind = "SynopsisDocumentation",
+            usePlaceholders = true,
+            gofumpt = true,
+            analyses = {
+                unusedparams = true,
+            },
+            staticcheck = true,
+        },
+    },
+}
+lspconfig.tsserver.setup{on_attach=on_attach_lsp}
+lspconfig.jsonls.setup{on_attach=on_attach_lsp}
+lspconfig.pyls.setup{on_attach=on_attach_lsp}
+lspconfig.vimls.setup{on_attach=on_attach_lsp}
+lspconfig.sqlls.setup{on_attach=on_attach_lsp}
+lspconfig.rls.setup{on_attach=on_attach_lsp}
 EOF
 

@@ -3,7 +3,7 @@ set -g fish_user_paths $HOME/bin $HOME/.cargo/bin /usr/local/opt/openssl/bin >/d
 
 # Dev variables
 set -xg ARCHFLAGS '-arch x86_64'
-set -xg EDITOR vi
+set -xg EDITOR nvim
 set -g HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
 set -xg GOPRIVATE "gitlab.whiteops.com/*"
