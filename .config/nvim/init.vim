@@ -5,7 +5,7 @@ scriptencoding utf-8
     " UI
     Plug 'romainl/flattened'
     Plug 'liuchengxu/vim-which-key'
-    Plug 'nvim-treesitter/nvim-treesitter'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
     " Edit
     Plug 'tpope/vim-commentary'
@@ -258,9 +258,7 @@ scriptencoding utf-8
         "}
         " neoformat {
             let g:neoformat_enabled_typescipt = ['prettier']
-            " let g:neoformat_toml_tomlfmt = {'exe': 'toml-fmt', 'stdin': 1 }
-            " let g:neoformat_enabled_toml = ['tomlfmt']
-            let g:neoformat_enabled_go = ['gofumports', 'goimports', 'gofmt']
+            let g:neoformat_enabled_go = ['goimports', 'gofmt']
             let g:neoformat_basic_format_trim = 1
             augroup fmt
                 autocmd!

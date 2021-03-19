@@ -1,5 +1,5 @@
 set --erase fish_greeting
-set -g fish_user_paths $HOME/bin $HOME/.cargo/bin /usr/local/opt/openssl/bin >/dev/null 2>/dev/null or true
+set -g fish_user_paths $HOME/bin $HOME/.cargo/bin /usr/local/sbin /usr/local/opt/openssl/bin >/dev/null 2>/dev/null or true
 
 # Dev variables
 set -xg ARCHFLAGS '-arch x86_64'
@@ -7,7 +7,7 @@ set -xg EDITOR nvim
 set -g HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
 set -xg GOPRIVATE "gitlab.whiteops.com/*"
-set -xg GOROOT "/usr/local/go"
+set -xg GOROOT /usr/local/go
 set -xg GOBIN $HOME/bin
 set -xg GO111MODULE on
 set -xg CARGO_INSTALL_ROOT $HOME
@@ -16,10 +16,12 @@ set -xg CARGO_INSTALL_ROOT $HOME
 source $HOME/.config/fish/private-config.fish >/dev/null 2>/dev/null or true
 
 # Aliases
-alias g "git"
-alias y "yadm"
-alias vi "nvim"
-alias vis "vise"
+alias g git
+alias y yadm
+alias vi nvim
+alias vis vise
+alias myaws "aws --profile my"
+alias mycdk "cdk --profile my"
 alias rgg "rg --iglob '*.go' --iglob '!vendor'"
 alias tmux "tmux -2"
 alias venv "source ./env/bin/activate.fish"

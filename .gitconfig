@@ -220,3 +220,5 @@
 	insteadOf = https://gitlab.whiteops.com
 [mergetool]
 	keepBackup = false
+[init]
+	defaultBranch = main
