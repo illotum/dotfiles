@@ -4,6 +4,7 @@ tap "homebrew/cask-fonts"
 
 brew "neovim", args:["HEAD"]
 brew "git"
+brew "tree"
 brew "tree-sitter"
 brew "fish"
 brew "mdp"
