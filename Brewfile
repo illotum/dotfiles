@@ -1,0 +1,25 @@
+cask_args appdir: "~/Applications"
+
+tap "homebrew/cask-fonts"
+
+brew "neovim", args:["HEAD"]
+brew "git"
+brew "tree-sitter"
+brew "fish"
+brew "mdp"
+brew "awscli"
+brew "go"
+
+cask "font-fira-code-nerd-font"
+cask "docker"
+cask "1password"
+cask "kitty"
+cask "spotify"
+cask "telegram"
+cask "discord"
+cask "zulip"
+cask "iina"
+cask "calibre"
+cask "steam"
+cask "visual-studio-code"
+cask "transmission-remote-gui"
