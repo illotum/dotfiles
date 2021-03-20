@@ -5,7 +5,7 @@ set -g fish_user_paths $HOME/bin $HOME/.cargo/bin /usr/local/sbin /usr/local/opt
 set -xg ARCHFLAGS '-arch x86_64'
 set -xg EDITOR nvim
 set -g HOMEBREW_CASK_OPTS "--appdir=~/Applications"
-set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
+# set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src 2>/dev/null or true
 set -xg GOPRIVATE "gitlab.whiteops.com/*"
 set -xg GOROOT /usr/local/go
 set -xg GOBIN $HOME/bin
@@ -17,7 +17,7 @@ source $HOME/.config/fish/private-config.fish >/dev/null 2>/dev/null or true
 
 # Aliases
 alias g git
-alias y yadm
+alias y '/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias vi nvim
 alias vis vise
 alias myaws "aws --profile my"
