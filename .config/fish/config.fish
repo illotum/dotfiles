@@ -7,7 +7,6 @@ set -xg EDITOR nvim
 set -g HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 # set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src 2>/dev/null or true
 set -xg GOPRIVATE "gitlab.whiteops.com/*"
-set -xg GOROOT /usr/local/go
 set -xg GOBIN $HOME/bin
 set -xg GO111MODULE on
 set -xg CARGO_INSTALL_ROOT $HOME
@@ -25,6 +24,13 @@ alias mycdk "cdk --profile my"
 alias rgg "rg --iglob '*.go' --iglob '!vendor'"
 alias tmux "tmux -2"
 alias venv "source ./env/bin/activate.fish"
+
+function wav2ogg
+    for file in *.wav
+        set target (echo "$file" | cut -d'.' -f1 | tr ' ' '-').ogg
+        ffmpeg -i $file -c:a libopus -b:a 96000 -vsync 2 $target
+    end
+end
 
 # Maintain a persistent tmux session
 # if not set -q TMUX; and not set -q SSH_CONNECTION; and [ $TERM = 'xterm-256color' ]
