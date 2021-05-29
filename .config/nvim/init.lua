@@ -17,12 +17,6 @@ function smap(mode, lhs, rhs, opts)
   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
-local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
-function opt(scope, key, value)
-  scopes[scope][key] = value
-  if scope ~= 'o' then scopes['o'][key] = value end
-end
-
 function _G.dump(...)
     local objects = vim.tbl_map(vim.inspect, {...})
     print(unpack(objects))
@@ -60,49 +54,49 @@ require('packer').startup(function()
 end)
 -- }
 -- Settings {
-opt('b', 'expandtab', true)
-opt('b', 'shiftwidth', 0)
-opt('b', 'softtabstop', -1)
-opt('b', 'swapfile', false)
-opt('b', 'tabstop', 4)
-opt('b', 'textwidth', 78)
-opt('b', 'undofile', true)
-opt('o', 'autowrite', true)
-opt('o', 'clipboard', 'unnamedplus')
-opt('o', 'completeopt', 'menuone,noinsert,noselect')
-opt('o', 'cmdheight', 2)
-opt('o', 'foldlevelstart', 10)
-opt('o', 'hlsearch', true)
-opt('o', 'ignorecase', true)
-opt('o', 'inccommand', 'nosplit')
-opt('o', 'incsearch', true)
-opt('o', 'joinspaces', false)
-opt('o', 'lazyredraw', true)
-opt('o', 'listchars', [[tab:›\ ,trail:.,extends:#,nbsp:.]])
-opt('o', 'mouse', 'a')
-opt('o', 'pastetoggle', '<F3>')
-opt('o', 'scrolloff', 5)
-opt('o', 'secure', true)
-opt('o', 'shiftround', true)
-opt('o', 'sidescrolloff', 5)
-opt('o', 'smartcase', true)
-opt('o', 'splitbelow', false)
-opt('o', 'splitright', false)
-opt('o', 'switchbuf', 'useopen')
-opt('o', 'undolevels', 1000)
-opt('o', 'undoreload', 10000)
-opt('o', 'updatetime', 250)
-opt('o', 'virtualedit', 'block,onemore')
-opt('o', 'visualbell', true)
-opt('o', 'whichwrap', 'b,s,<,>,[,]')
-opt('o', 'wildmode', 'list:longest,full')
-opt('w', 'breakindent', true)
-opt('w', 'cursorline', true)
-opt('w', 'foldmethod', 'syntax')
-opt('w', 'foldminlines', 5)
-opt('w', 'foldnestmax', 2)
-opt('w', 'signcolumn', 'yes')
-opt('w', 'wrap', false)
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 0
+vim.opt.softtabstop = -1
+vim.opt.swapfile = false
+vim.opt.tabstop = 4
+vim.opt.textwidth = 78
+vim.opt.undofile = true
+vim.opt.autowrite = true
+vim.opt.clipboard = 'unnamedplus'
+vim.opt.completeopt = 'menuone,noinsert,noselect'
+vim.opt.cmdheight = 2
+vim.opt.foldlevelstart = 10
+vim.opt.hlsearch = true
+vim.opt.ignorecase = true
+vim.opt.inccommand = 'nosplit'
+vim.opt.incsearch = true
+vim.opt.joinspaces = false
+vim.opt.lazyredraw = true
+vim.opt.listchars = 'tab:›\\ ,trail:.,extends:#,nbsp:.'
+vim.opt.mouse = 'a'
+vim.opt.pastetoggle = '<F3>'
+vim.opt.scrolloff = 5
+vim.opt.secure = true
+vim.opt.shiftround = true
+vim.opt.sidescrolloff = 5
+vim.opt.smartcase = true
+vim.opt.splitbelow = false
+vim.opt.splitright = false
+vim.opt.switchbuf = 'useopen'
+vim.opt.undolevels = 1000
+vim.opt.undoreload = 10000
+vim.opt.updatetime = 250
+vim.opt.virtualedit = 'block,onemore'
+vim.opt.visualbell = true
+vim.opt.whichwrap = 'b,s,<,>,[,]'
+vim.opt.wildmode = 'list:longest,full'
+vim.opt.breakindent = true
+vim.opt.cursorline = true
+vim.opt.foldmethod = 'syntax'
+vim.opt.foldminlines = 5
+vim.opt.foldnestmax = 2
+vim.opt.signcolumn = 'yes'
+vim.opt.wrap = false
 
 g.loaded_python3_provider = 0
 g.loaded_python_provider = 0
@@ -160,7 +154,7 @@ cmd([[autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearc
 -- }
 
 -- Colors {
--- opt('o', 'termguicolors', true)
+-- vim.opt.termguicolors = true
 vim.api.nvim_exec([[
   aug custom_highlight
   au!
