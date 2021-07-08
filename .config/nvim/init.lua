@@ -25,7 +25,8 @@ end
 -- Packages {
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-  cmd('!git clone https://github.com/wbthomason/packer.nvim '.. install_path)
+  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+  cmd 'packadd packer.nvim'
 end
 cmd 'autocmd BufWritePost init.lua PackerCompile'
 
@@ -35,14 +36,14 @@ require('packer').startup(function()
   use 'romainl/flattened' -- Color scheme
   use 'tpope/vim-surround' -- Edit braces
   use 'tpope/vim-repeat' -- Better '.'
-  use 'tpope/vim-commentary' -- Switch comments with 'gc'
+  use 'b3nj5m1n/kommentary'
   use 'tpope/vim-sleuth' -- Detect tabstop
   use 'kopischke/vim-stay' -- Remember cursor pos
   use 'haya14busa/incsearch.vim'
   use 'junegunn/vim-easy-align'
   use 'liuchengxu/vim-which-key'
   use 'kosayoda/nvim-lightbulb'
-  use {'lukas-reineke/indent-blankline.nvim', branch="lua"}
+  use 'lukas-reineke/indent-blankline.nvim'
   use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'}}}
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
   use 'neovim/nvim-lspconfig'
