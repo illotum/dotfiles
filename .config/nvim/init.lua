@@ -32,29 +32,46 @@ cmd 'autocmd BufWritePost init.lua PackerCompile'
 
 local use = require('packer').use
 require('packer').startup(function()
-  use 'wbthomason/packer.nvim' -- Package manager
-  use 'romainl/flattened' -- Color scheme
-  use 'tpope/vim-surround' -- Edit braces
-  use 'tpope/vim-repeat' -- Better '.'
+  use 'wbthomason/packer.nvim'
+  use 'tpope/vim-surround'
+  use 'tpope/vim-repeat'
   use 'b3nj5m1n/kommentary'
-  use 'tpope/vim-sleuth' -- Detect tabstop
-  use 'kopischke/vim-stay' -- Remember cursor pos
+  use 'tpope/vim-sleuth'
+  use 'kopischke/vim-stay'
   use 'haya14busa/incsearch.vim'
   use 'junegunn/vim-easy-align'
   use 'liuchengxu/vim-which-key'
   use 'kosayoda/nvim-lightbulb'
   use 'lukas-reineke/indent-blankline.nvim'
-  use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}, {'kyazdani42/nvim-web-devicons'}}}
-  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
+  use {'nvim-telescope/telescope.nvim',
+    requires = {
+      {'nvim-lua/popup.nvim'},
+      {'nvim-lua/plenary.nvim'},
+      {'kyazdani42/nvim-web-devicons'}
+    }
+  }
+  use {'nvim-treesitter/nvim-treesitter',
+    branch = '0.5-compat',
+    run = ':TSUpdate'
+    }
+  use {'nvim-treesitter/nvim-treesitter-textobjects',
+    branch = '0.5-compat',
+    requires = {
+      {'nvim-treesitter/nvim-treesitter'}
+    }
+  }
   use 'neovim/nvim-lspconfig'
   use 'hrsh7th/nvim-compe'
   use 'tpope/vim-fugitive'
   use {'lewis6991/gitsigns.nvim', requires = {'nvim-lua/plenary.nvim'}}
-  use 'ishan9299/nvim-solarized-lua'
-  use 'RRethy/nvim-base16'
+  -- Colors
+  use 'romainl/flattened'
+  use 'folke/tokyonight.nvim'
+  use 'shaunsingh/nord.nvim'
 end)
 -- }
 -- Settings {
+vim.opt.termguicolors = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 0
 vim.opt.softtabstop = -1
@@ -229,7 +246,7 @@ smap('n', '<Leader>fh', [[<CMD>lua require('telescope.builtin').help_tags()<CR>]
 -- }
 -- TreeSitter {
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = {'python', 'lua', 'go', 'json', 'yaml', 'toml', 'bash'},
+  ensure_installed = {'python', 'lua', 'go', 'json', 'yaml', 'toml', 'bash', 'comment'},
   highlight = {enable = true},
   indent = {enable = true},
 }
