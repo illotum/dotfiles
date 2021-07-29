@@ -233,12 +233,29 @@ cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightb
 g.indent_blankline_char = '┊'
 g.indent_blankline_use_treesitter = true
 g.indent_blankline_filetype = {'yaml'}
-
 g.indent_blankline_buftype_exclude = { 'terminal', 'nofile'}
 g.indent_blankline_char_highlight = 'LineNr'
 -- }
 -- Telescope {
-require('telescope').setup()
+require('telescope').setup({
+  pickers = {
+    find_files = {
+      theme = "ivy",
+    },
+    live_grep = {
+      theme = "ivy",
+    },
+    tags = {
+      theme = "ivy",
+    },
+    help_tags = {
+      theme = "ivy",
+    },
+    lsp_code_actions = {
+      theme = "cursor",
+    },
+  },
+})
 smap('n', '<Leader>ff', [[<CMD>lua require('telescope.builtin').find_files()<CR>]])
 smap('n', '<Leader>fg', [[<CMD>lua require('telescope.builtin').live_grep()<CR>]])
 smap('n', '<Leader>ft', [[<CMD>lua require('telescope.builtin').tags()<CR>]])
