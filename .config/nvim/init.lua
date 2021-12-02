@@ -273,87 +273,95 @@ require'nvim-treesitter.configs'.setup {
 -- }
 -- LSP {
 local nvim_lsp = require('lspconfig')
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...)
+    vim.api.nvim_buf_set_keymap(bufnr, ...)
+  end
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
   local opts = {noremap = true, silent = true}
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<CMD>lua vim.lsp.buf.declaration()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<CMD>lua vim.lsp.buf.definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<CMD>lua vim.lsp.buf.hover()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<CMD>lua vim.lsp.buf.implementation()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<CMD>lua vim.lsp.buf.signature_help()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>wa', '<CMD>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>wr', '<CMD>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>wl', '<CMD>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>D', '<CMD>lua vim.lsp.buf.type_definition()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>rn', '<CMD>lua vim.lsp.buf.rename()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<CMD>lua vim.lsp.buf.references()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>ca', [[<CMD>lua require('telescope.builtin').lsp_code_actions()<CR>]], opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>e', '<CMD>lua vim.diagnostic.show_float()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<CMD>lua vim.diagnostic.goto_prev()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<CMD>lua vim.diagnostic.goto_next()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>q', '<CMD>lua vim.diagnostic.setloclist()<CR>', opts)
+  buf_set_keymap('n', 'gD', '<CMD>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<CMD>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<CMD>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<CMD>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<CMD>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<Leader>wa', '<CMD>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<Leader>wr', '<CMD>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<Leader>wl', '<CMD>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<Leader>D', '<CMD>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<Leader>rn', '<CMD>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<CMD>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<Leader>ca', [[<CMD>lua require('telescope.builtin').lsp_code_actions()<CR>]], opts)
+  buf_set_keymap('n', '<Leader>e', '<CMD>lua vim.diagnostic.open_float()<CR>', opts)
+  buf_set_keymap('n', '[d', '<CMD>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<CMD>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<Leader>q', '<CMD>lua vim.diagnostic.setloclist()<CR>', opts)
+  -- Gofmt and goimports on save
+  cmd [[autocmd BufWritePre *.go lua goimports(250)]]
+  -- Set some key bindings conditional on server capabilities
+  if client.resolved_capabilities.document_formatting then
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", opts)
+  end
+  if client.resolved_capabilities.document_range_formatting then
+    buf_set_keymap("x", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR><ESC>", opts)
+  end
 end
 -- Default configs:
-local servers = {}
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup { on_attach = on_attach }
-end
--- Lua
-local sumneko_root_path = fn.getenv('HOME')..'/src/lua-language-server'
-local sumneko_binary = '/bin/macOS/lua-language-server'
-nvim_lsp.sumneko_lua.setup {
-  cmd = {sumneko_root_path .. sumneko_binary, '-E', sumneko_root_path..'/main.lua' };
-  on_attach = on_attach,
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-        path = vim.split(package.path, ';'),
-      },
-      diagnostics = {
-        globals = {'vim'},
-        disable = {'lowercase-global'}
-      },
-      workspace = {
-        library = {
-          [fn.expand('$VIMRUNTIME/lua')] = true,
-          [fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+local servers = {
+  sumneko_lua = {
+    cmd = {
+      vim.fn.exepath("lua-language-server"),
+      '-E',
+      fn.getenv('HOME')..'/src/lua-language-server/main.lua',
+    },
+    settings = {
+      Lua = {
+        runtime = {
+          version = 'LuaJIT',
+          path = vim.split(package.path, ';'),
+        },
+        diagnostics = {
+          globals = {'vim'},
+          disable = {'lowercase-global'}
+        },
+        workspace = {
+          library = {
+            [fn.expand('$VIMRUNTIME/lua')] = true,
+            [fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+          },
         },
       },
     },
   },
-}
--- Zig
-local zls_binary = fn.getenv('HOME')..'/src/zls'
-nvim_lsp.zls.setup{
-  cmd = {zls_binary},
-  on_attach = on_attach,
-  filetypes = {'zig'};
-  root_dir = function(fname)
-    return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-  end;
-  settings = {};
-}
--- Go
-nvim_lsp.gopls.setup{
+  zls = {
+    cmd = {vim.fn.exepath('zls')},
+    filetypes = {'zig'};
+    root_dir = function(fname)
+      return nvim_lsp.util.find_git_ancestor(fname) or vim.loop.os_homedir()
+    end;
+    settings = {};
+  },
+  gopls = {
     cmd = {"gopls", "serve"},
-    on_attach=on_attach,
     settings = {
-        gopls = {
-            hoverKind = "SynopsisDocumentation",
-            usePlaceholders = true,
-            gofumpt = true,
-            analyses = {
-                nilness = true,
-                fieldalignment = true,
-                unusedparams = true,
-                unusedwrite = true,
-            },
-            staticcheck = true,
+      gopls = {
+        hoverKind = "SynopsisDocumentation",
+        usePlaceholders = true,
+        gofumpt = true,
+        analyses = {
+          nilness = true,
+          fieldalignment = true,
+          unusedparams = true,
+          unusedwrite = true,
         },
+        staticcheck = true,
+      },
     },
+  },
 }
-cmd [[command! Format execute 'lua vim.lsp.buf.formatting()']]
+for lsp, config in pairs(servers) do
+  config.on_attach = on_attach
+  nvim_lsp[lsp].setup(config)
+end
 -- Gofmt and goimports via LSP
 function _G.goimports(timeout_ms)
   vim.lsp.buf.formatting_sync(nil, timeout_ms) -- Format first
@@ -377,13 +385,20 @@ function _G.goimports(timeout_ms)
     vim.lsp.buf.execute_command(action)
   end
 end
-cmd 'autocmd BufWritePre *.go lua goimports(250)'
 
+-- Change diagnostic signs.
+vim.fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 
-cmd 'sign define DiagnosticSignError text= texthl=LspDiagnosticsSignError linehl= numhl='
-cmd 'sign define DiagnosticSignWarning text= texthl=LspDiagnosticsSignWarning linehl= numhl='
-cmd 'sign define DiagnosticSignInformation text= texthl=LspDiagnosticsSignInformation linehl= numhl='
-cmd 'sign define DiagnosticSignHint text= texthl=LspDiagnosticsSignHint linehl= numhl='
+-- global config for diagnostic
+vim.diagnostic.config({
+  underline = false,
+  virtual_text = false,
+  signs = true,
+  severity_sort = true,
+})
 -- }
 -- Compe {
 require'compe'.setup {
