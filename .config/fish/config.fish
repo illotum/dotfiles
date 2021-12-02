@@ -10,6 +10,8 @@ set -xg GOPRIVATE "gitlab.whiteops.com/*"
 set -xg GOBIN $HOME/bin
 set -xg GO111MODULE on
 set -xg CARGO_INSTALL_ROOT $HOME
+set -xg DOCKER_HOST_IP 127.0.0.1
+
 
 
 source $HOME/.config/fish/private-config.fish >/dev/null 2>/dev/null or true
@@ -25,12 +27,6 @@ alias rgg "rg --iglob '*.go' --iglob '!vendor'"
 alias tmux "tmux -2"
 alias venv "source ./env/bin/activate.fish"
 
-function wav2ogg
-    for file in *.wav
-        set target (echo "$file" | cut -d'.' -f1 | tr ' ' '-').ogg
-        ffmpeg -i $file -c:a libopus -b:a 96000 -vsync 2 $target
-    end
-end
 
 # Maintain a persistent tmux session
 # if not set -q TMUX; and not set -q SSH_CONNECTION; and [ $TERM = 'xterm-256color' ]
