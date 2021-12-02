@@ -60,10 +60,15 @@ require('packer').startup(function()
       {'nvim-treesitter/nvim-treesitter'}
     }
   }
+  use {'luukvbaal/stabilize.nvim',
+    config = function() require('stabilize').setup() end
+  }
   use 'neovim/nvim-lspconfig'
   use 'hrsh7th/nvim-compe'
   use 'tpope/vim-fugitive'
-  use {'lewis6991/gitsigns.nvim', requires = {'nvim-lua/plenary.nvim'}}
+  use {'lewis6991/gitsigns.nvim',
+    requires = {'nvim-lua/plenary.nvim'}
+  }
   -- Colors
   use 'romainl/flattened'
   use 'folke/tokyonight.nvim'
@@ -86,7 +91,6 @@ vim.opt.cmdheight = 2
 vim.opt.foldlevelstart = 10
 vim.opt.hlsearch = true
 vim.opt.ignorecase = true
-vim.opt.inccommand = 'nosplit'
 vim.opt.incsearch = true
 vim.opt.joinspaces = false
 vim.opt.lazyredraw = true
@@ -145,7 +149,6 @@ g.maplocalleader = ','
 map('i', '<C-u>', '<C-g>u<C-u>')  -- Make <C-u> undo-friendly
 map('i', '<C-w>', '<C-g>u<C-w>')  -- Make <C-w> undo-friendly
 map('n', '<Leader>o', 'm`o<Esc>``')  -- Insert a newline in normal mode
-map('n', 'Y', 'y$') -- Yank all
 smap('n', '<Leader>/', ':set invhlsearch<CR>')
 smap('n', '<Esc><Esc>', '<CMD>nohlsearch<CR>')
 map('v', '.', ':normal .<CR>') -- Allow using the repeat operator with a visual selection
@@ -182,19 +185,19 @@ vim.api.nvim_exec([[
   au ColorScheme * hi clear SpecialKey
   au ColorScheme * hi clear CursorLineNr
 
-  au ColorScheme * hi LspDiagnosticsDefaultError ctermfg=1 guifg=#dc322f
-  au ColorScheme * hi LspDiagnosticsDefaultInformation  ctermfg=2 guifg=#719e07 guisp=#719e07
-  au ColorScheme * hi LspDiagnosticsDefaultWarning ctermfg=3 guifg=#b58900 guisp=#b58900
-  au ColorScheme * hi LspDiagnosticsDefaultHint ctermfg=4 guifg=#2aa198
+  au ColorScheme * hi DiagnosticDefaultError ctermfg=1 guifg=#dc322f
+  au ColorScheme * hi DiagnosticDefaultInformation  ctermfg=2 guifg=#719e07 guisp=#719e07
+  au ColorScheme * hi DiagnosticDefaultWarning ctermfg=3 guifg=#b58900 guisp=#b58900
+  au ColorScheme * hi DiagnosticDefaultHint ctermfg=4 guifg=#2aa198
 
-  au ColorScheme * hi LspDiagnosticsUnderlineError cterm=undercurl gui=undercurl guisp=#dc322f
-  au ColorScheme * hi LspDiagnosticsUnderlineInformation cterm=undercurl gui=undercurl guisp=#719e07
-  au ColorScheme * hi LspDiagnosticsUnderlineWarning cterm=undercurl gui=undercurl guisp=#b58900
-  au ColorScheme * hi LspDiagnosticsUnderlineHint cterm=undercurl gui=undercurl guisp=#2aa198
+  au ColorScheme * hi DiagnosticUnderlineError cterm=undercurl gui=undercurl guisp=#dc322f
+  au ColorScheme * hi DiagnosticUnderlineInformation cterm=undercurl gui=undercurl guisp=#719e07
+  au ColorScheme * hi DiagnosticUnderlineWarning cterm=undercurl gui=undercurl guisp=#b58900
+  au ColorScheme * hi DiagnosticUnderlineHint cterm=undercurl gui=undercurl guisp=#2aa198
 
-  au colorscheme * hi link GitSignsDelete LspDiagnosticsDefaultError
-  au colorscheme * hi link GitSignsAdd    LspDiagnosticsDefaultInformation
-  au colorscheme * hi link GitSignsChange LspDiagnosticsDefaultWarning
+  au colorscheme * hi link GitSignsDelete DiagnosticDefaultError
+  au colorscheme * hi link GitSignsAdd    DiagnosticDefaultInformation
+  au colorscheme * hi link GitSignsChange DiagnosticDefaultWarning
 
   aug END
 ]], false)
@@ -285,10 +288,10 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>rn', '<CMD>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<CMD>lua vim.lsp.buf.references()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>ca', [[<CMD>lua require('telescope.builtin').lsp_code_actions()<CR>]], opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>e', '<CMD>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<CMD>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<CMD>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>q', '<CMD>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>e', '<CMD>lua vim.diagnostic.show_float()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<CMD>lua vim.diagnostic.goto_prev()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<CMD>lua vim.diagnostic.goto_next()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>q', '<CMD>lua vim.diagnostic.setloclist()<CR>', opts)
 end
 -- Default configs:
 local servers = {}
@@ -337,12 +340,14 @@ nvim_lsp.gopls.setup{
     on_attach=on_attach,
     settings = {
         gopls = {
-            allExperiments = true,
             hoverKind = "SynopsisDocumentation",
             usePlaceholders = true,
             gofumpt = true,
             analyses = {
+                nilness = true,
+                fieldalignment = true,
                 unusedparams = true,
+                unusedwrite = true,
             },
             staticcheck = true,
         },
@@ -375,10 +380,10 @@ end
 cmd 'autocmd BufWritePre *.go lua goimports(250)'
 
 
-cmd 'sign define LspDiagnosticsSignError text= texthl=LspDiagnosticsSignError linehl= numhl='
-cmd 'sign define LspDiagnosticsSignWarning text= texthl=LspDiagnosticsSignWarning linehl= numhl='
-cmd 'sign define LspDiagnosticsSignInformation text= texthl=LspDiagnosticsSignInformation linehl= numhl='
-cmd 'sign define LspDiagnosticsSignHint text= texthl=LspDiagnosticsSignHint linehl= numhl='
+cmd 'sign define DiagnosticSignError text= texthl=LspDiagnosticsSignError linehl= numhl='
+cmd 'sign define DiagnosticSignWarning text= texthl=LspDiagnosticsSignWarning linehl= numhl='
+cmd 'sign define DiagnosticSignInformation text= texthl=LspDiagnosticsSignInformation linehl= numhl='
+cmd 'sign define DiagnosticSignHint text= texthl=LspDiagnosticsSignHint linehl= numhl='
 -- }
 -- Compe {
 require'compe'.setup {
