@@ -55,7 +55,6 @@ require('packer').startup(function()
     run = ':TSUpdate'
     }
   use {'nvim-treesitter/nvim-treesitter-textobjects',
-    branch = '0.5-compat',
     requires = {
       {'nvim-treesitter/nvim-treesitter'}
     }
@@ -67,8 +66,16 @@ require('packer').startup(function()
   use 'hrsh7th/nvim-compe'
   use 'tpope/vim-fugitive'
   use {'lewis6991/gitsigns.nvim',
-    requires = {'nvim-lua/plenary.nvim'}
+    requires = {'nvim-lua/plenary.nvim'},
+    tag = 'release',
+    config = function()
+      require('gitsigns').setup()
+    end
   }
+  -- Erlang
+  use 'vim-erlang/vim-erlang-runtime'
+  use 'vim-erlang/vim-erlang-compiler'
+  use 'vim-erlang/vim-erlang-skeletons'
   -- Colors
   use 'romainl/flattened'
   use 'folke/tokyonight.nvim'
@@ -307,6 +314,7 @@ local on_attach = function(client, bufnr)
 end
 -- Default configs:
 local servers = {
+  erlangls = {},
   sumneko_lua = {
     cmd = {
       vim.fn.exepath("lua-language-server"),
@@ -476,7 +484,4 @@ smap('n', '<Leader>gw', ':Gwrite<CR>')
 smap('n', '<Leader>ge', ':Gedit<CR>')
 smap('n', '<Leader>gi', ':Git add -p %<CR>')
 smap('n', '<Leader>gg', ':SignifyToggle<CR>')
--- }
--- Gitsigns {
-require('gitsigns').setup()
 -- }
