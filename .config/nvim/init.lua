@@ -51,7 +51,6 @@ require('packer').startup(function()
     }
   }
   use {'nvim-treesitter/nvim-treesitter',
-    branch = '0.5-compat',
     run = ':TSUpdate'
     }
   use {'nvim-treesitter/nvim-treesitter-textobjects',
@@ -59,6 +58,7 @@ require('packer').startup(function()
       {'nvim-treesitter/nvim-treesitter'}
     }
   }
+  use 'nvim-treesitter/playground'
   use {'luukvbaal/stabilize.nvim',
     config = function() require('stabilize').setup() end
   }
@@ -73,17 +73,13 @@ require('packer').startup(function()
     end
   }
   -- Erlang
-  use 'vim-erlang/vim-erlang-runtime'
-  use 'vim-erlang/vim-erlang-compiler'
+  -- use 'vim-erlang/vim-erlang-compiler'
   use 'vim-erlang/vim-erlang-skeletons'
   -- Colors
-  use 'romainl/flattened'
-  use 'folke/tokyonight.nvim'
-  use 'shaunsingh/nord.nvim'
+  use 'illotum/flat.nvim'
 end)
 -- }
 -- Settings {
-vim.opt.termguicolors = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 0
 vim.opt.softtabstop = -1
@@ -121,7 +117,11 @@ vim.opt.whichwrap = 'b,s,<,>,[,]'
 vim.opt.wildmode = 'list:longest,full'
 vim.opt.breakindent = true
 vim.opt.cursorline = true
-vim.opt.foldmethod = 'syntax'
+-- TreeSitter based folding experiment:
+-- vim.opt.foldmethod = 'syntax'
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr='nvim_treesitter#foldexpr()'
+--
 vim.opt.foldminlines = 5
 vim.opt.foldnestmax = 2
 vim.opt.signcolumn = 'yes'
@@ -182,33 +182,7 @@ cmd([[autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearc
 -- }
 
 -- Colors {
--- vim.opt.termguicolors = true
-vim.api.nvim_exec([[
-  aug custom_highlight
-  au!
-
-  au ColorScheme * hi clear SignColumn
-  au ColorScheme * hi clear LineNr
-  au ColorScheme * hi clear SpecialKey
-  au ColorScheme * hi clear CursorLineNr
-
-  au ColorScheme * hi DiagnosticDefaultError ctermfg=1 guifg=#dc322f
-  au ColorScheme * hi DiagnosticDefaultInformation  ctermfg=2 guifg=#719e07 guisp=#719e07
-  au ColorScheme * hi DiagnosticDefaultWarning ctermfg=3 guifg=#b58900 guisp=#b58900
-  au ColorScheme * hi DiagnosticDefaultHint ctermfg=4 guifg=#2aa198
-
-  au ColorScheme * hi DiagnosticUnderlineError cterm=undercurl gui=undercurl guisp=#dc322f
-  au ColorScheme * hi DiagnosticUnderlineInformation cterm=undercurl gui=undercurl guisp=#719e07
-  au ColorScheme * hi DiagnosticUnderlineWarning cterm=undercurl gui=undercurl guisp=#b58900
-  au ColorScheme * hi DiagnosticUnderlineHint cterm=undercurl gui=undercurl guisp=#2aa198
-
-  au colorscheme * hi link GitSignsDelete DiagnosticDefaultError
-  au colorscheme * hi link GitSignsAdd    DiagnosticDefaultInformation
-  au colorscheme * hi link GitSignsChange DiagnosticDefaultWarning
-
-  aug END
-]], false)
-cmd 'colorscheme flattened_dark'
+cmd 'colorscheme flat'
 -- }
 -- incsearch {
     config = function()
@@ -273,9 +247,34 @@ smap('n', '<Leader>fh', [[<CMD>lua require('telescope.builtin').help_tags()<CR>]
 -- }
 -- TreeSitter {
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = {'python', 'lua', 'go', 'json', 'yaml', 'toml', 'bash', 'comment'},
-  highlight = {enable = true},
-  indent = {enable = true},
+  ensure_installed = {
+    'python',
+    'lua',
+    'go',
+    'json',
+    'yaml',
+    'toml',
+    'bash',
+    'comment',
+    'fish',
+    'erlang',
+  },
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false, -- Disable :h syntax
+  },
+  indent = {
+    enable = true,
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
 }
 -- }
 -- LSP {
