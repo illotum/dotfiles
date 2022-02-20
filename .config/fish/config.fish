@@ -1,5 +1,5 @@
 set --erase fish_greeting
-set -g fish_user_paths $HOME/bin $HOME/.cargo/bin /usr/local/sbin /usr/local/opt/openssl/bin >/dev/null 2>/dev/null or true
+set -g fish_user_paths $HOME/bin $HOME/.cargo/bin /usr/local/sbin /usr/local/opt/make/libexec/gnubin /usr/local/opt/openssl/bin >/dev/null 2>/dev/null or true
 
 # Dev variables
 set -xg ARCHFLAGS '-arch x86_64'
@@ -11,6 +11,7 @@ set -xg GOBIN $HOME/bin
 set -xg GO111MODULE on
 set -xg CARGO_INSTALL_ROOT $HOME
 set -xg DOCKER_HOST_IP 127.0.0.1
+set -xg MANPATH (manpath) /usr/local/opt/erlang/lib/erlang/man
 
 
 
