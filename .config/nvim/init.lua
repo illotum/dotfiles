@@ -90,6 +90,12 @@ vim.fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSi
 vim.fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
 vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticSignInfo" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+vim.diagnostic.config({
+  underline = false,
+  virtual_text = false,
+  signs = true,
+  severity_sort = true,
+})
 
 -- Extensions
 local function cfgTelescope()
@@ -123,6 +129,7 @@ local function cfgTelescope()
     vim.api.nvim_set_keymap('n', '<leader>so', [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
     vim.api.nvim_set_keymap('n', '<leader>?',  [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
 end
+
 local function cfgGitsigns()
     require('gitsigns').setup {
         signs = {
@@ -134,6 +141,7 @@ local function cfgGitsigns()
         },
     }
 end
+
 local function cfgTreesitter()
     require('nvim-treesitter.configs').setup {
         highlight = { enable = true },
@@ -182,6 +190,7 @@ local function cfgTreesitter()
         },
     }
 end
+
 local function cfgLSP()
     local lspconfig = require('lspconfig')
     local runtime_path = vim.split(package.path, ';')
@@ -271,52 +280,76 @@ local function cfgLSP()
         config.capabilities = capabilities
         lspconfig[lsp].setup(config)
     end
+    function _G.goimports(timeout_ms)
+        vim.lsp.buf.formatting_sync(nil, timeout_ms) -- Format first
+        local context = { source = { organizeImports = true } }
+        vim.validate { context = { context, 't', true } }
+        local params = vim.lsp.util.make_range_params()
+        params.context = context
+        local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, timeout_ms)
+        if not result or next(result) == nil then return end
+        local actions = result[1].result
+        if not actions then return end
+        local action = actions[1]
+        if action.edit or type(action.command) == 'table' then
+            if action.edit then
+                vim.lsp.util.apply_workspace_edit(action.edit)
+            end
+            if type(action.command) == 'tabl' then
+                vim.lsp.buf.execute_command(action.command)
+            end
+        else
+            vim.lsp.buf.execute_command(action)
+        end
+    end
 end
+
 local function cfgCmp()
+    local function has_words_before()
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    end
     local cmp = require('cmp')
-    local luasnip = require('luasnip')
+    local snippy = require('snippy')
     cmp.setup {
         snippet = {
             expand = function(args)
-                luasnip.lsp_expand(args.body)
+                snippy.expand_snippet(args.body)
             end,
         },
         mapping = {
-            ['<C-p>'] = cmp.mapping.select_prev_item(),
-            ['<C-n>'] = cmp.mapping.select_next_item(),
-            ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-            ['<C-f>'] = cmp.mapping.scroll_docs(4),
-            ['<C-Space>'] = cmp.mapping.complete(),
-            ['<C-e>'] = cmp.mapping.close(),
             ['<CR>'] = cmp.mapping.confirm {
                 behavior = cmp.ConfirmBehavior.Replace,
                 select = true,
             },
-            ['<Tab>'] = function(fallback)
+            ['<Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_next_item()
-                elseif luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
+                elseif snippy.can_expand_or_advance() then
+                    snippy.expand_or_advance()
+                elseif has_words_before() then
+                    cmp.complete()
                 else
                     fallback()
                 end
-            end,
-            ['<S-Tab>'] = function(fallback)
+            end, { "i", "s" }),
+            ['<S-Tab>'] = cmp.mapping(function(fallback)
                 if cmp.visible() then
                     cmp.select_prev_item()
-                elseif luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
+                elseif snippy.can_jump(-1) then
+                    snippy.previous()
                 else
                     fallback()
                 end
-            end,
+            end, { "i", "s" }),
         },
         sources = {
-            { name = 'lspconfig' },
-            { name = 'luasnip' },
+            { name = 'nvim_lsp' },
+            { name = 'snippy' },
         },
     }
 end
+
 local function cfgBlankLine()
     vim.g.indent_blankline_char = '┊'
     vim.g.indent_blankline_use_treesitter = true
@@ -324,27 +357,20 @@ local function cfgBlankLine()
     vim.g.indent_blankline_buftype_exclude = { 'terminal', 'nofile'}
     vim.g.indent_blankline_char_highlight = 'LineNr'
 end
-function _G.goimports(timeout_ms)
-    vim.lsp.buf.formatting_sync(nil, timeout_ms) -- Format first
-    local context = { source = { organizeImports = true } }
-    vim.validate { context = { context, 't', true } }
-    local params = vim.lsp.util.make_range_params()
-    params.context = context
-    local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, timeout_ms)
-    if not result or next(result) == nil then return end
-    local actions = result[1].result
-    if not actions then return end
-    local action = actions[1]
-    if action.edit or type(action.command) == 'table' then
-        if action.edit then
-            vim.lsp.util.apply_workspace_edit(action.edit)
-        end
-        if type(action.command) == 'tabl' then
-            vim.lsp.buf.execute_command(action.command)
-        end
-    else
-        vim.lsp.buf.execute_command(action)
-    end
+
+local function cfgIncSearch()
+    vim.g['incsearch#auto_nohlsearch'] = 1
+    vim.api.nvim_set_keymap('','n','<Plug>(incsearch-nohl-n)', {})
+    vim.api.nvim_set_keymap('','N','<Plug>(incsearch-nohl-N)', {})
+    vim.api.nvim_set_keymap('','*','<Plug>(incsearch-nohl-*)', {})
+    vim.api.nvim_set_keymap('','#','<Plug>(incsearch-nohl-#)', {})
+    vim.api.nvim_set_keymap('','g*','<Plug>(incsearch-nohl-g*)', {})
+    vim.api.nvim_set_keymap('','g#','<Plug>(incsearch-nohl-g#)', {})
+end
+
+local function cfgEasyAlign()
+    vim.api.nvim_set_keymap('x', '<Leader>ta', '<Plug>(EasyAlign)', {})
+    vim.api.nvim_set_keymap('n', '<Leader>ta', '<Plug>(EasyAlign)', {})
 end
 
 -- Packer
@@ -359,23 +385,26 @@ vim.cmd [[
     augroup end
 ]]
 require('packer').startup(function(use)
-    use 'haya14busa/incsearch.vim'
     use 'illotum/flat.nvim'
-    use 'nvim-treesitter/nvim-treesitter-textobjects'
-    use 'romainl/flattened'
     use 'tpope/vim-fugitive'
     use 'tpope/vim-repeat'
     use 'tpope/vim-surround'
     use 'wbthomason/packer.nvim'
     use 'zhimsel/vim-stay'
-    use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgTelescope }
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', config = cfgTreesitter }
-    use { 'hrsh7th/nvim-cmp', config = cfgCmp }
-    use { 'L3MON4D3/LuaSnip', requires = { 'saadparwaiz1/cmp_luasnip' }, configure = function() require('luasnip') end }
-    use { 'neovim/nvim-lspconfig', requires = { 'hrsh7th/cmp-nvim-lsp' }, config = cfgLSP }
+    use 'dcampos/nvim-snippy'
+    use 'honza/vim-snippets'
+    use { 'dcampos/cmp-snippy', requires = { 'dcampos/nvim-snippy' } }
+    use { 'haya14busa/incsearch.vim', config = cfgIncSearch }
+    use { 'hrsh7th/cmp-nvim-lsp', requires = 'neovim/nvim-lspconfig' }
+    use { 'hrsh7th/nvim-cmp', requires = { 'dcampos/cmp-snippy' }, config = cfgCmp }
+    use { 'junegunn/vim-easy-align', config = cfgEasyAlign }
     use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, tag = 'release', config = cfgGitsigns }
     use { 'lukas-reineke/indent-blankline.nvim', config = cfgBlankLine }
     use { 'luukvbaal/stabilize.nvim', config = function() require('stabilize').setup() end }
+    use { 'neovim/nvim-lspconfig', config = cfgLSP }
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
+    use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgTelescope }
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', config = cfgTreesitter }
+    use { 'nvim-treesitter/nvim-treesitter-textobjects', requires = { 'nvim-treesitter/nvim-treesitter' } }
 end)
 
