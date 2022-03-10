@@ -1,6 +1,6 @@
 [user]
-	name = Alex V
-	email = alex.valiushko@whiteops.com
+	name = Alex Valiushko
+	email = valiushk@amazon.com
 [github]
 	user = illotum
 [core]
@@ -216,8 +216,6 @@
 [url "git@github.com:"]
 	pushInsteadOf = "git://github.com/"
 	pushInsteadOf = "https://github.com/"
-[url "git@gitlab.whiteops.com:"]
-	insteadOf = https://gitlab.whiteops.com
 [mergetool]
 	keepBackup = false
 [init]

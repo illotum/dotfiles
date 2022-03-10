@@ -1,5 +1,5 @@
 set --erase fish_greeting
-set -g fish_user_paths $HOME/bin $HOME/.cargo/bin /usr/local/sbin /usr/local/opt/make/libexec/gnubin /usr/local/opt/openssl/bin >/dev/null 2>/dev/null or true
+set -g fish_user_paths $HOME/.toolbox/bin $HOME/bin $HOME/.cargo/bin /usr/local/sbin /usr/local/opt/make/libexec/gnubin /usr/local/opt/openssl/bin >/dev/null 2>/dev/null or true
 
 # Dev variables
 set -xg ARCHFLAGS '-arch x86_64'
@@ -27,6 +27,7 @@ alias mycdk "cdk --profile my"
 alias rgg "rg --iglob '*.go' --iglob '!vendor'"
 alias tmux "tmux -2"
 alias venv "source ./env/bin/activate.fish"
+alias y '/usr/bin/git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME'
 
 
 # Maintain a persistent tmux session

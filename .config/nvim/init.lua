@@ -1,4 +1,16 @@
 -- vim: et
+-- Bootstrap
+local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+end
+vim.cmd [[
+    augroup Packer
+        autocmd!
+        autocmd BufWritePost init.lua PackerCompile
+    augroup end
+]]
+
 -- Settings
 vim.cmd [[colorscheme flat]]
 vim.g.loaded_node_provider = 0
@@ -144,6 +156,20 @@ end
 
 local function cfgTreesitter()
     require('nvim-treesitter.configs').setup {
+        ensure_installed = {
+            'lua',
+            'markdown',
+            'erlang',
+            'java',
+            'yaml',
+            'json',
+            'toml',
+            'ruby',
+            'go',
+            'fish',
+            'bash',
+            'sh',
+        },
         highlight = { enable = true },
         indent = { enable = true },
         incremental_selection = {
@@ -374,16 +400,6 @@ local function cfgEasyAlign()
 end
 
 -- Packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-end
-vim.cmd [[
-    augroup Packer
-        autocmd!
-        autocmd BufWritePost init.lua PackerCompile
-    augroup end
-]]
 require('packer').startup(function(use)
     use 'illotum/flat.nvim'
     use 'tpope/vim-fugitive'
@@ -405,6 +421,5 @@ require('packer').startup(function(use)
     use { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end }
     use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgTelescope }
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', config = cfgTreesitter }
-    use { 'nvim-treesitter/nvim-treesitter-textobjects', requires = { 'nvim-treesitter/nvim-treesitter' } }
+    use { 'nvim-treesitter/nvim-treesitter-textobjects' }
 end)
-
