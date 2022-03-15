@@ -168,7 +168,6 @@ local function cfgTreesitter()
             'go',
             'fish',
             'bash',
-            'sh',
         },
         highlight = { enable = true },
         indent = { enable = true },
