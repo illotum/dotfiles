@@ -12,7 +12,10 @@ set -xg GO111MODULE on
 set -xg CARGO_INSTALL_ROOT $HOME
 set -xg DOCKER_HOST_IP 127.0.0.1
 set -xg MANPATH (manpath) /usr/local/opt/erlang/lib/erlang/man
+set -xg NVM_DIR "$HOME/.nvm"
 
+# NVM
+load_nvm
 
 
 source $HOME/.config/fish/private-config.fish >/dev/null 2>/dev/null or true
