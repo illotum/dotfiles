@@ -11,11 +11,12 @@ set -xg GOBIN $HOME/bin
 set -xg GO111MODULE on
 set -xg CARGO_INSTALL_ROOT $HOME
 set -xg DOCKER_HOST_IP 127.0.0.1
-set -xg MANPATH (manpath) /usr/local/opt/erlang/lib/erlang/man
+# set -xg MANPATH (manpath) /usr/local/opt/erlang/lib/erlang/man
 set -xg NVM_DIR "$HOME/.nvm"
+set -xg JAVA_HOME (/usr/libexec/java_home)
 
 # NVM
-load_nvm
+# load_nvm
 
 
 source $HOME/.config/fish/private-config.fish >/dev/null 2>/dev/null or true
@@ -32,6 +33,13 @@ alias tmux "tmux -2"
 alias venv "source ./env/bin/activate.fish"
 alias y '/usr/bin/git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME'
 
+# Brazil Build
+alias bb "brazil-build"
+alias bbb "brazil-recursive-cmd --allPackages brazil-build"
+alias bws "brazil ws"
+alias bp "brazil setup platform-support"
+alias bpl "brazil setup platform-support --mode legacy"
+alias bbsd "bb sam-deploy"
 
 # Maintain a persistent tmux session
 # if not set -q TMUX; and not set -q SSH_CONNECTION; and [ $TERM = 'xterm-256color' ]
