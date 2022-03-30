@@ -1,12 +1,17 @@
 set --erase fish_greeting
-set -g fish_user_paths $HOME/.toolbox/bin $HOME/bin $HOME/.cargo/bin /usr/local/sbin /usr/local/opt/make/libexec/gnubin /usr/local/opt/openssl/bin >/dev/null 2>/dev/null or true
+fish_add_path /usr/local/opt/make/libexec/gnubin
+fish_add_path /usr/local/opt/openssl/bin
+fish_add_path /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/bin/
+fish_add_path $HOME/.cargo/bin
+fish_add_path $HOME/.toolbox/bin
+fish_add_path $HOME/bin
 
 # Dev variables
 set -xg ARCHFLAGS '-arch x86_64'
 set -xg EDITOR nvim
 set -g HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 # set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src 2>/dev/null or true
-set -xg GOPRIVATE "gitlab.whiteops.com/*"
+set -xg GOPRIVATE "*"
 set -xg GOBIN $HOME/bin
 set -xg GO111MODULE on
 set -xg CARGO_INSTALL_ROOT $HOME
