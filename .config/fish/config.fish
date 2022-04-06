@@ -1,7 +1,14 @@
 set --erase fish_greeting
+
+if test -f /usr/libexec/java_home
+	set -xU JAVA_HOME (/usr/libexec/java_home)
+	fish_add_path $JAVA_HOME/bin
+end
 fish_add_path /usr/local/opt/make/libexec/gnubin
 fish_add_path /usr/local/opt/openssl/bin
-fish_add_path /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/bin/
+# fish_add_path /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/bin/
+fish_add_path /usr/local/opt/rabbitmq/sbin/
+fish_add_path /usr/local/opt/make/libexec/gnubin
 fish_add_path $HOME/.cargo/bin
 fish_add_path $HOME/.toolbox/bin
 fish_add_path $HOME/bin
@@ -9,22 +16,16 @@ fish_add_path $HOME/bin
 # Dev variables
 set -xg ARCHFLAGS '-arch x86_64'
 set -xg EDITOR nvim
-set -g HOMEBREW_CASK_OPTS "--appdir=~/Applications"
-# set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src 2>/dev/null or true
+set -xg HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 set -xg GOPRIVATE "*"
 set -xg GOBIN $HOME/bin
-set -xg GO111MODULE on
-set -xg CARGO_INSTALL_ROOT $HOME
 set -xg DOCKER_HOST_IP 127.0.0.1
-# set -xg MANPATH (manpath) /usr/local/opt/erlang/lib/erlang/man
 set -xg NVM_DIR "$HOME/.nvm"
-set -xg JAVA_HOME (/usr/libexec/java_home)
 
-# NVM
-# load_nvm
-
-
-source $HOME/.config/fish/private-config.fish >/dev/null 2>/dev/null or true
+if command -v rustc >/dev/null
+	set -xg RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
+	set -xg CARGO_INSTALL_ROOT $HOME
+end
 
 # Aliases
 alias g git
@@ -33,10 +34,12 @@ alias vi nvim
 alias vis vise
 alias myaws "aws --profile my"
 alias mycdk "cdk --profile my"
-alias rgg "rg --iglob '*.go' --iglob '!vendor'"
+alias rgg "rg --iglob '*.go' --iglob '!vendor/**'"
+alias rs "rg -g '!**/build/**' -g '!**/env/**' -g '!**/node_modules/**' -g '!**/site-packages/**' -g '!**/release-info/**'"
+alias fs "find -type d \( -path '*/release-info/*' -o -path '*/build/*' -o -path '*/env/*' -o -path '*/node_modules/*' -o -path '*/site-packages/*' \) -prune -o"
 alias tmux "tmux -2"
 alias venv "source ./env/bin/activate.fish"
-alias y '/usr/bin/git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME'
+alias y "/usr/bin/git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME"
 
 # Brazil Build
 alias bb "brazil-build"
@@ -57,3 +60,12 @@ alias bbsd "bb sam-deploy"
 #     end
 #     exec tmux attach-session
 # end
+
+if test -f $HOME/.config/fish/private-config.fish
+	source $HOME/.config/fish/private-config.fish
+end
+
+set brew_asdf_path (brew --prefix asdf)
+if test -f $brew_asdf_path/libexec/asdf.fish
+	source $brew_asdf_path/libexec/asdf.fish
+end
