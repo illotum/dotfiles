@@ -1,5 +1,6 @@
 fish_add_path $HOME/.rodar/bin
 fish_add_path $HOME/.toolbox/bin
+fish_add_path /apollo/env/AmazonMqOpsToolsConsumable/bin/
 # fish_add_path /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home/bin/
 
 alias bb "brazil-build"
