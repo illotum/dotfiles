@@ -3,6 +3,7 @@ test (uname) = "Darwin"; or return
 set -U HOMEBREW_CASK_OPTS "--appdir=~/Applications"
 
 fish_add_path /usr/local/opt/make/libexec/gnubin
+fish_add_path /usr/local/opt/findutils/libexec/gnubin
 fish_add_path /usr/local/opt/openssl/bin
 
 set brew_asdf_path (brew --prefix asdf)
