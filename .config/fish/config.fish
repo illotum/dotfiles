@@ -15,3 +15,5 @@ alias rs "rg -g '!**/build/**' -g '!**/env/**' -g '!**/node_modules/**' -g '!**/
 alias fs "find -type d \( -path '*/release-info/*' -o -path '*/build/*' -o -path '*/env/*' -o -path '*/node_modules/*' -o -path '*/site-packages/*' \) -prune -o"
 
 alias rge "rg -g '!**/test/**' -g '!**/examples/**' -g '**/src/**' -g '**/include/**' -g '!*SUITE*' -g '*.erl' -g '*.hrl'"
+
+alias bazel bazelisk
