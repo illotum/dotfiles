@@ -21,15 +21,15 @@ local function cfgTelescope()
             },
         }
     }
-    vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').buffers()<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>ff', [[<cmd>lua require('telescope.builtin').find_files({previewer = false})<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>fb', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>fh', [[<cmd>lua require('telescope.builtin').help_tags()<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>ft', [[<cmd>lua require('telescope.builtin').tags()<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>fd', [[<cmd>lua require('telescope.builtin').grep_string()<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>fp', [[<cmd>lua require('telescope.builtin').live_grep()<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>fo', [[<cmd>lua require('telescope.builtin').tags{ only_current_buffer = true }<CR>]], { noremap = true, silent = true })
-    vim.api.nvim_set_keymap('n', '<leader>?',  [[<cmd>lua require('telescope.builtin').oldfiles()<CR>]], { noremap = true, silent = true })
+    local builtin = require('telescope.builtin')
+    vim.keymap.set('n', '<leader><space>', '', { callback = builtin.buffers })
+    vim.keymap.set('n', '<leader>ff',      '', { callback = builtin.find_files })
+    vim.keymap.set('n', '<leader>fb',      '', { callback = builtin.current_buffer_fuzzy_find })
+    vim.keymap.set('n', '<leader>fh',      '', { callback = builtin.help_tags })
+    vim.keymap.set('n', '<leader>ft',      '', { callback = builtin.tags })
+    vim.keymap.set('n', '<leader>fd',      '', { callback = builtin.grep_string })
+    vim.keymap.set('n', '<leader>fp',      '', { callback = builtin.live_grep })
+    vim.keymap.set('n', '<leader>?',       '', { callback = builtin.oldfiles })
 end
 
 local function cfgGitsigns()
@@ -175,12 +175,12 @@ end
 
 local function cfgIncSearch()
     vim.g['incsearch#auto_nohlsearch'] = 1
-    vim.api.nvim_set_keymap('','n','<Plug>(incsearch-nohl-n)', {})
-    vim.api.nvim_set_keymap('','N','<Plug>(incsearch-nohl-N)', {})
-    vim.api.nvim_set_keymap('','*','<Plug>(incsearch-nohl-*)', {})
-    vim.api.nvim_set_keymap('','#','<Plug>(incsearch-nohl-#)', {})
-    vim.api.nvim_set_keymap('','g*','<Plug>(incsearch-nohl-g*)', {})
-    vim.api.nvim_set_keymap('','g#','<Plug>(incsearch-nohl-g#)', {})
+    vim.keymap.set('','n','<Plug>(incsearch-nohl-n)')
+    vim.keymap.set('','N','<Plug>(incsearch-nohl-N)')
+    vim.keymap.set('','*','<Plug>(incsearch-nohl-*)')
+    vim.keymap.set('','#','<Plug>(incsearch-nohl-#)')
+    vim.keymap.set('','g*','<Plug>(incsearch-nohl-g*)')
+    vim.keymap.set('','g#','<Plug>(incsearch-nohl-g#)')
 end
 
 local function cfgRest()
@@ -232,29 +232,29 @@ local function cfgLSP()
         end
     end
     local on_attach = function(client, bufnr)
-        local opts = { noremap = true, silent = true }
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<Leader>fa', [[<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>]], opts)
-        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>fo', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
+        local telescope_builtin = require('telescope.builtin')
+        vim.keymap.set('n', 'gD',         '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.declaration } )
+        vim.keymap.set('n', 'gd',         '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.definition } )
+        vim.keymap.set('n', 'K',          '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.hover })
+        vim.keymap.set('n', 'gi',         '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.implementation })
+        vim.keymap.set('n', '<C-k>',      '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.signature_help })
+        vim.keymap.set('n', '<leader>wa', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.add_workspace_folder })
+        vim.keymap.set('n', '<leader>wr', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.remove_workspace_folder })
+        vim.keymap.set('n', '<leader>wl', '', { silent = true, buffer = bufnr, callback = function () print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end })
+        vim.keymap.set('n', '<leader>rn', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.rename })
+        vim.keymap.set('n', 'gr',         '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.references })
+        vim.keymap.set('n', '<leader>ca', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.code_action })
+        vim.keymap.set('n', '<Leader>fa', '', { silent = true, buffer = bufnr, callback = telescope_builtin.lsp_code_actions })
+        vim.keymap.set('n', '<leader>fo', '', { silent = true, buffer = bufnr, callback = telescope_builtin.lsp_document_symbols })
         if client.resolved_capabilities.type_definition then
-            vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+            vim.keymap.set('n', '<leader>D', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.type_definition })
         end
         if client.resolved_capabilities.document_formatting then
-            vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>f", "<cmd>lua vim.lsp.buf.formatting_sync()<CR>", opts)
+            vim.keymap.set("n", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.formatting_sync })
             vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
         end
         if client.resolved_capabilities.document_range_formatting then
-            vim.api.nvim_buf_set_keymap(bufnr, "x", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR><ESC>", opts)
+            vim.keymap.set("x", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.range_formatting })
         end
         vim.cmd [[
             augroup GoImportsOnSave
@@ -315,8 +315,8 @@ local function cfgLSP()
 end
 
 local function cfgEasyAlign()
-    vim.api.nvim_set_keymap('x', '<Leader>ta', '<Plug>(EasyAlign)', {})
-    vim.api.nvim_set_keymap('n', '<Leader>ta', '<Plug>(EasyAlign)', {})
+    vim.keymap.set('x', '<Leader>ta', '<Plug>(EasyAlign)')
+    vim.keymap.set('n', '<Leader>ta', '<Plug>(EasyAlign)')
 end
 
 -- Packer
@@ -331,13 +331,13 @@ vim.cmd [[
     augroup end
 ]]
 
+-- Install Packages
 require('packer').startup(function(use)
     use {
         'Glench/Vim-Jinja2-Syntax',
         'dcampos/cmp-snippy',
         'dcampos/nvim-snippy',
         'honza/vim-snippets',
-        -- 'hrsh7th/cmp-nvim-lsp',
         'illotum/flat.nvim',
         'nvim-treesitter/nvim-treesitter-textobjects',
         'tpope/vim-fugitive',
@@ -356,7 +356,6 @@ require('packer').startup(function(use)
         { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end },
         { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgTelescope },
         { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', config = cfgTreesitter },
-        -- 'williamboman/nvim-lsp-installer',
     }
 end)
 
@@ -399,36 +398,35 @@ vim.opt.wildmode = 'list:longest,full'
 vim.opt.wrap = false
 
 --Remap space as leader key
-vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 --Remap for dealing with word wrap
-vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap = true, expr = true, silent = true })
-vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { noremap = true, expr = true, silent = true })
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Easy paste multiple lines
-vim.api.nvim_set_keymap('n', 'p', 'p`]', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', 'p', 'p`]', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', 'y', 'y`]', { noremap = true, silent = true })
+vim.keymap.set('n', 'p', 'p`]', { silent = true })
+vim.keymap.set('v', 'p', 'p`]', { silent = true })
+vim.keymap.set('v', 'y', 'y`]', { silent = true })
 
 -- Easier horizontal scrolling
-vim.api.nvim_set_keymap('', 'zl', 'zL', { noremap = true })
-vim.api.nvim_set_keymap('', 'zh', 'zH', { noremap = true })
+vim.keymap.set('', 'zl', 'zL')
+vim.keymap.set('', 'zh', 'zH')
 
 -- Allow using the repeat operator with a visual selection
-vim.api.nvim_set_keymap('v', '.', ':normal .<CR>', { noremap = true })
+vim.keymap.set('v', '.', ':normal .<CR>')
 
 -- Toggle search highlight
-vim.api.nvim_set_keymap('n', '<Leader>/', ':set invhlsearch<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Esc><Esc>', '<CMD>nohlsearch<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<Leader>/', ':set invhlsearch<CR>', { silent = true })
+vim.keymap.set('n', '<Esc><Esc>', '<CMD>nohlsearch<CR>', { silent = true })
 
 -- Insert a newline in normal mode
-vim.api.nvim_set_keymap('n', '<Leader>o', 'm`o<Esc>``', { noremap = true })
+vim.keymap.set('n', '<Leader>o', 'm`o<Esc>``')
 
 -- Visual shifting (does not exit Visual mode)
-vim.api.nvim_set_keymap('v', '<', '<gv', { noremap = true })
-vim.api.nvim_set_keymap('v', '>', '>gv', { noremap = true })
+vim.keymap.set('v', '<', '<gv')
+vim.keymap.set('v', '>', '>gv')
 
 -- Clipboard yank
 -- map('', '<Leader>y', '"+y')
@@ -442,15 +440,15 @@ vim.cmd [[
     augroup end
 ]]
 -- QF
-vim.api.nvim_set_keymap('n', '[q', ':cprev<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', ']q', ':cnext<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>q', ':cclose<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '[q', ':cprev<CR>', { silent = true })
+vim.keymap.set('n', ']q', ':cnext<CR>', { silent = true })
+vim.keymap.set('n', '<leader>q', ':cclose<CR>', { silent = true })
 
 -- Diagnostics
-vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>d', '<cmd>lua vim.diagnostic.setloclist()<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>e', '', { silent = true, callback = vim.diagnostic.open_float })
+vim.keymap.set('n', '[d', '', { silent = true, callback = vim.diagnostic.goto_prev})
+vim.keymap.set('n', ']d', '', { silent = true, callback = vim.diagnostic.goto_next })
+vim.keymap.set('n', '<leader>d', '', { silent = true, callback = vim.diagnostic.setloclist })
 vim.fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
 vim.fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticSignInfo" })
