@@ -208,7 +208,7 @@ local function cfgRest()
     })
 end
 
-local function cfgLspInstall()
+local function cfgLSP()
     function _G.goimports(timeout_ms)
         vim.lsp.buf.formatting_sync(nil, timeout_ms) -- Format first
         local context = { source = { organizeImports = true } }
@@ -303,22 +303,15 @@ local function cfgLspInstall()
         yamlls = {},
         zls = {},
     }
-    local lsp_installer = require("nvim-lsp-installer")
-    for name, _ in pairs(servers) do
-        local server_is_found, server = lsp_installer.get_server(name)
-        if server_is_found and not server:is_installed() then
-            print("Installing " .. name)
-            server:install()
-        end
-    end
-    lsp_installer.on_server_ready(function(server)
-        local opts = {
+    require("nvim-lsp-installer").setup {} -- Server locator hook
+    local lspconfig = require("lspconfig")
+    for name, settings in pairs(servers) do
+        lspconfig[name].setup {
             on_attach = on_attach,
             capabilities = capabilities,
-            settings = servers[server.name],
+            settings = settings,
         }
-        server:setup(opts)
-    end)
+    end
 end
 
 local function cfgEasyAlign()
@@ -344,15 +337,15 @@ require('packer').startup(function(use)
         'dcampos/cmp-snippy',
         'dcampos/nvim-snippy',
         'honza/vim-snippets',
-        'hrsh7th/cmp-nvim-lsp',
+        -- 'hrsh7th/cmp-nvim-lsp',
         'illotum/flat.nvim',
-        'neovim/nvim-lspconfig',
         'nvim-treesitter/nvim-treesitter-textobjects',
         'tpope/vim-fugitive',
         'tpope/vim-repeat',
         'tpope/vim-surround',
         'wbthomason/packer.nvim',
         'zhimsel/vim-stay',
+        { 'neovim/nvim-lspconfig', requires = { 'williamboman/nvim-lsp-installer', 'hrsh7th/cmp-nvim-lsp' }, config = cfgLSP },
         { 'NTBBloodbath/rest.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgRest },
         { 'haya14busa/incsearch.vim', config = cfgIncSearch },
         { 'hrsh7th/nvim-cmp', config = cfgCmp },
@@ -363,7 +356,7 @@ require('packer').startup(function(use)
         { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end },
         { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgTelescope },
         { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate', config = cfgTreesitter },
-        { 'williamboman/nvim-lsp-installer', config = cfgLspInstall },
+        -- 'williamboman/nvim-lsp-installer',
     }
 end)
 
