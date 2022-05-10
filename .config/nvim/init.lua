@@ -209,7 +209,7 @@ local function cfgRest()
 end
 
 local function cfgLSP()
-    function _G.goimports(timeout_ms)
+    local function goimports(timeout_ms)
         vim.lsp.buf.formatting_sync(nil, timeout_ms) -- Format first
         local context = { source = { organizeImports = true } }
         vim.validate { context = { context, 't', true } }
@@ -231,6 +231,7 @@ local function cfgLSP()
             vim.lsp.buf.execute_command(action)
         end
     end
+    vim.api.nvim_create_autocmd("BufWritePre", { pattern = "*.go", callback = function() goimports(250) end })
     local on_attach = function(client, bufnr)
         local telescope_builtin = require('telescope.builtin')
         vim.keymap.set('n', 'gD',         '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.declaration } )
@@ -256,12 +257,6 @@ local function cfgLSP()
         if client.resolved_capabilities.document_range_formatting then
             vim.keymap.set("x", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.range_formatting })
         end
-        vim.cmd [[
-            augroup GoImportsOnSave
-            autocmd!
-            autocmd BufWritePre *.go lua goimports(250)
-            augroup end
-        ]]
     end
     -- nvim-cmp supports additional completion capabilities
     local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -324,12 +319,7 @@ local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nv
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
 end
-vim.cmd [[
-    augroup Packer
-        autocmd!
-        autocmd BufWritePost init.lua PackerCompile
-    augroup end
-]]
+vim.api.nvim_create_autocmd("BufWritePost", { pattern = "init.lua", command = "PackerCompile" })
 
 -- Install Packages
 require('packer').startup(function(use)
@@ -433,12 +423,8 @@ vim.keymap.set('v', '>', '>gv')
 -- map('', '<Leader>p', '"+p')
 
 -- Highlight on yank
-vim.cmd [[
-    augroup YankHighlight
-        autocmd!
-        autocmd TextYankPost * silent! lua vim.highlight.on_yank()
-    augroup end
-]]
+vim.api.nvim_create_autocmd("TextYankPost", { callback = function() vim.highlight.on_yank() end })
+
 -- QF
 vim.keymap.set('n', '[q', ':cprev<CR>', { silent = true })
 vim.keymap.set('n', ']q', ':cnext<CR>', { silent = true })
