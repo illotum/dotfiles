@@ -252,7 +252,6 @@ local function cfgLSP()
         end
         if client.resolved_capabilities.document_formatting then
             vim.keymap.set("n", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.formatting_sync })
-            vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
         end
         if client.resolved_capabilities.document_range_formatting then
             vim.keymap.set("x", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.range_formatting })
@@ -356,6 +355,7 @@ vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_python_provider = 0
 vim.g.loaded_ruby_provider = 0
+vim.g.do_filetype_lua = 1
 vim.opt.breakindent = true
 vim.opt.clipboard = 'unnamedplus'
 vim.opt.cmdheight = 2
