@@ -1,0 +1,4 @@
+# vim: ft=bash
+KERL_CONFIGURE_OPTIONS="--without-odbc --without-javac"
+KERL_BUILD_DOCS=yes
+KERL_INSTALL_MANPAGES=yes
