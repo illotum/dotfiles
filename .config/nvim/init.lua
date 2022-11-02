@@ -32,18 +32,6 @@ local function cfgTelescope()
     vim.keymap.set('n', '<leader>?',       '', { callback = builtin.oldfiles })
 end
 
-local function cfgGitsigns()
-    require('gitsigns').setup {
-        signs = {
-            add = { text = '+' },
-            change = { text = '~' },
-            delete = { text = '_' },
-            topdelete = { text = '‾' },
-            changedelete = { text = '~' },
-        },
-    }
-end
-
 local function cfgTreesitter()
     require('nvim-treesitter.configs').setup {
         ensure_installed = {
@@ -72,7 +60,9 @@ local function cfgTreesitter()
             'yaml',
             'zig',
         },
-        highlight = { enable = true },
+        highlight = {
+            enable = true,
+        },
         indent = { enable = true },
         incremental_selection = {
             enable = true,
@@ -209,29 +199,22 @@ local function cfgRest()
 end
 
 local function cfgLSP()
-    local function goimports(timeout_ms)
-        vim.lsp.buf.formatting_sync(nil, timeout_ms) -- Format first
-        local context = { source = { organizeImports = true } }
-        vim.validate { context = { context, 't', true } }
+    function OrgImports()
+        local wait_ms = 250
         local params = vim.lsp.util.make_range_params()
-        params.context = context
-        local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, timeout_ms)
-        if not result or next(result) == nil then return end
-        local actions = result[1].result
-        if not actions then return end
-        local action = actions[1]
-        if action.edit or type(action.command) == 'table' then
-            if action.edit then
-                vim.lsp.util.apply_workspace_edit(action.edit)
+        params.context = {only = {"source.organizeImports"}}
+        local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+        for _, res in pairs(result or {}) do
+            for _, r in pairs(res.result or {}) do
+                if r.edit then
+                    vim.lsp.util.apply_workspace_edit(r.edit, "UTF-8")
+                else
+                    vim.lsp.buf.execute_command(r.command)
+                end
             end
-            if type(action.command) == 'tabl' then
-                vim.lsp.buf.execute_command(action.command)
-            end
-        else
-            vim.lsp.buf.execute_command(action)
         end
     end
-    vim.api.nvim_create_autocmd("BufWritePre", { pattern = "*.go", callback = function() goimports(250) end })
+    vim.api.nvim_create_autocmd("BufWritePre", { pattern = "*.go", callback = OrgImports })
     local on_attach = function(client, bufnr)
         local telescope_builtin = require('telescope.builtin')
         vim.keymap.set('n', 'gD',         '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.declaration } )
@@ -247,26 +230,27 @@ local function cfgLSP()
         vim.keymap.set('n', '<leader>ca', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.code_action })
         vim.keymap.set('n', '<Leader>fa', '', { silent = true, buffer = bufnr, callback = telescope_builtin.lsp_code_actions })
         vim.keymap.set('n', '<leader>fo', '', { silent = true, buffer = bufnr, callback = telescope_builtin.lsp_document_symbols })
-        if client.resolved_capabilities.type_definition then
+        if client.server_capabilities.typeDefinitionProvider then
             vim.keymap.set('n', '<leader>D', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.type_definition })
         end
-        if client.resolved_capabilities.document_formatting then
+        if client.server_capabilities.documentFormattingProvider then
             vim.keymap.set("n", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.formatting_sync })
         end
-        if client.resolved_capabilities.document_range_formatting then
+        if client.server_capabilities.documentRangeFormattingProvider then
             vim.keymap.set("x", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.range_formatting })
         end
     end
     -- nvim-cmp supports additional completion capabilities
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
     local runtime_path = vim.split(package.path, ';')
     table.insert(runtime_path, 'lua/?.lua')
     table.insert(runtime_path, 'lua/?/init.lua')
     local servers = {
         bashls = {},
+        bzl = {},
         dockerls = {},
         erlangls = {},
+        quick_lint_js = {},
         gopls = {
             gopls = {
                 hoverKind = "SynopsisDocumentation",
@@ -299,6 +283,20 @@ local function cfgLSP()
     }
     require("nvim-lsp-installer").setup {} -- Server locator hook
     local lspconfig = require("lspconfig")
+    local configs = require 'lspconfig.configs'
+    if not configs.bzl then
+        configs.bzl = {
+            default_config = {
+                cmd = { 'bzl', 'lsp', 'serve' },
+                filetypes = { 'bzl' },
+                root_dir = function(fname)
+                    return lspconfig.util.find_git_ancestor(fname)
+                end,
+                settings = {},
+                docs = { description = 'https://docs.stack.build/docs/' },
+            },
+        }
+    end
     for name, settings in pairs(servers) do
         lspconfig[name].setup {
             on_attach = on_attach,
@@ -334,12 +332,13 @@ require('packer').startup(function(use)
         'tpope/vim-surround',
         'wbthomason/packer.nvim',
         'zhimsel/vim-stay',
+        'gpanders/editorconfig.nvim',
         { 'neovim/nvim-lspconfig', requires = { 'williamboman/nvim-lsp-installer', 'hrsh7th/cmp-nvim-lsp' }, config = cfgLSP },
         { 'NTBBloodbath/rest.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgRest },
         { 'haya14busa/incsearch.vim', config = cfgIncSearch },
         { 'hrsh7th/nvim-cmp', config = cfgCmp },
         { 'junegunn/vim-easy-align', config = cfgEasyAlign },
-        { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, tag = 'release', config = cfgGitsigns },
+        { 'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end },
         { 'lukas-reineke/indent-blankline.nvim', config = cfgBlankLine },
         { 'luukvbaal/stabilize.nvim', config = function() require('stabilize').setup() end },
         { 'numToStr/Comment.nvim', config = function() require('Comment').setup() end },
