@@ -136,22 +136,22 @@
 	psao = push --all origin
 	psfo = push -f origin
 	psuo = push -u origin
-	psom = push origin master
-	psfom = push -f origin master
-	psuom = push -u origin master
+	psom = push origin main
+	psfom = push -f origin main
+	psuom = push -u origin main
 	#############
 	pl = pull
 	plu = pull -u
 	plo = pull origin
 	plp = pull upstream
-	plom = pull origin master
-	plpm = pull upstream master
+	plom = pull origin main
+	plpm = pull upstream main
 	#############
 	pb = pull --rebase
 	pbo = pull --rebase origin
 	pbp = pull --rebase upstream
-	pbom = pull --rebase origin master
-	pbpm = pull --rebase upstream master
+	pbom = pull --rebase origin main
+	pbpm = pull --rebase upstream main
 	#############
 	rb = rebase
 	rba = rebase --abort
@@ -214,9 +214,10 @@
 	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
 	#############
 	barebranch = !sh -c 'git symbolic-ref HEAD refs/heads/$1 && git rm --cached -r . && git clean -xfd' -
+	purge = clean -xffd .
 	flat = clone --depth 1
-	subpull = !git submodule foreach git pull --tags origin master
-	subrepo = !sh -c 'filter-branch --prune-empty --subdirectory-filter $1 master' -
+	subpull = !git submodule foreach git pull --tags origin main
+	subrepo = !sh -c 'filter-branch --prune-empty --subdirectory-filter $1 main' -
 	human = name-rev --name-only --refs=refs/heads/*
 	serve = !git daemon --reuseaddr --verbose  --base-path=. --export-all ./.git
 	snapshot = !git stash save "snapshot: $(date)" && git stash apply "stash@{0}"
@@ -229,4 +230,4 @@
 [init]
 	defaultBranch = main
 [secrets]
-	providers = git secrets --aws-provider
+	; providers = git secrets --aws-provider
