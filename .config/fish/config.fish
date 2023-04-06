@@ -1,5 +1,6 @@
 set --erase fish_greeting
 
+fish_add_path /usr/local/sbin
 fish_add_path $HOME/bin
 
 fish_add_path $HOME/rabbit/server/bazel-bin/broker-home/sbin/
@@ -18,5 +19,4 @@ alias fs "find -type d \( -path '*/release-info/*' -o -path '*/build/*' -o -path
 
 alias rge "rg -g '!**/test/**' -g '!**/examples/**' -g '**/src/**' -g '**/include/**' -g '!*SUITE*' -g '*.erl' -g '*.hrl'"
 
-alias bazel bazelisk
-alias perf-test "./bin/runjava com.rabbitmq.perf.PerfTest"
+alias perf-test "/Users/valiushk/rabbit/bench/bin/runjava com.rabbitmq.perf.PerfTest"
