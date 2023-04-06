@@ -234,7 +234,7 @@ local function cfgLSP()
             vim.keymap.set('n', '<leader>D', '', { silent = true, buffer = bufnr, callback = vim.lsp.buf.type_definition })
         end
         if client.server_capabilities.documentFormattingProvider then
-            vim.keymap.set("n", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.formatting_sync })
+            vim.keymap.set("n", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.format })
         end
         if client.server_capabilities.documentRangeFormattingProvider then
             vim.keymap.set("x", "<space>f", "", { silent = true, buffer = bufnr, callback = vim.lsp.buf.range_formatting })
@@ -249,6 +249,12 @@ local function cfgLSP()
         bashls = {},
         bzl = {},
         dockerls = {},
+        elixirls = {
+            elixirLS = {
+                enableTestLenses = true,
+                fetchDeps = true,
+            },
+        },
         erlangls = {},
         quick_lint_js = {},
         gopls = {
