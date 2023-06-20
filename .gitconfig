@@ -229,5 +229,3 @@
 	keepBackup = false
 [init]
 	defaultBranch = main
-[secrets]
-	; providers = git secrets --aws-provider

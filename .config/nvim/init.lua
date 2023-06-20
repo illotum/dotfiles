@@ -1,7 +1,9 @@
 -- vim: et
 -- Extensions
 local function cfgTelescope()
-    require('telescope').setup {
+    local telescope = require('telescope')
+    local builtin = require('telescope.builtin')
+    local cfg = {
         pickers = {
             find_files = { theme = "ivy" },
             buffers = { theme = "ivy" },
@@ -21,12 +23,11 @@ local function cfgTelescope()
             },
         }
     }
-    local builtin = require('telescope.builtin')
+    telescope.setup(cfg)
     vim.keymap.set('n', '<leader><space>', '', { callback = builtin.buffers })
     vim.keymap.set('n', '<leader>ff',      '', { callback = builtin.find_files })
     vim.keymap.set('n', '<leader>fb',      '', { callback = builtin.current_buffer_fuzzy_find })
     vim.keymap.set('n', '<leader>fh',      '', { callback = builtin.help_tags })
-    vim.keymap.set('n', '<leader>ft',      '', { callback = builtin.tags })
     vim.keymap.set('n', '<leader>fd',      '', { callback = builtin.grep_string })
     vim.keymap.set('n', '<leader>fp',      '', { callback = builtin.live_grep })
     vim.keymap.set('n', '<leader>?',       '', { callback = builtin.oldfiles })
@@ -275,16 +276,16 @@ local function cfgLSP()
         jsonls = {},
         lemminx = {},
         pyright = {},
-        remark_ls = {},
-        sumneko_lua = {
-            Lua = {
-                runtime = { version = 'LuaJIT', path = runtime_path },
-                diagnostics = { globals = { 'vim' }, disable = { 'lowercase-global' } },
-                workspace = { library = vim.api.nvim_get_runtime_file('*.lua', true) },
-                telemetry = { enable = false },
-            },
-        },
-        yamlls = {},
+        lua_ls = {},
+        -- sumneko_lua = {
+        --     Lua = {
+        --         runtime = { version = 'LuaJIT', path = runtime_path },
+        --         diagnostics = { globals = { 'vim' }, disable = { 'lowercase-global' } },
+        --         workspace = { library = vim.api.nvim_get_runtime_file('*.lua', true) },
+        --         telemetry = { enable = false },
+        --     },
+        -- },
+        -- yamlls = {},
         zls = {},
     }
     require("nvim-lsp-installer").setup {} -- Server locator hook
@@ -317,6 +318,21 @@ local function cfgEasyAlign()
     vim.keymap.set('n', '<Leader>ta', '<Plug>(EasyAlign)')
 end
 
+local function cfgTrouble()
+    require("trouble").setup {
+        use_diagnostic_signs = true
+    }
+end
+
+local function cfgTodo()
+    local todo = require('todo-comments')
+    todo.setup {
+        signs = false,
+    }
+    vim.keymap.set("n", "]t",         function() todo.jump_next() end, { desc = "Next todo comment" })
+    vim.keymap.set("n", "[t",         function() todo.jump_prev() end, { desc = "Previous todo comment" })
+end
+
 -- Packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
@@ -339,6 +355,8 @@ require('packer').startup(function(use)
         'wbthomason/packer.nvim',
         'zhimsel/vim-stay',
         'gpanders/editorconfig.nvim',
+        { 'folke/trouble.nvim', config = cfgTrouble },
+        { 'folke/todo-comments.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgTodo },
         { 'neovim/nvim-lspconfig', requires = { 'williamboman/nvim-lsp-installer', 'hrsh7th/cmp-nvim-lsp' }, config = cfgLSP },
         { 'NTBBloodbath/rest.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgRest },
         { 'haya14busa/incsearch.vim', config = cfgIncSearch },
