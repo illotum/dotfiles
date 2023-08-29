@@ -343,7 +343,6 @@ vim.api.nvim_create_autocmd("BufWritePost", { pattern = "init.lua", command = "P
 -- Install Packages
 require('packer').startup(function(use)
     use {
-        'Glench/Vim-Jinja2-Syntax',
         'dcampos/cmp-snippy',
         'dcampos/nvim-snippy',
         'honza/vim-snippets',
@@ -354,11 +353,9 @@ require('packer').startup(function(use)
         'tpope/vim-surround',
         'wbthomason/packer.nvim',
         'zhimsel/vim-stay',
-        'gpanders/editorconfig.nvim',
         { 'folke/trouble.nvim', config = cfgTrouble },
         { 'folke/todo-comments.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgTodo },
         { 'neovim/nvim-lspconfig', requires = { 'williamboman/nvim-lsp-installer', 'hrsh7th/cmp-nvim-lsp' }, config = cfgLSP },
-        { 'NTBBloodbath/rest.nvim', requires = { 'nvim-lua/plenary.nvim' }, config = cfgRest },
         { 'haya14busa/incsearch.vim', config = cfgIncSearch },
         { 'hrsh7th/nvim-cmp', config = cfgCmp },
         { 'junegunn/vim-easy-align', config = cfgEasyAlign },
