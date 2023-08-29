@@ -7,6 +7,8 @@ fish_add_path $HOME/rabbit/server/bazel-bin/broker-home/sbin/
 
 fish_add_path $HOME/.cache/rebar3/bin
 
+source ~/.asdf/asdf.fish
+
 set -U EDITOR nvim
 
 alias g git
