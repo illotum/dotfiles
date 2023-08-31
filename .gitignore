@@ -1,6 +1,6 @@
 # Compiled source #
 ###################
-# *.com
+*.com
 *.class
 *.dll
 *.exe
@@ -36,3 +36,5 @@
 ehthumbs.db
 Icon?
 Thumbs.db
+
+lazy-lock.json

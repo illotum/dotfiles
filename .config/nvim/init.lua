@@ -28,25 +28,20 @@ require 'autocmds'
 require 'filetypes'
 
 require('lazy').setup('plugins', {
-  defaults = {
-    lazy = true,
-    version = false,
-  },
+  defaults = { lazy = true, },
+  install = { colorscheme = { "flat" } },
   dev = {
+    fallback = true,
     path = "~/workplace",
-  },
-  install = {
-    colorscheme = { "flat" },
+    patterns = { "illotum" },
   },
   performance = {
-    cache = { enabled = true },
     rtp = {
       disabled_plugins = {
         'gzip',
         'matchit',
         'matchparen',
         'netrwPlugin',
-        'rplugin',
         'tarPlugin',
         'tohtml',
         'tutor',

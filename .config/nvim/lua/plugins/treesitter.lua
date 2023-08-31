@@ -16,22 +16,21 @@ return {
     { "<cr>", desc = "Increment selection" },
     { "<bs>", desc = "Decrement selection", mode = "x" },
   },
-  opts = {
-    auto_install = true,
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = "<cr>",
-        node_incremental = "<cr>",
-        scope_incremental = false,
-        node_decremental = "<bs>",
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      auto_install = true,
+      highlight = { enable = true },
+      indent = { enable = true },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "<cr>",
+          node_incremental = "<cr>",
+          scope_incremental = false,
+          node_decremental = "<bs>",
+        },
       },
-    },
-    endwise = { enable = true },
-  },
-  config = function(_, opts)
-    require("nvim-treesitter.configs").setup(opts)
+      endwise = { enable = true },
+    })
   end,
 }

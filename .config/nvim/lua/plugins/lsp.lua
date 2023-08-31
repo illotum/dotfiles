@@ -8,9 +8,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
       end
     end
 
-    map('definition', 'n', 'gd', vim.lsp.buf.definition, "Go to definition")
-    map('implementation', 'n', 'gi', vim.lsp.buf.implementation, "Go to implementation")
-    map('references', 'n', 'gr', vim.lsp.buf.references, "Go to references")
+    map('definition', 'n', '<leader>d', vim.lsp.buf.definition, "Go to definition")
+    map('implementation', 'n', '<leader>i', vim.lsp.buf.implementation, "Go to implementation")
+    map('references', 'n', '<leader>r', vim.lsp.buf.references, "Go to references")
     map('rename', 'n', '<leader>rn', vim.lsp.buf.rename, "Rename")
     map('hover', 'n', 'K', vim.lsp.buf.hover, "Hover info")
     map('codeAction', 'n', '<leader>a', vim.lsp.buf.code_action, "Code action")
@@ -22,8 +22,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- TODO v0.10
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
-    -- local client = vim.lsp.get_client_by_id(args.data.client_id)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
     -- local bufnr = args.buf
+
+    -- Disable highlight
+    client.server_capabilities.semanticTokensProvider = nil
+
     -- vim.lsp.buf.inlay_hint(bufnr,
     --   client.server_capabilities.inlayHintProvider ~= nil and client.server_capabilities.inlayHintProvider ~= false
     -- )
@@ -95,10 +99,10 @@ return {
   config = function()
     vim.keymap.set('n', '<leader>e', '', { callback = vim.diagnostic.open_float, silent = true })
 
-    vim.fn.sign_define('DiagnosticSignError', { text = '✗', numhl = 'DiagnosticSignError' })
-    vim.fn.sign_define('DiagnosticSignWarn', { text = '‼', numhl = 'DiagnosticSignWarn' })
-    vim.fn.sign_define('DiagnosticSignInfo', { text = '✓', numhl = 'DiagnosticSignInfo' })
-    vim.fn.sign_define('DiagnosticSignHint', { text = '', numhl = 'DiagnosticSignHint' })
+    vim.fn.sign_define('DiagnosticSignError', { text = '✗', texthl = 'DiagnosticSignError' })
+    vim.fn.sign_define('DiagnosticSignWarn', { text = '‼', texthl = 'DiagnosticSignWarn' })
+    vim.fn.sign_define('DiagnosticSignInfo', { text = '󱐋', texthl = 'DiagnosticSignInfo' })
+    vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
     vim.diagnostic.config {
       virtual_text = false,
       severity_sort = true,
