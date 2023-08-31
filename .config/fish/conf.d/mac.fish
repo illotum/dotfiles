@@ -15,5 +15,5 @@ if test -f $brew_asdf_path/libexec/asdf.fish
 	source $brew_asdf_path/libexec/asdf.fish
 end
 
-set -U JAVA_HOME /Library/Java/JavaVirtualMachines/amazon-corretto-8.jdk/Contents/Home
+set -x JAVA_HOME (/usr/libexec/java_home -v1.20)
 fish_add_path $JAVA_HOME/bin
