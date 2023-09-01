@@ -17,26 +17,6 @@ local function init()
     },
     silent = true,
   })
-  require("mini.ai").setup()
-  require("mini.move").setup()
-  require("mini.align").setup()
-  require("mini.bracketed").setup()
-  require("mini.comment").setup()
-  require("mini.splitjoin").setup()
-  require("mini.surround").setup()
-  require("mini.pairs").setup()
-
-
-  local hipatterns = require('mini.hipatterns')
-  hipatterns.setup({
-    highlighters = {
-      fixme     = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
-      hack      = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
-      todo      = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
-      note      = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
-      hex_color = hipatterns.gen_highlighter.hex_color(),
-    },
-  })
 
   vim.opt.concealcursor = 'nc'
   vim.opt.conceallevel = 2
@@ -98,15 +78,6 @@ end
 
 return {
   {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    init = function()
-      vim.o.timeout = true
-      vim.o.timeoutlen = 300
-    end,
-    opts = {}
-  },
-  {
     "illotum/flat.nvim",
     lazy = false,
     priority = 1000,
@@ -115,7 +86,7 @@ return {
     end
   },
   {
-    "echasnovski/mini.nvim",
+    "echasnovski/mini.basics",
     lazy = false,
     priority = 999,
     config = init,

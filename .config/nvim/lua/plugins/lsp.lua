@@ -8,14 +8,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
       end
     end
 
-    map('definition', 'n', '<leader>d', vim.lsp.buf.definition, "Go to definition")
-    map('implementation', 'n', '<leader>i', vim.lsp.buf.implementation, "Go to implementation")
-    map('references', 'n', '<leader>r', vim.lsp.buf.references, "Go to references")
-    map('rename', 'n', '<leader>rn', vim.lsp.buf.rename, "Rename")
     map('hover', 'n', 'K', vim.lsp.buf.hover, "Hover info")
-    map('codeAction', 'n', '<leader>a', vim.lsp.buf.code_action, "Code action")
-    map('typeDefinition', 'n', '<leader>y', vim.lsp.buf.type_definition, "Define type")
-    map('documentFormatting', "n", "<space>f", vim.lsp.buf.format, "Format")
+    map('definition', 'n', '<leader>ld', vim.lsp.buf.definition, "Go to definition")
+    map('implementation', 'n', '<leader>li', vim.lsp.buf.implementation, "Go to implementation")
+    map('references', 'n', '<leader>lD', vim.lsp.buf.references, "Go to references")
+    map('rename', 'n', '<leader>lr', vim.lsp.buf.rename, "Rename")
+    map('codeAction', 'n', '<leader>la', vim.lsp.buf.code_action, "Code action")
+    map('typeDefinition', 'n', '<leader>ly', vim.lsp.buf.type_definition, "Define type")
+    map('documentFormatting', "n", "<space>lf", vim.lsp.buf.format, "Format")
   end,
 })
 
@@ -93,7 +93,6 @@ return {
   dependencies = {
     "williamboman/mason.nvim",
     "neovim/nvim-lspconfig",
-    "hrsh7th/cmp-nvim-lsp",
     "williamboman/mason.nvim",
   },
   config = function()
@@ -111,7 +110,8 @@ return {
 
     local client_capabilities = vim.tbl_deep_extend("force",
       vim.lsp.protocol.make_client_capabilities(),
-      require('cmp_nvim_lsp').default_capabilities()
+      -- require('cmp_nvim_lsp').default_capabilities(),
+      {}
     )
 
     require("mason").setup()
