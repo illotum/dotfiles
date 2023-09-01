@@ -77,6 +77,7 @@ local function init()
 end
 
 return {
+
   {
     "illotum/flat.nvim",
     lazy = false,
@@ -90,5 +91,17 @@ return {
     lazy = false,
     priority = 999,
     config = init,
+  },
+  {
+    "ethanholz/nvim-lastplace",
+    lazy = false,
+    priority = 998,
+    opts = {
+        lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
+        lastplace_ignore_filetype = {
+          "gitcommit", "gitrebase", "svn", "hgcommit",
+        },
+        lastplace_open_folds = true,
+      },
   },
 }

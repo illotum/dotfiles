@@ -1,6 +1,6 @@
 return {
   "echasnovski/mini.completion",
-  event = { "BufReadPre", "BufNewFile" },
+  event = { "BufReadPost", "BufNewFile" },
   config = function()
     require("mini.completion").setup()
 
