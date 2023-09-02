@@ -103,9 +103,9 @@ return {
     vim.fn.sign_define('DiagnosticSignInfo', { text = '󱐋', texthl = 'DiagnosticSignInfo' })
     vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
     vim.diagnostic.config {
-      virtual_text = false,
+      underline = false,
       severity_sort = true,
-      float = { header = "", border = "single" },
+      float = { header = "" },
     }
 
     local client_capabilities = vim.tbl_deep_extend("force",
