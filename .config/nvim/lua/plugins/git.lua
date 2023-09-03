@@ -27,7 +27,7 @@ local function set_keymaps(bufnr)
   map("n", "<leader>gp", gs.preview_hunk, { desc = "Preview hunk" })
   map("n", "<leader>gS", gs.stage_buffer, { desc = "Stage" })
   map("n", "<leader>gR", gs.reset_buffer, { desc = "Reset" })
-  map("n", "<leader>gb", function() gs.blame_line{full=true} end, { desc = "Blame" })
+  map("n", "<leader>gb", function() gs.blame_line { full = true } end, { desc = "Blame" })
   map('n', '<leader>gd', gs.diffthis, { desc = "Diff" })
 end
 
@@ -36,10 +36,8 @@ return {
     'lewis6991/gitsigns.nvim',
     cmd = "Gitsigns",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("gitsigns").setup({
-        on_attach = set_keymaps
-      })
-    end
+    opts = {
+      on_attach = set_keymaps,
+    }
   }
 }

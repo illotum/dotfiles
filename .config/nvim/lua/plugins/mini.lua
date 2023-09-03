@@ -55,6 +55,7 @@ return {
         clues = {
           { mode = 'n', keys = '<Leader>g', desc = '+Git' },
           { mode = 'n', keys = '<Leader>l', desc = '+LSP' },
+          { mode = 'n', keys = '<Leader>f', desc = '+Find' },
           clue.gen_clues.builtin_completion(),
           clue.gen_clues.g(),
           clue.gen_clues.marks(),

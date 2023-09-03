@@ -9,13 +9,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     map('hover', 'n', 'K', vim.lsp.buf.hover, "Hover info")
-    map('definition', 'n', '<leader>ld', vim.lsp.buf.definition, "Go to definition")
-    map('implementation', 'n', '<leader>li', vim.lsp.buf.implementation, "Go to implementation")
-    map('references', 'n', '<leader>lD', vim.lsp.buf.references, "Go to references")
-    map('rename', 'n', '<leader>lr', vim.lsp.buf.rename, "Rename")
-    map('codeAction', 'n', '<leader>la', vim.lsp.buf.code_action, "Code action")
-    map('typeDefinition', 'n', '<leader>ly', vim.lsp.buf.type_definition, "Define type")
+    map('definition', 'n', 'gd', vim.lsp.buf.definition, "Go to definition")
+    map('rename', 'n', '<leader>ln', vim.lsp.buf.rename, "Rename")
     map('documentFormatting', "n", "<space>lf", vim.lsp.buf.format, "Format")
+    map('documentFormatting', "n", "<space>la", vim.lsp.buf.code_action, "Actions")
   end,
 })
 
@@ -87,6 +84,39 @@ local servers = {
   },
 }
 
+local function config()
+  vim.keymap.set('n', '<leader>e', '', { callback = vim.diagnostic.open_float, silent = true })
+
+  vim.fn.sign_define('DiagnosticSignError', { text = '✗', texthl = 'DiagnosticSignError' })
+  vim.fn.sign_define('DiagnosticSignWarn', { text = '‼', texthl = 'DiagnosticSignWarn' })
+  vim.fn.sign_define('DiagnosticSignInfo', { text = '󱐋', texthl = 'DiagnosticSignInfo' })
+  vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
+  vim.diagnostic.config {
+    underline = false,
+    severity_sort = true,
+    float = { header = "" },
+  }
+
+  local client_capabilities = vim.tbl_deep_extend("force",
+    vim.lsp.protocol.make_client_capabilities(),
+    -- require('cmp_nvim_lsp').default_capabilities(),
+    {}
+  )
+
+  require("mason").setup()
+  require("mason-lspconfig").setup({
+    ensure_installed = vim.tbl_keys(servers),
+    handlers = {
+      function(server)
+        require("lspconfig")[server].setup {
+          capabilities = client_capabilities,
+          settings = servers[server] or {},
+        }
+      end
+    }
+  })
+end
+
 return {
   "williamboman/mason-lspconfig.nvim",
   event = { "BufReadPost", "BufNewFile" },
@@ -95,36 +125,5 @@ return {
     "neovim/nvim-lspconfig",
     "williamboman/mason.nvim",
   },
-  config = function()
-    vim.keymap.set('n', '<leader>e', '', { callback = vim.diagnostic.open_float, silent = true })
-
-    vim.fn.sign_define('DiagnosticSignError', { text = '✗', texthl = 'DiagnosticSignError' })
-    vim.fn.sign_define('DiagnosticSignWarn', { text = '‼', texthl = 'DiagnosticSignWarn' })
-    vim.fn.sign_define('DiagnosticSignInfo', { text = '󱐋', texthl = 'DiagnosticSignInfo' })
-    vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
-    vim.diagnostic.config {
-      underline = false,
-      severity_sort = true,
-      float = { header = "" },
-    }
-
-    local client_capabilities = vim.tbl_deep_extend("force",
-      vim.lsp.protocol.make_client_capabilities(),
-      -- require('cmp_nvim_lsp').default_capabilities(),
-      {}
-    )
-
-    require("mason").setup()
-    require("mason-lspconfig").setup({
-      ensure_installed = vim.tbl_keys(servers),
-      handlers = {
-        function(server)
-          require("lspconfig")[server].setup {
-            capabilities = client_capabilities,
-            settings = servers[server] or {},
-          }
-        end
-      }
-    })
-  end
+  config = config,
 }

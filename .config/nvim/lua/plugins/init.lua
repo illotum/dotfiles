@@ -77,7 +77,6 @@ local function init()
 end
 
 return {
-
   {
     "illotum/flat.nvim",
     lazy = false,
