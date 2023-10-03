@@ -40,7 +40,7 @@ local servers = {
       },
       diagnostics = {
         unusedLocalExclude = { '_*' },
-        globals = { "vim" }
+        globals = { "vim", "vis" }
       },
       runtime = { version = 'LuaJIT' },
       telemetry = { enable = false }
@@ -92,7 +92,7 @@ local function config()
   vim.fn.sign_define('DiagnosticSignInfo', { text = '󱐋', texthl = 'DiagnosticSignInfo' })
   vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
   vim.diagnostic.config {
-    underline = false,
+    underline = true,
     severity_sort = true,
     float = { header = "" },
   }

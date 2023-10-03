@@ -8,7 +8,7 @@ local function init()
     mappings = {
       basic = true,
       windows = true,
-      option_toggle_prefix = [[,]],
+      option_toggle_prefix = [[\]],
       move_with_alt = true,
     },
     autocommands = {
@@ -18,6 +18,7 @@ local function init()
     silent = true,
   })
 
+  vim.opt.clipboard = [[unnamed,unnamedplus]]
   vim.opt.concealcursor = 'nc'
   vim.opt.conceallevel = 2
   vim.opt.display = 'msgsep'
