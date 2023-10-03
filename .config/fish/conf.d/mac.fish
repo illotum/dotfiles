@@ -17,3 +17,6 @@ end
 
 set -x JAVA_HOME (/usr/libexec/java_home -v1.20)
 fish_add_path $JAVA_HOME/bin
+
+
+alias perf-test "/Users/valiushk/rabbit/bench/bin/runjava com.rabbitmq.perf.PerfTest"
