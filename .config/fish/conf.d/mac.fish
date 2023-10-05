@@ -12,7 +12,7 @@ alias fs "fd -E build -E env -E node_modules -E site-packages -E release-info"
 
 set brew_asdf_path (brew --prefix asdf)
 if test -f $brew_asdf_path/libexec/asdf.fish
-	source $brew_asdf_path/libexec/asdf.fish
+  source $brew_asdf_path/libexec/asdf.fish
 end
 
 set -x JAVA_HOME (/usr/libexec/java_home -v1.20)

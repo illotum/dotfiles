@@ -5,13 +5,11 @@ fish_add_path $HOME/rabbit/server/bazel-bin/broker-home/sbin/
 
 fish_add_path $HOME/.cache/rebar3/bin
 
-source ~/.asdf/asdf.fish
-
-set -U EDITOR nvim
+set -U EDITOR hx
 
 alias g git
 alias y "/usr/bin/git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME"
-alias vi nvim
+alias vi hx
 
 alias myaws "aws --profile my"
 alias mycdk "cdk --profile my"

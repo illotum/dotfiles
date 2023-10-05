@@ -1,0 +1,107 @@
+colorscheme solarized-light
+
+set-option global tabstop 4
+set-option global indentwidth 4
+set-option global scrolloff 5,5
+
+# set-option global autoinfo normal
+
+#add-highlighter global/ number-lines -hlcursor
+add-highlighter global/ regex \h+$ 0:Error
+
+map global user y "| pbcopy<ret>" -docstring "yank the selection into the clipboard"
+map global user p "! pbpaste<ret>"    -docstring "paste the clipboard"
+map global normal <c-c> %{:comment-line<ret>} -docstring "Comment line"
+
+define-command x "write-all; quit"     -docstring "save and quit"
+
+# Shades of blue/cyan for normal mode
+set-face global PrimarySelection white,blue+F
+set-face global SecondarySelection black,blue+F
+set-face global PrimaryCursor black,bright-cyan+F
+set-face global SecondaryCursor black,bright-blue+F
+set-face global PrimaryCursorEol black,bright-cyan
+set-face global SecondaryCursorEol black,bright-blue
+
+# Shades of green/yellow for insert mode.
+hook global ModeChange (push|pop):.*:insert %{
+    set-face window PrimarySelection white,green+F
+    set-face window SecondarySelection black,green+F
+    set-face window PrimaryCursor black,bright-yellow+F
+    set-face window SecondaryCursor black,bright-green+F
+    set-face window PrimaryCursorEol black,bright-yellow
+    set-face window SecondaryCursorEol black,bright-green
+}
+
+# Undo colour changes when we leave insert mode.
+hook global ModeChange (push|pop):insert:.* %{
+    unset-face window PrimarySelection
+    unset-face window SecondarySelection
+    unset-face window PrimaryCursor
+    unset-face window SecondaryCursor
+    unset-face window PrimaryCursorEol
+    unset-face window SecondaryCursorEol
+}
+
+# Plugins
+evaluate-commands %sh{
+    plugins="$kak_config/plugins"
+    mkdir -p "$plugins"
+    [ ! -e "$plugins/plug.kak" ] && \
+        git clone -q https://github.com/andreyorst/plug.kak.git "$plugins/plug.kak"
+    printf "%s\n" "source '$plugins/plug.kak/rc/plug.kak'"
+}
+plug "andreyorst/plug.kak" noload
+
+plug 'delapouite/kakoune-palette' # palette-gutter, etc.
+
+plug "kak-lsp/kak-lsp" do %{
+    cargo install --locked --force --path .
+    # optional: if you want to use specific language servers
+    mkdir -p ~/.config/kak-lsp
+    cp -n kak-lsp.toml ~/.config/kak-lsp/
+} config %{
+    hook global WinSetOption filetype=(go|erlang) %{
+        lsp-enable-window
+        lsp-inlay-hints-enable window
+        lsp-inlay-diagnostics-enable window
+        map window user l %{:enter-user-mode lsp<ret>} -docstring "LSP mode"
+        map window user h %{:lsp-hover<ret>} -docstring "LSP hover"
+        map window insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' -docstring 'Select next snippet placeholder'
+        map window object a '<a-semicolon>lsp-object<ret>' -docstring 'LSP any symbol'
+        map window object <a-a> '<a-semicolon>lsp-object<ret>' -docstring 'LSP any symbol'
+        map window object e '<a-semicolon>lsp-object Function Method<ret>' -docstring 'LSP function or method'
+        map window object k '<a-semicolon>lsp-object Class Interface Struct<ret>' -docstring 'LSP class interface or struct'
+        map window object d '<a-semicolon>lsp-diagnostic-object --include-warnings<ret>' -docstring 'LSP errors and warnings'
+        map window object D '<a-semicolon>lsp-diagnostic-object<ret>' -docstring 'LSP errors'
+    }
+}
+
+# Helpers
+define-command trim-indent %{
+    # remove trailing white spaces
+    try %{ execute-keys -draft -itersel x s \h+$ <ret> d }
+}
+
+# # Erlang
+# hook global BufSetOption filetype=erlang %{
+#     set-option buffer comment_line '%%'
+# }
+
+# # Tab completion
+# hook global InsertCompletionShow .* %{
+#     try %{
+#         # this command temporarily removes cursors preceded by whitespace;
+#         # if there are no cursors left, it raises an error, does not
+#         # continue to execute the mapping commands, and the error is eaten
+#         # by the `try` command so no warning appears.
+#         unalias
+#         execute-keys -draft 'h<a-K>\h<ret>'
+#         map window insert <tab> <c-n>
+#         map window insert <s-tab> <c-p>
+#         hook -once -always window InsertCompletionHide .* %{
+#             unmap window insert <tab> <c-n>
+#             unmap window insert <s-tab> <c-p>
+#         }
+#     }
+# }
