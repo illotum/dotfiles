@@ -5,16 +5,16 @@
   user = illotum
 [core]
   whitespace = fix,-indent-with-non-tab,space-before-tab,trailing-space,cr-at-eol
-    legacyheaders = false
-    quotepath = false
-    trustctime = false
+  legacyheaders = false
+  quotepath = false
+  trustctime = false
   excludesfile = ~/.gitignore
-  pager = less -FMRiX
+  pager = diffr | less -FMRiX
   hooksPath = /Users/valiushk/.git-templates/hooks
 [repack]
-    usedeltabaseoffset = true
+  usedeltabaseoffset = true
 [apply]
-    whitespace = fix
+  whitespace = fix
 [transfer]
   fsckobjects = true
 [fetch]
@@ -38,13 +38,9 @@
   autoupdate = 1
 [color]
   ui = auto
-    interactive = auto
-; [pager]
-;   log = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
-;   show = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
-;   diff = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight | less
+  interactive = auto
 [diff]
-    algorithm = histogram
+  algorithm = histogram
   renames = copy
   wordregex = [^[:space:]]
   mnemonicprefix = true
@@ -52,17 +48,17 @@
   submodule = log
   tool = difftastic
 [difftool]
-        prompt = false
+  prompt = false
 [difftool "difftastic"]
-        cmd = difft  --background=light "$LOCAL" "$REMOTE"
+  cmd = difft  --background=light "$LOCAL" "$REMOTE"
 [mergetool "splice"]
   cmd = "vi -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
   trustexitcode = true
 [merge]
   summary = true
   tool = splice
-; [interactive]
-;   diffFilter = /usr/local/share/git-core/contrib/diff-highlight/diff-highlight
+[interactive]
+  diffFilter = diffr
 [gitflow "prefix"]
   feature = feature/
   release = release/

@@ -6,9 +6,6 @@ auto-save = true
 mouse = false
 gutters = ["diff", "diagnostics", "spacer"]
 
-[editor.whitespace.render]
-tab = "all"
-
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
