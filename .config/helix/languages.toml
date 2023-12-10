@@ -1,7 +1,7 @@
 [[language]]
 name = "erlang"
 formatter = { command = "erlfmt", args = ["-"]}
-file-types = ["erl", "hrl", "app", "rebar.config", "rebar.lock", "config"]
+file-types = ["erl", "hrl", "src", "snippets", "schema", "rebar.config", "rebar.lock", "config"]
 # language-server = { command = "elp", args = ["server"] }
 
 [language-server.gopls.config]
