@@ -7,7 +7,10 @@ mouse = false
 gutters = ["diff", "diagnostics", "spacer"]
 auto-pairs = false
 
-[editor.cursor-shape]
-insert = "bar"
-normal = "block"
-select = "underline"
+  [editor.cursor-shape]
+  insert = "bar"
+  normal = "block"
+  select = "underline"
+
+[keys.normal.space]
+l = ":toggle lsp.display-inlay-hints"
