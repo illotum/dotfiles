@@ -1,8 +1,6 @@
 [[language]]
 name = "erlang"
-formatter = { command = "erlfmt", args = ["-"]}
 file-types = ["erl", "hrl", "src", "snippets", "schema", "rebar.config", "rebar.lock", "config"]
-# language-server = { command = "elp", args = ["server"] }
 
 [language-server.gopls.config]
 "formatting.gofumpt" = true

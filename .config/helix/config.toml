@@ -5,6 +5,7 @@ rulers = [80]
 auto-save = true
 mouse = false
 gutters = ["diff", "diagnostics", "spacer"]
+auto-pairs = false
 
 [editor.cursor-shape]
 insert = "bar"
