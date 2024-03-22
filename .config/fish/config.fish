@@ -16,3 +16,5 @@ alias mycdk "cdk --profile my"
 
 alias rs "rg -g '!**/build/**' -g '!**/env/**' -g '!**/node_modules/**' -g '!**/site-packages/**' -g '!**/release-info/**'"
 alias fs "find -type d \( -path '*/release-info/*' -o -path '*/build/*' -o -path '*/env/*' -o -path '*/node_modules/*' -o -path '*/site-packages/*' \) -prune -o"
+
+alias icat "kitty icat"
