@@ -4,3 +4,8 @@ file-types = ["erl", "hrl", "src", "snippets", "schema", "rebar.config", "rebar.
 
 [language-server.gopls.config]
 "formatting.gofumpt" = true
+
+[[language]]
+name = "nix"
+auto-format = true
+formatter = { command = "nixpkgs-fmt" }
