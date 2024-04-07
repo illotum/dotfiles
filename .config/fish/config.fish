@@ -7,6 +7,7 @@ set -gx XDG_CONFIG_HOME $HOME/.config
 alias y "git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME"
 abbr g git
 abbr vi hx
+abbr c curl -LO -C -
 abbr bazel bazelisk
 abbr myaws "aws --profile my"
 abbr mycdk "cdk --profile my"

@@ -15,6 +15,7 @@
         paths = with pkgs; [
           # basics
           git
+          jujutsu
           fish
           fd
           zoxide
@@ -37,12 +38,13 @@
           rakudo
           zef
           picat
+          spicetify-cli
 
           # files
           cfssl
           angle-grinder
           yq
-          graphicsmagick
+          imagemagick
           pandoc
           ffmpeg
           gnused
@@ -57,7 +59,6 @@
           # editor
           helix
           nil
-          nixpkgs-fmt
         ];
       };
   };
