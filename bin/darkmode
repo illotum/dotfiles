@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu -o pipefail
+
+light () {
+  ln -sf  ${HOME}/.config/helix/themes/solarized_light.toml \
+          ${HOME}/.config/helix/themes/solarized.toml
+  /opt/homebrew/bin/kitten themes --reload-in=all Solarized Light
+}
+
+dark () {
+  ln -sf  ${HOME}/.config/helix/themes/solarized_dark.toml \
+          ${HOME}/.config/helix/themes/solarized.toml
+   /opt/homebrew/bin/kitten themes --reload-in=all Solarized Dark
+}
+
+if test $# -eq 1 && test $1 = "false"; then
+  light
+else
+  dark
+fi
