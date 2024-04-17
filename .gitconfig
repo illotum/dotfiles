@@ -1,6 +1,6 @@
 [user]
   name = Alex Valiushko
-  email = valiushk@amazon.com
+  email = illotum@gmail.com
 [github]
   user = illotum
 [core]
@@ -225,3 +225,6 @@
   keepBackup = false
 [init]
   defaultBranch = main
+
+[includeIf "gitdir:~/work/"]
+  path = .gitconfig-work

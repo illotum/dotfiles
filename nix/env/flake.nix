@@ -26,7 +26,8 @@
           diffr
           cloc
           jdk
-          awscli
+          awscli2
+          libvirt
 
           # network
           curl
@@ -55,6 +56,10 @@
           elixir_1_16
           erlang-ls
           bazelisk
+
+          # work
+          ansible
+          ansible-language-server
 
           # editor
           helix
