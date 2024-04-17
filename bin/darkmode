@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eu -o pipefail
+set -eu
 
 light () {
   ln -sf  ${HOME}/.config/helix/themes/solarized_light.toml \
