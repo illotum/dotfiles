@@ -2,6 +2,8 @@ fish_add_path $HOME/.nix-profile/bin
 fish_add_path $HOME/bin
 fish_add_path $HOME/.local/bin
 
+set -a fish_complete_path $HOME/.nix-profile/share/fish/completions/
+
 set -gx EDITOR hx
 set -gx XDG_CONFIG_HOME $HOME/.config
 
