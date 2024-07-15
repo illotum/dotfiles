@@ -2,5 +2,9 @@
 name = "erlang"
 file-types = ["erl", "hrl", "src", "snippets", "schema", "rebar.config", "rebar.lock", "config"]
 
+[[language]]
+name = "hcl"
+formatter = { command = "tofu", args = ["fmt", "-"] }
+
 [language-server.gopls.config]
 "formatting.gofumpt" = true
