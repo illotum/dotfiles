@@ -1,5 +1,5 @@
 {
-  description = "@illotum's generic env setup";
+  description = "@illotum's env setup";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs";
@@ -26,8 +26,26 @@
           diffr
           cloc
           jdk
+          
+          # infra
+          taplo
           awscli2
+          google-cloud-sdk
+          docker
+          dockerfile-language-server-nodejs
+          docker-compose
+          docker-compose-language-service
+          podman
+          qemu
           libvirt
+          opentofu
+          terraform-ls
+          kubectl
+          yaml-language-server
+          kubernetes-helm
+          helm-ls
+          ansible
+          ansible-language-server
 
           # network
           curl
@@ -38,6 +56,7 @@
           # tools
           rakudo
           zef
+          go
           picat
           spicetify-cli
 
@@ -56,10 +75,7 @@
           elixir_1_16
           erlang-ls
           bazelisk
-
-          # work
-          ansible
-          ansible-language-server
+          rebar3
 
           # editor
           helix
