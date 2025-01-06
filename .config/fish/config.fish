@@ -1,6 +1,7 @@
 fish_add_path $HOME/.nix-profile/bin
 fish_add_path $HOME/bin
 fish_add_path $HOME/.local/bin
+fish_add_path $HOME/.cargo/bin
 
 set -a fish_complete_path $HOME/.nix-profile/share/fish/completions/
 
