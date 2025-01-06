@@ -6,11 +6,16 @@ auto-save = true
 mouse = false
 gutters = ["diff", "diagnostics", "spacer"]
 auto-pairs = false
+end-of-line-diagnostics = "hint"
+
+  [editor.inline-diagnostics]
+  cursor-line = "error"
+  # other-lines = "error"
 
   [editor.cursor-shape]
   insert = "bar"
   normal = "block"
   select = "underline"
 
-[keys.normal.space]
-l = ":toggle lsp.display-inlay-hints"
+[keys.normal]
+space.l = ":toggle lsp.display-inlay-hints"
