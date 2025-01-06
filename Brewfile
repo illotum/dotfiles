@@ -8,7 +8,7 @@ cask "iina"
 cask "deckset"
 cask "kitty"
 cask "spotify"
-cask "zotero"
+cask "calibre"
 
 # Basics
 brew "fish"
@@ -37,7 +37,7 @@ brew "opentofu"
 brew "terraform-ls"
 brew "kubectl"
 brew "yaml-language-server"
-brew "kubernetes-helm"
+brew "helm"
 brew "helm-ls"
 
 # network
@@ -48,7 +48,6 @@ brew "ipcalc"
 
 # toolkit
 brew "rakudo-star"
-brew "picat"
 brew "picat"
 brew "go"
 brew "hyperfine"
