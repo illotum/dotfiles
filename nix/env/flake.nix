@@ -31,13 +31,13 @@
           taplo
           awscli2
           google-cloud-sdk
-          docker
-          dockerfile-language-server-nodejs
-          docker-compose
-          docker-compose-language-service
-          podman
-          qemu
-          libvirt
+          # docker
+          # dockerfile-language-server-nodejs
+          # docker-compose
+          # docker-compose-language-service
+          # podman
+          # qemu
+          # libvirt
           opentofu
           terraform-ls
           kubectl
@@ -57,7 +57,6 @@
           rakudo
           zef
           go
-          picat
           spicetify-cli
 
           # files

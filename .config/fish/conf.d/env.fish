@@ -1,12 +1,7 @@
-fish_add_path $HOME/.nix-profile/bin
-fish_add_path $HOME/bin
-fish_add_path $HOME/.local/bin
-fish_add_path $HOME/.cargo/bin
-
-set -a fish_complete_path $HOME/.nix-profile/share/fish/completions/
-
 set -gx EDITOR hx
 set -gx XDG_CONFIG_HOME $HOME/.config
+
+test (command -v zoxide); and zoxide init fish | source
 
 alias y "git --git-dir=$HOME/.dotfiles/.git --work-tree=$HOME"
 abbr g git

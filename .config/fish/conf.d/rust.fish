@@ -1,5 +1,4 @@
 test (command -v rustc >/dev/null); or return
-
-set -U RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
-set -U CARGO_INSTALL_ROOT $HOME
-
+set -gx RUSTSRC (rustc --print sysroot)/lib/rustlib/src/rust/src
+set -gx CARGO_INSTALL_ROOT $HOME
+fish_add_path $HOME/.cargo/bin

@@ -46,7 +46,7 @@
   mnemonicprefix = true
   compactionheuristic = true
   submodule = log
-  tool = difftastic
+  tool = diffr
 [difftool]
   prompt = false
 [difftool "difftastic"]
@@ -85,7 +85,7 @@
   c = commit
   ca = commit -a
   cm = commit -m
-  cem = commit --allow-empty -m
+  cem = commit --allow-empty -m ''
   cam = commit -am
   cd = commit --amend
   cad = commit -a --amend
