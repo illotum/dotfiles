@@ -11,6 +11,9 @@
   excludesfile = ~/.gitignore
   pager = diffr | less -FMRiX
   hooksPath = /Users/valiushk/.git-templates/hooks
+  preloadIndex = true
+  writeCommitGraph = true
+  CommitGraph = true
 [repack]
   usedeltabaseoffset = true
 [apply]
