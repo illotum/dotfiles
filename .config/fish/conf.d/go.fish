@@ -1,5 +1,5 @@
-set -gx GOPRIVATE "bitbucket.surfcrew.com"
-set -gx GOPROXY "https://artifactory.menloinfra.com/artifactory/api/go/go-dev"
+set -gx GOPRIVATE "bitbucket.surfcrew.com,gitlab.menloinfra.com"
+set -gx GOPROXY "https://us-west1-go.pkg.dev/fond-giraffe-1d7l/go"
 set -gx GOBIN $HOME/bin
 fish_add_path $HOME/bin
 
