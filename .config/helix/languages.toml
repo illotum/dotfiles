@@ -8,3 +8,11 @@ formatter = { command = "tofu", args = ["fmt", "-"] }
 
 [language-server.gopls.config]
 "formatting.gofumpt" = true
+
+[[language]]
+name = "rust"
+auto-format = true
+
+[[language]]
+name = "typescript"
+auto-format = true
