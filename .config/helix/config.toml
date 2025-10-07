@@ -9,8 +9,7 @@ auto-pairs = false
 end-of-line-diagnostics = "hint"
 
   [editor.inline-diagnostics]
-  cursor-line = "error"
-  # other-lines = "error"
+  cursor-line = "hint"
 
   [editor.cursor-shape]
   insert = "bar"
