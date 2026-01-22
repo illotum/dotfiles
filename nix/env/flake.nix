@@ -25,7 +25,7 @@
           hyperfine
           diffr
           cloc
-          jdk
+          # jdk
           
           # infra
           taplo
@@ -57,7 +57,6 @@
           rakudo
           zef
           go
-          spicetify-cli
 
           # files
           cfssl
@@ -69,14 +68,6 @@
           gnused
           graphviz
 
-          # rabbitmq
-          erlang_26
-          elixir_1_16
-          erlang-ls
-          bazelisk
-          rebar3
-
-          # editor
           helix
           nil
         ];

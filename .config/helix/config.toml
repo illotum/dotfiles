@@ -18,3 +18,4 @@ end-of-line-diagnostics = "hint"
 
 [keys.normal]
 space.l = ":toggle lsp.display-inlay-hints"
+space.q = ":reflow"
