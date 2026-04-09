@@ -1,1 +1,1 @@
-/Users/alex/.config/helix/themes/solarized_light.toml
+inherits = "solarized_dark"
