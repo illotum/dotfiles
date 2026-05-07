@@ -9,7 +9,6 @@
   quotepath = false
   trustctime = false
   excludesfile = ~/.gitignore
-  pager = diffr | less -FMRiX
   preloadIndex = true
   writeCommitGraph = true
   CommitGraph = true
@@ -48,11 +47,12 @@
   mnemonicprefix = true
   compactionheuristic = true
   submodule = log
-  tool = diffr
 [difftool]
   prompt = false
-[difftool "difftastic"]
-  cmd = difft  --background=light "$LOCAL" "$REMOTE"
+[diff]
+  cmd = difftastic
+[pager]
+  difftool = true
 [mergetool "splice"]
   cmd = "vi -f $BASE $LOCAL $REMOTE $MERGED -c 'SpliceInit'"
   trustexitcode = true

@@ -2,6 +2,12 @@
 
 [user]
 name = "Alex Valiushko"
+email = "illotum@gmail.com"
+
+[[--scope]]
+--when.repositories = ["~/work"]
+
+[--scope.user]
 email = "alexvaliushko@tailscale.com"
 
 [ui]
@@ -10,8 +16,7 @@ diff-formatter = [
     "difft",
     # "--display=inline",
     "--color=always",
-    "--background=light",
-    "--syntax-highlight=off",
+    # "--syntax-highlight=off",
     "$left",
     "$right",
   ]
