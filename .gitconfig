@@ -230,3 +230,5 @@
 
 [includeIf "gitdir:~/work/"]
   path = .gitconfig-work
+[rebase]
+	autoSquash = true

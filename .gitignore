@@ -40,3 +40,4 @@ Thumbs.db
 lazy-lock.json
 mise.toml
 .claude*
+.zed*
